@@ -208,7 +208,6 @@
     <Resource Include="Image\stone.jpg" />
     <Resource Include="Image\paper.jpg" />
     <Resource Include="Image\attack.png" />
-    <Resource Include="Image\1.jpg" />
     <Resource Include="Image\Cardback.jpg" />
     <Resource Include="Image\aim.png" />
     <SplashScreen Include="Image\start.png" />
