@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E8F0B827-A32E-49B1-9364-EFAE72A75500}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>iDuel_EvolutionX</RootNamespace>
+    <AssemblyName>iDuel-EvolutionX</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <PublishUrl>发布\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.93.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="DataConverter\IPAddressToString.cs" />
+    <Compile Include="EventJson\Point2Point.cs" />
+    <Compile Include="Model\CardControl.cs" />
+    <Compile Include="Model\CardInfo.cs" />
+    <Compile Include="Model\Deck.cs" />
+    <Compile Include="Model\Location.cs" />
+    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\Status.cs" />
+    <Compile Include="Net\TcpCommon.cs" />
+    <Compile Include="Net\TcpServerHelper.cs" />
+    <Compile Include="Service\DecksManergerOperate.cs" />
+    <Compile Include="Model\NotificationObject.cs" />
+    <Compile Include="Service\AppConfigOperate.cs" />
+    <Compile Include="Service\DeckManergerOperatre.cs" />
+    <Compile Include="Tools\BitmapImagehandle.cs" />
+    <Compile Include="Tools\LogHelper.cs" />
+    <Compile Include="UI\CardAnimation2.cs" />
+    <Compile Include="UI\CardAreaEvent.cs" />
+    <Compile Include="UI\CardView.xaml.cs">
+      <DependentUpon>CardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ActionParameters.cs" />
+    <Compile Include="Model\Duelist.cs" />
+    <Compile Include="Model\MyStoryboard.cs" />
+    <Compile Include="Net\Client.cs" />
+    <Compile Include="Net\ClientSocket.cs" />
+    <Compile Include="Net\Server.cs" />
+    <Compile Include="Net\ServerSocket.cs" />
+    <Compile Include="Service\CardOperate.cs" />
+    <Compile Include="Service\DuelOperate.cs" />
+    <Compile Include="Service\DuelReportOperate.cs" />
+    <Compile Include="Service\MenuItemOperate.cs" />
+    <Compile Include="Service\OpponentOperate.cs" />
+    <Compile Include="UI\Base.cs" />
+    <Compile Include="UI\CardAnimation.cs" />
+    <Compile Include="UI\DragAdorner.cs" />
+    <Compile Include="UI\DuelEvent.cs" />
+    <Compile Include="UI\CardMenu.cs" />
+    <Compile Include="UI\MyCanvas.xaml.cs">
+      <DependentUpon>MyCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\OverOrInsert.xaml.cs">
+      <DependentUpon>OverOrInsert.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UIAnimation.cs" />
+    <Compile Include="UI\XYZmaterialView.xaml.cs">
+      <DependentUpon>XYZmaterialView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="UI\MyCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\OverOrInsert.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ResourceDictionary\MyBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ResourceDictionary\MyCanvasAnimation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ResourceDictionary\MyTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\CardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
+    <Compile Include="ADO\CardDataOperate.cs" />
+    <Compile Include="ADO\SqliteHelper.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Page Include="UI\ResourceDictionary\TextBlockNum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\XYZmaterialView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Card.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\background.png" />
+    <Resource Include="Image\Head3.jpg" />
+    <Resource Include="Image\Head4.jpg" />
+    <Resource Include="Image\scissors.jpg" />
+    <Resource Include="Image\stone.jpg" />
+    <Resource Include="Image\paper.jpg" />
+    <Resource Include="Image\attack.png" />
+    <Resource Include="Image\1.jpg" />
+    <Resource Include="Image\Cardback.jpg" />
+    <Resource Include="Image\aim.png" />
+    <SplashScreen Include="Image\start.png" />
+    <Resource Include="Image\Cardpic\GLTT.jpg" />
+    <Resource Include="Image\Cardpic\GLXG.jpg" />
+    <Resource Include="Image\Cardpic\GTT.jpg" />
+    <Resource Include="Image\Cardpic\GXYZ.jpg" />
+    <Resource Include="Image\Cardpic\GY.jpg" />
+    <Resource Include="Image\Cardpic\GTC.jpg" />
+    <Resource Include="Image\Cardpic\GXG.jpg" />
+    <Resource Include="Image\Cardpic\MF.jpg" />
+    <Resource Include="Image\Cardpic\XJ.jpg" />
+    <Resource Include="Image\Cardpic\GRH.jpg" />
+    <Resource Include="Image\bomb.png" />
+    <Resource Include="Image\none.png" />
+    <Resource Include="Image\scan.png" />
+    <Resource Include="Image\SerchP2.png" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\-1339494751TransTest\TransLibrary\TransLibrary.csproj">
+      <Project>{624b2249-84dc-46ea-a717-901f77cc079a}</Project>
+      <Name>TransLibrary</Name>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
