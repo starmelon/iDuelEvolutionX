@@ -453,87 +453,96 @@ namespace iDuel_EvolutionX.Service
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
 
-                //对出发地的处理
-                if (cv.Name.Equals("card_1_Extra"))
-                {
-                    return;
-                }
-                if (cv.Equals(mainwindow.card_1_Deck))
-                {
-                    return;
-                }
-                if (cv_monsters_1.Contains(cv) && cv.Children.Count < 2)
-                {
-                    #region 清除指示物
-
-                    StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                    if (sp != null) sp.Children.Clear();
-
-                    #endregion
-                }
-                if (cv.Name.Length == 8 || cv.Name.Length == 9)
-                {
-
-                    int witch;
-                    if (int.TryParse(cv.Name.Substring(7), out witch))
-                    {
-                        #region 来自魔陷区
-
-                        if (witch > 0 && witch < 11 && !mb_right.Equals("Pressed") && e.KeyStates == DragDropKeyStates.AltKey)
-                        {
-                            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
-
-                            MyStoryboard msb = CardAnimation.EffectOrigin();
-                            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
-                            MyStoryboard msb2 = CardAnimation.EffectAim();
-                            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
-                            return;
-                        }
-
-                        #endregion
-                    }
-                }
-
-                //对目标地的处理
+                //只允许存在一张卡
                 if (cv_aim.Children.Count > 0) return;
 
-                cv.Children.Remove(card);
-                if (!cv.Name.Equals("card_1_Graveyard") && !cv.Name.Equals("card_1_Outside") && !cv.Equals(mainwindow.card_1_Deck))
+                //脱离父控件
+                card.getAwayFromParents();
+
+                if (mb_right.Equals("Pressed"))
                 {
-                    CardOperate.sort(cv, card);
+                    card.Status = Status.BACK_ATK;
                 }
+
+                //加入当前区域
+                cv_aim.Children.Add(card);
+
+                
+
+                //对出发地的处理
+                //if (cv.Name.Equals("card_1_Extra"))
+                //{
+                //    return;
+                //}
+                //if (cv.Equals(mainwindow.card_1_Deck))
+                //{
+                //    return;
+                //}
+                //if (cv_monsters_1.Contains(cv) && cv.Children.Count < 2)
+                //{
+                //    #region 清除指示物
+
+                //    StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //    if (sp != null) sp.Children.Clear();
+
+                //    #endregion
+                //}
+                //if (cv.Name.Length == 8 || cv.Name.Length == 9)
+                //{
+
+                //    int witch;
+                //    if (int.TryParse(cv.Name.Substring(7), out witch))
+                //    {
+                //        #region 来自魔陷区
+
+                //        if (witch > 0 && witch < 11 && !mb_right.Equals("Pressed") && e.KeyStates == DragDropKeyStates.AltKey)
+                //        {
+                //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
+
+                //            MyStoryboard msb = CardAnimation.EffectOrigin();
+                //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
+                //            MyStoryboard msb2 = CardAnimation.EffectAim();
+                //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
+                //            return;
+                //        }
+
+                //        #endregion
+                //    }
+                //}
+
+
 
                 //#region 魔陷区放置
-                card.ContextMenu = AllMenu.cm_magictrap;
-                string report = "";
 
-                if (cv_magictraps_1.Contains(cv) || cv_monsters_1.Contains(cv))
-                {
-                    
-                    //if (!card.isBack)
-                    //{
-                    //    report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]" );
-                    //}
-                    //else if (card.isBack)
-                    //{
-                    //    report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
-                    //}
 
-                    //if ( cv_monsters_1.Contains(cv) && card.isDef )
-                    //{
-                    //    card.isDef = false;                      
 
-                    //}
-                    cv_aim.Children.Add(card);
-                    //card.SetPic();
-                    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
-                    card.ContextMenu = AllMenu.cm_magictrap;
-                    //DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
-                    
-                    
-                    return;
-                }
+                //if (cv_magictraps_1.Contains(cv) || cv_monsters_1.Contains(cv))
+                //{
+
+                //    //if (!card.isBack)
+                //    //{
+                //    //    report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]" );
+                //    //}
+                //    //else if (card.isBack)
+                //    //{
+                //    //    report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
+                //    //}
+
+                //    //if ( cv_monsters_1.Contains(cv) && card.isDef )
+                //    //{
+                //    //    card.isDef = false;                      
+
+                //    //}
+
+                //    //card.SetPic();
+                //    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
+                //    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
+                //    card.ContextMenu = AllMenu.cm_magictrap;
+                //    //DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
+
+
+                //    return;
+                //}
 
                 //if (cv_monsters.Contains(cv))
                 //{
@@ -567,24 +576,23 @@ namespace iDuel_EvolutionX.Service
                 //    return;
                 //}
 
-                if (mb_right.Equals("Pressed") && cv.Equals(mainwindow.card_1_hand))
-                {
-                    
-                    cv_aim.Children.Add(card);
-                    //card_BackAtk(   card);
-                    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
+                //if (mb_right.Equals("Pressed") && cv.Equals(mainwindow.card_1_hand))
+                //{
 
-                    //report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");                 
-                    //DuelOperate.getInstance().sendMsg("Cover2=" + card.duelindex + "," + cv_aim.Name, report);
+                //    cv_aim.Children.Add(card);
+                //    //card_BackAtk(   card);
+                //    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
+                //    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
 
-                    return;
+                //    //report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");                 
+                //    //DuelOperate.getInstance().sendMsg("Cover2=" + card.duelindex + "," + cv_aim.Name, report);
 
-                }
+                //    return;
 
-                cv_aim.Children.Add(card);
-                Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
+                //}
+
+                //cv_aim.Children.Add(card);
+
 
                 //report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
                 //DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
@@ -660,130 +668,131 @@ namespace iDuel_EvolutionX.Service
                     return;
                 }
 
-                if (cv_monsters_1.Contains(cv) && cv_monsters_1.Contains(cv_aim))
-                {
+                //if (cv_monsters_1.Contains(cv) && cv_monsters_1.Contains(cv_aim))
+                //{
                     
-                    if (cv_aim.Children.Count > 0)
-                    {
-                        OverOrInsert oi = new OverOrInsert();
-                        oi.Owner = mainwindow;
-                        oi.ShowDialog();
+                //    if (cv_aim.Children.Count > 0)
+                //    {
+                //        OverOrInsert oi = new OverOrInsert();
+                //        oi.Owner = mainwindow;
+                //        oi.ShowDialog();
                         
 
-                        Card top = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+                //        Card top = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
 
-                        if (card.info.sCardType.Equals("XYZ怪兽"))
-                        {
-                            if (!top.sCardType.Equals("XYZ怪兽"))
-                            {
-                                #region 转移指示物
+                //        if (card.info.sCardType.Equals("XYZ怪兽"))
+                //        {
+                //            if (!top.sCardType.Equals("XYZ怪兽"))
+                //            {
+                //                #region 转移指示物
 
-                                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                                if (sp.Children.Count > 0)
-                                {
-                                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                                    int count = sp.Children.Count;
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        Grid gd = sp.Children[0] as Grid;
-                                        TextBlock tb = gd.Children[1] as TextBlock;
-                                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                                        sp.Children.Remove(gd);
-                                        sp_aim.Children.Add(gd);
-                                    }
-                                }
+                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                if (sp.Children.Count > 0)
+                //                {
+                //                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                    int count = sp.Children.Count;
+                //                    for (int i = 0; i < count; i++)
+                //                    {
+                //                        Grid gd = sp.Children[0] as Grid;
+                //                        TextBlock tb = gd.Children[1] as TextBlock;
+                //                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
+                //                        sp.Children.Remove(gd);
+                //                        sp_aim.Children.Add(gd);
+                //                    }
+                //                }
 
-                                #endregion
-                            }
-                            else
-                            {
+                //                #endregion
+                //            }
+                //            else
+                //            {
 
-                                #region 清除指示物
+                //                #region 清除指示物
 
-                                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                                if (sp != null) sp.Children.Clear();
+                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                if (sp != null) sp.Children.Clear();
 
-                                #endregion
+                //                #endregion
 
-                            }
+                //            }
                             
-                        }
-                        else
-                        {
+                //        }
+                //        else
+                //        {
                             
-                            #region 清除指示物
+                //            #region 清除指示物
 
-                            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                            if (sp != null) sp.Children.Clear();
+                //            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //            if (sp != null) sp.Children.Clear();
 
-                            #endregion
+                //            #endregion
                             
-                        }
+                //        }
 
                         
-                    }
-                    else 
-                    {
-                        if (cv.Children.Count > 1)
-                        {
-                            if (cv.Children.IndexOf(card) == cv.Children.Count - 1 || card.info.sCardType.Equals("XYZ怪兽"))
-                            {
-                                #region 转移指示物
+                //    }
+                //    else 
+                //    {
+                //        if (cv.Children.Count > 1)
+                //        {
+                //            if (cv.Children.IndexOf(card) == cv.Children.Count - 1 || card.info.sCardType.Equals("XYZ怪兽"))
+                //            {
+                //                #region 转移指示物
 
-                                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                                if (sp.Children.Count > 0)
-                                {
-                                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                                    int count = sp.Children.Count;
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        Grid gd = sp.Children[0] as Grid;
-                                        TextBlock tb = gd.Children[1] as TextBlock;
-                                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                                        sp.Children.Remove(gd);
-                                        sp_aim.Children.Add(gd);
-                                    }
-                                }
+                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                if (sp.Children.Count > 0)
+                //                {
+                //                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                    int count = sp.Children.Count;
+                //                    for (int i = 0; i < count; i++)
+                //                    {
+                //                        Grid gd = sp.Children[0] as Grid;
+                //                        TextBlock tb = gd.Children[1] as TextBlock;
+                //                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
+                //                        sp.Children.Remove(gd);
+                //                        sp_aim.Children.Add(gd);
+                //                    }
+                //                }
 
-                                #endregion
-                            }
-                            else
-                            {
-                                #region 清除指示物
+                //                #endregion
+                //            }
+                //            else
+                //            {
+                //                #region 清除指示物
 
-                                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                                if (sp != null) sp.Children.Clear();
+                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                if (sp != null) sp.Children.Clear();
 
-                                #endregion
-                            }
-                        }
-                        else
-                        {
-                            #region 转移指示物
+                //                #endregion
+                //            }
+                //        }
+                //        else
+                //        {
+                //            #region 转移指示物
 
-                            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                            if (sp.Children.Count > 0)
-                            {
-                                StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                                int count = sp.Children.Count;
-                                for (int i = 0; i < count; i++)
-                                {
-                                    Grid gd = sp.Children[0] as Grid;
-                                    TextBlock tb = gd.Children[1] as TextBlock;
-                                    tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                                    sp.Children.Remove(gd);
-                                    sp_aim.Children.Add(gd);
-                                }
-                            }
+                //            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                //            if (sp.Children.Count > 0)
+                //            {
+                //                StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
+                //                int count = sp.Children.Count;
+                //                for (int i = 0; i < count; i++)
+                //                {
+                //                    Grid gd = sp.Children[0] as Grid;
+                //                    TextBlock tb = gd.Children[1] as TextBlock;
+                //                    tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
+                //                    sp.Children.Remove(gd);
+                //                    sp_aim.Children.Add(gd);
+                //                }
+                //            }
 
-                            #endregion
-                        }
-                    }
+                //            #endregion
+                //        }
+                //    }
 
-                }
+                //}
                 //对目标地的处理
 
-                cv.Children.Remove(card);
+                card.getAwayFromParents();
+                //cv.Children.Remove(card);
                 if (cv.Equals(mainwindow.card_1_hand))
                 {
                     CardOperate.sort(cv, null);
@@ -948,7 +957,7 @@ namespace iDuel_EvolutionX.Service
                     }
 
 
-                    card.set2FrontAtk();
+                    //card.set2FrontAtk();
                     cv_aim.Children.Add(card);
                        
 

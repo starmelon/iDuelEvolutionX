@@ -220,6 +220,8 @@ namespace iDuel_EvolutionX
 
             #region 初始化控件的卡片处理事件
 
+            #region 怪物区
+
             card_1_6.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2Monster);
             card_1_7.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2Monster);
             card_1_8.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2Monster);
@@ -230,15 +232,36 @@ namespace iDuel_EvolutionX
             card_1_8.WhenInsertChildren += new CollectionChangeDelegate(CardAreaEvent.insert2Monster);
             card_1_9.WhenInsertChildren += new CollectionChangeDelegate(CardAreaEvent.insert2Monster);
             card_1_10.WhenInsertChildren += new CollectionChangeDelegate(CardAreaEvent.insert2Monster);
-            card_1_6.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.romoveFromMonster);
-            card_1_7.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.romoveFromMonster);
-            card_1_8.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.romoveFromMonster);
-            card_1_9.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.romoveFromMonster);
-            card_1_10.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.romoveFromMonster);
+            card_1_6.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMonster);
+            card_1_7.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMonster);
+            card_1_8.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMonster);
+            card_1_9.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMonster);
+            card_1_10.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMonster);
+
+            #endregion
+
+            #region 魔陷区
+
+            card_1_1.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2MagicTrap);
+            card_1_2.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2MagicTrap);
+            card_1_3.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2MagicTrap);
+            card_1_4.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2MagicTrap);
+            card_1_5.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2MagicTrap);
+            card_1_1.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMagicTrap);
+            card_1_2.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMagicTrap);
+            card_1_3.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMagicTrap);
+            card_1_4.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMagicTrap);
+            card_1_5.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromMagicTrap);
+
+            #endregion 墓地
 
             card_1_Graveyard.WhenRemoveChildren = new CollectionChangeDelegate(CardAreaEvent.romoveFromGraveyard);
             card_1_Graveyard.WhenAddChildren = new CollectionChangeDelegate(CardAreaEvent.add2Graveyrad);
 
+            #endregion
+
+            #region 手牌
+            card_1_hand.WhenRemoveChildren += new CollectionChangeDelegate(CardAreaEvent.removeFromHand);
             #endregion
 
             #region <-- 注册其他控件事件 -->

@@ -158,6 +158,8 @@ namespace iDuel_EvolutionX.UI
                     }
                     else
                     {
+                        Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
+                        Canvas.SetLeft(card, 0);
                         Service.CardOperate.sort_XYZ_def2(cv);
                     }
                     
@@ -174,9 +176,13 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void romoveFromMonster(MyCanvas cv, CardControl card)
+        public static void removeFromMonster(MyCanvas cv, CardControl card)
         {
             int count = cv.Children.Count;
+            if (count == 0)
+            {
+                return;
+            }
             CardControl top = cv.Children[count - 1] as CardControl;
             if (top.Status == Status.BACK_ATK || top.Status == Status.FRONT_ATK)
             {
@@ -191,6 +197,55 @@ namespace iDuel_EvolutionX.UI
         #endregion
 
         #region 魔陷区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2MagicTrap(MyCanvas cv, CardControl card)
+        {
+            int count = cv.Children.Count;
+            if (count == 1)
+            {
+                card.centerAtVerticalInParent();
+                card.ContextMenu = AllMenu.cm_magictrap;
+            }
+        }
+
+        /// <summary>
+        /// 卡片离开怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromMagicTrap(MyCanvas cv, CardControl card)
+        {
+            int count = cv.Children.Count;
+            if (count == 0)
+            {
+                return;
+            }
+            Service.CardOperate.sort_HandCard(cv);
+        }
+
+        #endregion
+
+        #region 手卡区控件事件
+
+        /// <summary>
+        /// 卡片离开怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromHand(MyCanvas cv, CardControl card)
+        {
+            int count = cv.Children.Count;
+            if (count == 0)
+            {
+                return;
+            }
+            Service.CardOperate.sort_HandCard(cv);
+        }
 
         #endregion
     }
