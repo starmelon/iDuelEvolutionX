@@ -35,15 +35,44 @@ namespace iDuel_EvolutionX.UI
 
         #endregion
 
+        #region 除外区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Banish(MyCanvas cv, CardControl card)
+        {
+            card.centerAtVerticalInParent();
+            card.ContextMenu = AllMenu.cm_outside;
+        }
+
+        #endregion
+
         #region P卡区控件事件
 
         #endregion
 
         #region 额外区控件事件
 
+
         #endregion
 
         #region 卡组区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Deck(MyCanvas cv, CardControl card)
+        {
+            int count = cv.Children.Count;
+
+            card.centerAtVerticalInParent();
+            card.ContextMenu = AllMenu.cm_deck;
+        }
 
         #endregion
 
@@ -233,9 +262,25 @@ namespace iDuel_EvolutionX.UI
         #region 手卡区控件事件
 
         /// <summary>
-        /// 卡片离开怪物区时，怪物区控件的操作
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
         /// </summary>
-        /// <param name="cv">怪物区控件</param>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Hand(MyCanvas cv, CardControl card)
+        {
+            int count = cv.Children.Count;
+
+            CardAnimation.setTransformGroup(card);
+            TransLibrary.StoryboardChain animator0 = new TransLibrary.StoryboardChain();
+
+            Service.CardOperate.sort_HandCard(cv);
+            card.ContextMenu = AllMenu.cm_hand;
+        }
+
+        /// <summary>
+        /// 卡片离开手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
         public static void removeFromHand(MyCanvas cv, CardControl card)
         {

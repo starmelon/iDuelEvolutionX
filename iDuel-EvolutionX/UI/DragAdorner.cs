@@ -28,7 +28,7 @@ public class DragAdorner : Adorner
     #region 构造函数
     public DragAdorner(UIElement owner) : base(owner) { }
 
-    public DragAdorner(UIElement owner, UIElement adornElement, double opacity)
+    public DragAdorner(UIElement owner, UIElement adornElement, double opacity,Status status)
         : base(owner)
     {
         this._owner = owner;
@@ -48,33 +48,34 @@ public class DragAdorner : Adorner
             img.Source = DuelOperate.getInstance().myself.cardback;
             _brush = new VisualBrush(img);
 
-        //    if (isback)
-        //{
-        //    //Image img = new Image();
-        //    img.Source = DuelOperate.getInstance().myself.cardback;
-        //    _brush = new VisualBrush(img);
+            CardControl card = adornElement as CardControl;
+            if (status == Status.BACK_ATK || status == Status.BACK_DEF)
+            {
+                //Image img = new Image();
+                img.Source = card.backImage;
+                _brush = new VisualBrush(img);
 
-            
-        //}
-        //else
-        //{
-        //    Card card = adornElement as Card;
-        //    img.Source = card.Source;
-        //    //if (isdef)
-        //    //{
-        //    //    r.Height = adornElement.DesiredSize.Width;
-        //    //    r.Width = adornElement.DesiredSize.Height; 
-        //    //}
 
-        //    _brush = new VisualBrush(img);
-        //}
-        //if (isdef)
-        //{
-        //    r.RenderTransformOrigin = new Point(0.5, 0.5);
-        //    r.RenderTransform = new RotateTransform(-90);
-        //}
-     
-        _brush.Opacity = opacity;
+            }
+            else
+            {
+                
+                img.Source = card.originalImage;
+                //if (isdef)
+                //{
+                //    r.Height = adornElement.DesiredSize.Width;
+                //    r.Width = adornElement.DesiredSize.Height; 
+                //}
+
+                _brush = new VisualBrush(img);
+            }
+            if (status == Status.BACK_DEF || status == Status.FRONT_DEF)
+            {
+                r.RenderTransformOrigin = new Point(0.5, 0.5);
+                r.RenderTransform = new RotateTransform(-90);
+            }
+
+            _brush.Opacity = opacity;
         
 
         r.Fill = _brush;

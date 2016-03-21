@@ -569,7 +569,7 @@ namespace NBX3.Service
         {
             mainwindow.btn_firstAtk.IsEnabled = false;
             mainwindow.btn_secondAtk.IsEnabled = false;
-            List<CardControl> cards = CardOperate.card_Draw(5, 150);
+            List<CardControl> cards = CardOperate.card_Draw(5, 300);
             //string command = "FirstAtk="+cards[0].duelindex;
             for (int i = 1; i < cards.Count; i++)
             {
