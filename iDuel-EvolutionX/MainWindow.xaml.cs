@@ -65,6 +65,7 @@ namespace iDuel_EvolutionX
                 {
                     //定义并初始化一个绑定
                     Binding textBinding = new Binding();
+                    textBinding.Mode = BindingMode.OneWay;
                     //设置要绑定源控件
                     textBinding.ElementName = "card_" + i + "_" + j;
                     //设置要绑定属性
@@ -82,8 +83,8 @@ namespace iDuel_EvolutionX
                     //给转换器传送参数
                     textBinding.ConverterParameter = this.FindName("card_"+ i +"_" + j);
                     //设置绑定到要绑定的控件
-                    TextBlock tb = this.FindName("atk_" + i + "_" + j) as TextBlock;
-                    tb.SetBinding(TextBlock.TextProperty, textBinding);
+                    //TextBlock tb = this.FindName("atk_" + i + "_" + j) as TextBlock;
+                    //tb.SetBinding(TextBlock.TextProperty, textBinding);
                 }
             }
             
@@ -171,9 +172,11 @@ namespace iDuel_EvolutionX
             card_1_hand.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_1_hand.Drop += new DragEventHandler(DuelEvent.card_Drop_Hand);
             card_1_Left.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
-            card_1_Left.Drop += new DragEventHandler(DuelEvent.card_Drop_Pendulum);
+            card_1_Left.Drop += DuelEvent.card_Drop_Pendulum;
+            card_1_Left.WhenAddChildren += CardAreaEvent.add2Pendulum;
             card_1_Right.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
-            card_1_Right.Drop += new DragEventHandler(DuelEvent.card_Drop_Pendulum);
+            card_1_Right.Drop += DuelEvent.card_Drop_Pendulum;
+            card_1_Right.WhenAddChildren += CardAreaEvent.add2Pendulum;
             card_1_Graveyard.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             
             
@@ -271,6 +274,12 @@ namespace iDuel_EvolutionX
             #region 卡组
 
             card_1_Deck.WhenAddChildren += CardAreaEvent.add2Deck;
+
+            #endregion
+
+            #region P卡区
+
+
 
             #endregion
 

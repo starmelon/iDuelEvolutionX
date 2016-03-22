@@ -43,14 +43,16 @@ namespace iDuel_EvolutionX.UI
             MenuItem mi_10 = new MenuItem { Header = "解放" };          //OK
             MenuItem mi_11 = new MenuItem { Header = "加入手卡" };      //OK
             MenuItem mi_12 = new MenuItem { Header = "指示物" };
+
             MenuItem mi_13 = new MenuItem { Header = "修改备注" };
             MenuItem mi_14 = new MenuItem { Header = "返回额外区" };    //OK
             MenuItem mi_15 = new MenuItem { Header = "送入对手墓地" };  //OK
+            MenuItem mi_16 = new MenuItem { Header = "修改攻守" };  //OK
 
-            MenuItem mi_16 = new MenuItem { Header = "黑" };  //OK
-            MenuItem mi_17 = new MenuItem { Header = "蓝" };  //OK
-            MenuItem mi_18 = new MenuItem { Header = "红" };  //OK
-            MenuItem mi_19 = new MenuItem { Header = "清除" };
+            MenuItem mi_17 = new MenuItem { Header = "黑" };  //OK
+            MenuItem mi_18 = new MenuItem { Header = "蓝" };  //OK
+            MenuItem mi_19 = new MenuItem { Header = "红" };  //OK
+            MenuItem mi_20 = new MenuItem { Header = "清除" };
 
             public CardMenuMonster()
             {
@@ -90,16 +92,19 @@ namespace iDuel_EvolutionX.UI
                 //this.AddChild(mi_11);
                 mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-                this.mi_12.Items.Add(mi_16);
-                mi_16.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_17);
                 mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_18);
-                mi_18.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_19);
                 mi_19.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                this.mi_12.Items.Add(mi_20);
+                mi_20.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.AddChild(mi_12);
-                
+
+                //mi_13.IsEnabled = false;
+                this.AddChild(mi_16);
+                mi_16.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 mi_13.IsEnabled = false;
                 this.AddChild(mi_13);

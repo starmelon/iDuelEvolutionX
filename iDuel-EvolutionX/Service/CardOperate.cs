@@ -1182,7 +1182,7 @@ namespace iDuel_EvolutionX.Service
 
         #endregion
 
-        #region <-- 左右摇摆区释放 -->
+        #region <-- P卡区释放 -->
 
         /// <summary>
         /// 左右摇摆区释放
@@ -1197,54 +1197,25 @@ namespace iDuel_EvolutionX.Service
 
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
-             //   //获得卡片对象
-             //   Card card = data.GetData(typeof(BitmapImage)) as Card;
-             //   //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
+                //获得卡片对象
+                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
 
-             //   //判断卡片原有位置的父容器类型
-             //   Canvas cv = card.Parent as Canvas;
+                //判断卡片原有位置的父容器类型
+                Canvas cv = card.Parent as Canvas;
 
-             //   //获取放置容器
-             //   Canvas cv_aim = sender as Canvas;
+                //获取放置容器
+                Canvas cv_aim = sender as Canvas;
 
-             //   //判断目标位置是否是原位置
-             //   if (cv.Name.Equals(cv_aim.Name)) return;
+                //判断目标位置是否是原位置
+                //if (cv.Name.Equals(cv_aim.Name)) return;
 
-             //   //对出发地的判断处理
-             //   if (!card.CardDType.Contains("灵摆"))
-             //   {
-             //       return;
-             //   }
 
-             //   //对目标地的处理
-             //   if (cv_aim.Children.Count > 0) return;
+                //对目标地的处理
+                if (cv_aim.Children.Count > 0) return;
 
-             //   cv.Children.Remove(card);
-             //   if (!cv.Name.Equals("card_1_Graveyard") && !cv.Name.Equals("card_1_Outside") && !cv.Equals(mainwindow.card_1_Deck) && !cv.Equals(mainwindow.card_1_Right) && !cv.Equals(mainwindow.card_1_Left))
-             //   {
-             //       CardOperate.sort(cv, card);
-             //   }
-
-             //   card_FrontAtk(card);
-             //   cv_aim.Children.Add(card);
-             //   card.ContextMenu = AllMenu.cm_pendulum;
-             //   CardOperate.sort_SingleCard(card);
-
-             //   if (cv_aim.Name.Equals("card_1_Right"))
-	            //{
-		           // string report = ("将 " + DuelReportOperate.from(cv.Name) + " [" + card.name + "] 设置为 <右刻度>" + Environment.NewLine);
-             //       DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name, report);
-               
-	            //}
-             //   else if (cv_aim.Name.Equals("card_1_Left"))
-	            //{
-             //       string report = ("将 " + DuelReportOperate.from(cv.Name) + " [" + card.name + "] 设置为 <左刻度>" + Environment.NewLine);
-             //       DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name, report);
-	            //}             
-                                
-                               
-                            
-
+                card.getAwayFromParents();
+                card.set2FrontAtk();
+                cv_aim.Children.Add(card);
             }
         }
 

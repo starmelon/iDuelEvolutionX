@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -9,14 +10,19 @@ using System.Windows.Media.Imaging;
 
 namespace iDuel_EvolutionX.Model
 {
-    public class CardControl : Image
+    public class CardControl : Image , INotifyPropertyChanged
     {
+        public int id;
         public CardInfo info;               //卡片信息
+        private string curAtk;               //当前攻击力
+        private string curDef;               //当前防守力
         public BitmapImage backImage;       //卡背
         public BitmapImage originalImage;   //卡图
         private Status status;               //攻守正背
         private Location curLocation;        //当前位置（具体位置+所在层次）
         public int[] point;                 //指示物
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Status Status
         {
@@ -29,6 +35,42 @@ namespace iDuel_EvolutionX.Model
             {
                 status = value;
                 showImg();
+            }
+        }
+
+        public string CurAtk
+        {
+            get
+            {
+                return curAtk + "/" + curDef;
+                
+            }
+
+            set
+            {
+                curAtk = value;
+                if (PropertyChanged != null)
+                {
+                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("CurAtk"));
+                }
+            }
+        }
+
+        public string CurDef
+        {
+            get
+            {
+                return curAtk + "/" + curDef;
+            }
+
+            set
+            {
+                curDef = value;
+                if (PropertyChanged != null)
+                {
+                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("CurAtk"));
+
+                }
             }
         }
 
@@ -50,6 +92,8 @@ namespace iDuel_EvolutionX.Model
         public void initCardInfo(CardInfo info)
         {
             this.info = info;
+            this.CurAtk = info.atk;
+            this.CurDef = info.def;
             setImg(info.id);
             
         }

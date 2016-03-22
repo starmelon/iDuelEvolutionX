@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 
 namespace iDuel_EvolutionX.UI
 {
+    //定义一个当控件拥有元素发生变化时所接受的委托
     public delegate void CollectionChangeDelegate(MyCanvas mcv,CardControl card);
 
     /// <summary>
@@ -128,7 +129,7 @@ namespace iDuel_EvolutionX.UI
                 {
                     return null;
                 }
-                return card.info.atk + "/" + card.info.def;
+                return card.CurAtk + "/" + card.CurDef;
             }
             else if (mcv.Children.Count < 1)
             {

@@ -226,7 +226,7 @@ namespace iDuel_EvolutionX.UI
         public static void card_Drop_Pendulum(object sender, DragEventArgs e)
         {
             //CardOperate.card_Drop_Pendulum(sender, e);
-            CardOperate.card_Drop_Magic(sender, e);
+            CardOperate.card_Drop_Pendulum(sender, e);
         }
 
         /// <summary>

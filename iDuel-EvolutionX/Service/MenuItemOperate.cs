@@ -25,15 +25,18 @@ namespace iDuel_EvolutionX.Service
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {
-            
+            CardControl card = CardOperate.getCard(sender) as CardControl;
+            ModifyAtkOrDef mad = new ModifyAtkOrDef(card);
+            mad.Owner = mainwindow;
+            mad.ShowDialog();
             //MenuItem mi = sender as MenuItem;
             //MenuItem mi_par = mi.Parent as MenuItem;
-            
+
             //#region 指示物
-            
+
             //if ( mi_par!=null && mi_par.Header.Equals("指示物"))
             //{
-            
+
             //    Card card = CardOperate.getCard((sender as MenuItem).Parent) as Card;
             //    if (card.isBack) return;
             //    Canvas cv = card.Parent as Canvas;
@@ -73,12 +76,12 @@ namespace iDuel_EvolutionX.Service
 
             //    }
 
-                
+
 
             //    Grid gd = new Grid();
             //    gd.Width = 25;
             //    gd.Height = 25;
-                
+
 
             //    TextBlock tb = new TextBlock();
             //    tb.Foreground = Brushes.White;
@@ -88,7 +91,7 @@ namespace iDuel_EvolutionX.Service
             //    tb.Text = "1";
             //    tb.MouseDown += new MouseButtonEventHandler(DuelEvent.ClikDouble2);
 
-                
+
             //    /* tooltip
             //    StackPanel sp_tooltip = new StackPanel();
             //    System.Windows.Shapes.Ellipse a = new System.Windows.Shapes.Ellipse();
@@ -143,7 +146,7 @@ namespace iDuel_EvolutionX.Service
             //                DuelOperate.getInstance().sendMsg("Setsign=" + sp.Name + ",red", report);
             //            }
             //            break;  
-                                                   
+
             //    }
 
             //    gd.Children.Add(bd);              
@@ -153,7 +156,7 @@ namespace iDuel_EvolutionX.Service
 
             //    return;
             //}
-            
+
 
             //#endregion
 
@@ -208,7 +211,7 @@ namespace iDuel_EvolutionX.Service
             //                    cvs.Clear();
             //                    MessageBox.Show("请确定切洗区域均为仅有一张set卡");
             //                    return;
- 
+
             //                }
 
             //            }
@@ -234,7 +237,7 @@ namespace iDuel_EvolutionX.Service
             //    }
 
             //    if (cvs.Count < 2) return;
-                
+
             //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             //    List<FrameworkElement> shuffle_cards = new List<FrameworkElement>();
             //    for (int j = 0; j < cvs.Count; j++)
@@ -294,7 +297,7 @@ namespace iDuel_EvolutionX.Service
             //                            start2.X = start2.X + ((shuffle_cards[i].ActualHeight - shuffle_cards[i].ActualWidth) / 2.0);
             //                            start2.Y = start2.Y - shuffle_cards[i].ActualWidth - ((shuffle_cards[i].ActualHeight - shuffle_cards[i].ActualWidth) / 2.0);
             //                        }
-                                     
+
             //                        //2.获取卡片在卡框中的相对距离
             //                        Point end2 = new Point((cvs[i].ActualWidth - shuffle_cards[i].ActualWidth) / 2.0, (cvs[i].ActualHeight - shuffle_cards[i].ActualHeight) / 2.0);
             //                        //脱离原控件
@@ -334,10 +337,10 @@ namespace iDuel_EvolutionX.Service
             //            msb.Begin(card);
             //            //animator.Animates.Add(msb);
             //        }
-                                     
+
             //    }
 
-                
+
 
 
             //    //animator.Begin(shuffle_cards);
@@ -389,7 +392,7 @@ namespace iDuel_EvolutionX.Service
             //        {
             //            if (command.Equals("全部洗切"))
             //            {
-                            
+
 
             //            }
             //            if (command.Equals("全部变为表侧 · 防守表示") || command.Equals("全部变为表侧 · 攻击表示"))
@@ -444,7 +447,7 @@ namespace iDuel_EvolutionX.Service
             //                            cards_2.Add(card);
             //                        }                                   
             //                    } 
- 
+
             //                }
             //                else if (cv.Children.Count > 1)
             //                {
@@ -458,7 +461,7 @@ namespace iDuel_EvolutionX.Service
             //                        if (card != cv.Children[cv.Children.Count - 1])
             //                        {
             //                            cards_4.Add(card);
-                                        
+
             //                        }
             //                        else
             //                        {
@@ -507,7 +510,7 @@ namespace iDuel_EvolutionX.Service
             //                    {
             //                        foreach (Card card in cv.Children)
             //                        {
-                                        
+
             //                            cards_1.Add(card);
             //                            cards_2.Insert(0, card);
             //                            //cards_2.Add(card);
@@ -587,7 +590,7 @@ namespace iDuel_EvolutionX.Service
             //                            cards_2.Add(card);
             //                        }
             //                    }
-                               
+
             //                }
 
             //                #endregion
@@ -608,7 +611,7 @@ namespace iDuel_EvolutionX.Service
             //                    cards_2.Add(card);                           
             //                }                         
             //            }
-                        
+
 
             //        }                 
             //    }
@@ -630,7 +633,7 @@ namespace iDuel_EvolutionX.Service
             //                    card.isBack = false;
             //                    card.SetPic();
             //                }
-                            
+
             //            };
             //            tls.Animates.Add(msb1);
             //        }
@@ -662,7 +665,7 @@ namespace iDuel_EvolutionX.Service
             //                    //card.isDef = false;
             //                    card.isBack = card.isBack ? false : true;
             //                    //{
-                                    
+
             //                    //}
             //                    //card.isBack = false;
             //                    card.SetPic();
@@ -694,7 +697,7 @@ namespace iDuel_EvolutionX.Service
 
             //    if (cards_2.Count>0)
             //    {
-                    
+
             //        if (command.Equals("全部送往墓地"))
             //        {
             //            #region
@@ -720,7 +723,7 @@ namespace iDuel_EvolutionX.Service
             //                    //card.isDef = false;
             //                    mainwindow.card_1_Graveyard.Children.Add(card);
             //                    CardOperate.sort_SingleCard(card);
-                                                               
+
             //                }
             //            };
 
@@ -880,7 +883,7 @@ namespace iDuel_EvolutionX.Service
 
             //                    card.isDef = false;
             //                    mainwindow.card_1_hand.Children.Add(card);
-                                
+
             //                }
 
             //                CardOperate.sort_HandCard(mainwindow.card_1_hand);
@@ -947,7 +950,7 @@ namespace iDuel_EvolutionX.Service
             //                        //card.BeginAnimation(Card.OpacityProperty, null);
             //                    }
 
-                                
+
             //                }
             //            };
 
@@ -961,7 +964,7 @@ namespace iDuel_EvolutionX.Service
             //            #region
 
             //            Point end = mainwindow.card_1_Deck.TranslatePoint(new Point(), mainwindow.MySpace);
-                    
+
             //            MyStoryboard msb16 = CardAnimation.Cards_move2(cards_2, end, 150,"1");
             //            msb16.Completed += (object sender_, EventArgs e_) =>
             //            {
@@ -1057,9 +1060,9 @@ namespace iDuel_EvolutionX.Service
 
             //            #endregion
             //        }
-                    
-                    
-                    
+
+
+
             //    }
 
             //    #endregion
@@ -1071,7 +1074,7 @@ namespace iDuel_EvolutionX.Service
 
 
             //        Point end = mainwindow.card_1_Extra.TranslatePoint(new Point(), mainwindow.MySpace);
-                    
+
             //        //设置XYZ的动画
             //        MyStoryboard msb11 = CardAnimation.Cards_move2(cards_3, end, 150,"1");
 
@@ -1122,16 +1125,16 @@ namespace iDuel_EvolutionX.Service
             //                }
             //            }
             //        }
-                    
+
             //    }
-                
+
             //    #endregion
 
             //    #region 当处理回手卡命，回卡组命令时，素材需要送去墓地或者除外
 
             //    if (cards_4.Count > 0)
             //    {
-                    
+
 
             //        if (command.Substring(command.Length - 4, 4).Equals("素材送墓"))
             //        {
@@ -1179,7 +1182,7 @@ namespace iDuel_EvolutionX.Service
             //                            {
             //                                msb.Children.Add(dba);
             //                            }
-                                            
+
             //                        }
             //                        else if (msb.Name.Equals("msb16"))
             //                        {
@@ -1187,7 +1190,7 @@ namespace iDuel_EvolutionX.Service
             //                            {
             //                                msb.Children.Add(dba);
             //                            }
-                                            
+
             //                        }
             //                        else if (msb.Name.Equals("msb3"))
             //                        {
@@ -1256,20 +1259,20 @@ namespace iDuel_EvolutionX.Service
             //                                msb.Children.Add(dba);
             //                            }
             //                        }
-                                    
+
             //                    }
 
-                                
+
             //                }
             //            }
             //            #endregion
             //        }
-                        
+
 
 
 
             //    }
-                        
+
             //    tls.Begin();
 
             //    #endregion
@@ -1300,7 +1303,7 @@ namespace iDuel_EvolutionX.Service
             //        }
 
             //    }
-                
+
             //    Card card = CardOperate.getCard(sender) as Card;
             //    Canvas cv = new Canvas();
             //    if (card == null) cv = CardOperate.getCard(sender) as Canvas;
@@ -1325,13 +1328,13 @@ namespace iDuel_EvolutionX.Service
 
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("FormChange=" + card.duelindex, report);
-                            
+
             //            }
-                        
+
             //            //动作
             //            //OpponentOperate.ActionAnalyze("FormChange=" + DuelReportOperate.Analyze_canvas(cv.Name) + "," + cv_childre_num, true);
             //            //OpponentOperate.ActionAnalyze("FormChange=" +card.duelindex ,true);
-                        
+
             //            break;
             //        case "里侧/表侧转换":
             //            {
@@ -1339,7 +1342,7 @@ namespace iDuel_EvolutionX.Service
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);                        
             //                DuelOperate.getInstance().sendMsg("FormChange2=" + card.duelindex, report);
             //            }
-                        
+
             //            break;
             //        case "转为里侧守备":
             //            {
@@ -1347,7 +1350,7 @@ namespace iDuel_EvolutionX.Service
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("FormChange3=" + card.duelindex, report);                           
             //            }
-                        
+
             //            break;
             //        case "放回卡组顶端":
             //            {
@@ -1355,7 +1358,7 @@ namespace iDuel_EvolutionX.Service
             //                card.ContextMenu = AllMenu.cm_deck;
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 放回 <卡组>顶端" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex + "," +"card_1_Deck",report);
-                            
+
             //            }
             //            break;
             //        case "送入墓地":
@@ -1365,9 +1368,9 @@ namespace iDuel_EvolutionX.Service
             //                CardOperate.sort_HandCard(mainwindow.card_1_hand);
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 送入 <墓地>" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + "card_1_Graveyard", report);
-                            
+
             //            }
-                        
+
             //            break;
             //        case "从游戏中除外":
             //            {
@@ -1375,9 +1378,9 @@ namespace iDuel_EvolutionX.Service
             //                card.ContextMenu = AllMenu.cm_outside;
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 从游戏中 <除外>" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Disappear=" + card.duelindex + "," + "card_1_Outside", report);
-                            
+
             //            }
-                        
+
             //            break;
             //        case "解放":
             //            {
@@ -1386,8 +1389,8 @@ namespace iDuel_EvolutionX.Service
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 解放" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Disappear=" + card.duelindex + "," + "card_1_Graveyard", report);
             //            }
-                        
-                        
+
+
             //            break;
             //        case "加入手卡":
             //            {
@@ -1395,7 +1398,7 @@ namespace iDuel_EvolutionX.Service
             //                card.ContextMenu = AllMenu.cm_hand;
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 取回 <手卡>" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex + "," + "card_1_hand", report);
-                            
+
             //            }
             //            break;
             //        case "打开/盖伏":
@@ -1405,7 +1408,7 @@ namespace iDuel_EvolutionX.Service
             //                if (!card.isBack) report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 盖伏" + Environment.NewLine);
             //                in_or_out(card);
             //                DuelOperate.getInstance().sendMsg("FormChange2="+card.duelindex, report);
-                            
+
             //            }
             //            break;
             //        case "将顶牌送往墓地":
@@ -1422,7 +1425,7 @@ namespace iDuel_EvolutionX.Service
             //                card.ContextMenu = AllMenu.cm_outside;
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 从游戏中 <除外>" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Disappear=" + card.duelindex + "," + "card_1_Outside",report);
-                            
+
             //            }
             //            break;
             //        case "将顶牌背面除外":
@@ -1446,16 +1449,16 @@ namespace iDuel_EvolutionX.Service
             //                string report = "将顶牌放回 <卡组> 底部" + Environment.NewLine;
             //                DuelOperate.getInstance().sendMsg("Top2bottom=",report);                                                     
             //            }
-                        
+
             //            break;
             //        case "返回额外区":
             //            {
             //                send2where_move(card, "额外", 600);
             //                string report = (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 返回 <额外>" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex + "," + "card_1_Extra", report);
-                            
+
             //            }
-                        
+
             //            break;
             //        case "送入对手墓地":
             //            {
@@ -1465,7 +1468,7 @@ namespace iDuel_EvolutionX.Service
             //                DuelOperate.getInstance().sendMsg("Send2OpGraveyard=" + card.duelindex , report);
             //            }
             //            //send2where_move(card, "对手墓地", 600);
-                        
+
             //            break;
             //        case "转移控制权":
             //            {
@@ -1480,7 +1483,7 @@ namespace iDuel_EvolutionX.Service
             //    }
             //}
 
-            
+
         }
 
 

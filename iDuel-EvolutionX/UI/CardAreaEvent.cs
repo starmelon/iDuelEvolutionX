@@ -3,7 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace iDuel_EvolutionX.UI
 {
@@ -52,9 +56,31 @@ namespace iDuel_EvolutionX.UI
 
         #region P卡区控件事件
 
+        /// <summary>
+        /// 卡片以顶层覆盖方式进入P卡区时，P卡区控件的操作
+        /// </summary>
+        /// <param name="cv">P卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Pendulum(MyCanvas cv, CardControl card)
+        {
+            card.centerAtVerticalInParent();
+            card.ContextMenu = AllMenu.cm_pendulum;
+        }
+
+        /// <summary>
+        /// 卡片离开手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromPendulum(MyCanvas cv, CardControl card)
+        {
+            
+        }
+
         #endregion
 
         #region 额外区控件事件
+
 
 
         #endregion
@@ -145,7 +171,28 @@ namespace iDuel_EvolutionX.UI
                 Canvas.SetLeft(card, cv.ActualWidth - card.ActualWidth);
                 Service.CardOperate.sort_XYZ_atk(cv);
             }
+
+            MainWindow mainwin = Application.Current.MainWindow as MainWindow;
             
+            Binding bind = new Binding();
+            bind.Source = card;
+            bind.Path = new PropertyPath("CurAtk");
+            bind.NotifyOnTargetUpdated = true;
+            mainwin.atk_1_6.SetBinding(TextBlock.TextProperty, bind);
+            //mainwin.atk_1_6.TargetUpdated
+            mainwin.atk_1_6.TargetUpdated += new EventHandler<DataTransferEventArgs>  ((o,e)=> {
+                if (!card.CurAtk.Equals(card.info.atk+"/"+card.info.def))
+                {
+                    mainwin.atk_1_6.Style = Application.Current.TryFindResource("tb_AtkDefStyleChanged") as Style;    
+                }
+                else
+                {
+                    mainwin.atk_1_6.Style = Application.Current.TryFindResource("tb_AtkDefStyle") as Style;
+                }
+                
+                //MessageBox.Show("修改了攻守");
+
+            });
         }
 
         /// <summary>
@@ -269,9 +316,6 @@ namespace iDuel_EvolutionX.UI
         public static void add2Hand(MyCanvas cv, CardControl card)
         {
             int count = cv.Children.Count;
-
-            CardAnimation.setTransformGroup(card);
-            TransLibrary.StoryboardChain animator0 = new TransLibrary.StoryboardChain();
 
             Service.CardOperate.sort_HandCard(cv);
             card.ContextMenu = AllMenu.cm_hand;
