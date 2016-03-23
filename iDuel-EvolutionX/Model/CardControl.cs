@@ -42,7 +42,7 @@ namespace iDuel_EvolutionX.Model
         {
             get
             {
-                return curAtk + "/" + curDef;
+                return curAtk == null || curAtk.Trim().Equals("") ? null : curAtk + "/" + curDef;
                 
             }
 
@@ -187,6 +187,12 @@ namespace iDuel_EvolutionX.Model
         {
             Status = Status.BACK_ATK;
             showImg();
+        }
+
+        public void reSetAtk()
+        {
+            CurAtk = info.atk;
+            CurDef = info.def;
         }
 
         #endregion

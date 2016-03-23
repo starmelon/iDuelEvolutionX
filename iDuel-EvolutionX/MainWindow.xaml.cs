@@ -140,6 +140,16 @@ namespace iDuel_EvolutionX
 
             #endregion
 
+
+            #region 绑定卡片控件和攻守控件
+            card_1_6.tb_atkDef = atk_1_6;
+            card_1_7.tb_atkDef = atk_1_7;
+            card_1_8.tb_atkDef = atk_1_8;
+            card_1_9.tb_atkDef = atk_1_9;
+            card_1_10.tb_atkDef = atk_1_10;
+
+            #endregion
+
             #region <-- 注册场地控件的拖放事件 -->
 
             card_1_1.DragOver += new DragEventHandler(DuelEvent.card_DragOver);

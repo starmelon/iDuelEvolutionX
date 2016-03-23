@@ -27,6 +27,8 @@ namespace iDuel_EvolutionX.UI
     public partial class MyCanvas : Canvas
     {
         public Position x;
+        public TextBlock tb_atkDef;
+        public StackPanel signs;
         private event CollectionChangeDelegate whenRemoveChildren;
         public CollectionChangeDelegate WhenRemoveChildren
         {

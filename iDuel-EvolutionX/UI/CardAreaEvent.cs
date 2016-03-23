@@ -16,6 +16,19 @@ namespace iDuel_EvolutionX.UI
         #region 墓地区控件事件
 
         /// <summary>
+        /// 卡片进入墓地时，墓地控件的操作
+        /// </summary>
+        /// <param name="cv">墓地控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Graveyrad(MyCanvas cv, CardControl card)
+        {
+            card.reSetAtk();
+            card.centerAtVerticalInParent();
+            card.set2FrontAtk();
+            card.ContextMenu = AllMenu.cm_graveyard;
+        }
+
+        /// <summary>
         /// 卡片离开墓地时，墓地控件操作
         /// </summary>
         /// <param name="cv">墓地控件</param>
@@ -23,19 +36,7 @@ namespace iDuel_EvolutionX.UI
         public static void romoveFromGraveyard(MyCanvas cv , CardControl card)
         {
 
-        }
-
-        /// <summary>
-        /// 卡片进入墓地时，墓地控件的操作
-        /// </summary>
-        /// <param name="cv">墓地控件</param>
-        /// <param name="card">卡片</param>
-        public static void add2Graveyrad(MyCanvas cv, CardControl card)
-        {
-            card.centerAtVerticalInParent();
-            card.set2FrontAtk();
-            card.ContextMenu = AllMenu.cm_graveyard;
-        }
+        }  
 
         #endregion
 
@@ -48,6 +49,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Banish(MyCanvas cv, CardControl card)
         {
+            card.reSetAtk();
             card.centerAtVerticalInParent();
             card.ContextMenu = AllMenu.cm_outside;
         }
@@ -63,6 +65,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Pendulum(MyCanvas cv, CardControl card)
         {
+            card.reSetAtk();
             card.centerAtVerticalInParent();
             card.ContextMenu = AllMenu.cm_pendulum;
         }
@@ -95,7 +98,7 @@ namespace iDuel_EvolutionX.UI
         public static void add2Deck(MyCanvas cv, CardControl card)
         {
             int count = cv.Children.Count;
-
+            card.reSetAtk();
             card.centerAtVerticalInParent();
             card.ContextMenu = AllMenu.cm_deck;
         }
@@ -132,7 +135,7 @@ namespace iDuel_EvolutionX.UI
             else
             {
                 CardControl second = cv.Children[count - 2] as CardControl;
-
+                second.reSetAtk();//当被叠放时要重置攻击力
                 /*
                 判断加入前最顶层的卡的状态，若是只要是存在背面或防守，则应先启动相关动画
                 */
@@ -142,7 +145,7 @@ namespace iDuel_EvolutionX.UI
 
                 if (second.Status == Status.BACK_DEF)
                 {
-                    
+
                     MyStoryboard msb1 = CardAnimation.ScaleX_120_Rotate(-90, 0, 150, 200);
                     msb1.card = second;
                     msb1.Completed += (object sender_, EventArgs e_) =>
@@ -153,7 +156,7 @@ namespace iDuel_EvolutionX.UI
                     };
                     animator0.Animates.Add(msb1);
                     MyStoryboard msb2 = CardAnimation.ScaleX_021(150);
-                    animator0.Animates.Add(msb2); 
+                    animator0.Animates.Add(msb2);
                 }
                 if (second.Status == Status.FRONT_DEF)
                 {
@@ -172,28 +175,16 @@ namespace iDuel_EvolutionX.UI
                 Service.CardOperate.sort_XYZ_atk(cv);
             }
 
-            MainWindow mainwin = Application.Current.MainWindow as MainWindow;
-            
-            Binding bind = new Binding();
-            bind.Source = card;
-            bind.Path = new PropertyPath("CurAtk");
-            bind.NotifyOnTargetUpdated = true;
-            mainwin.atk_1_6.SetBinding(TextBlock.TextProperty, bind);
-            //mainwin.atk_1_6.TargetUpdated
-            mainwin.atk_1_6.TargetUpdated += new EventHandler<DataTransferEventArgs>  ((o,e)=> {
-                if (!card.CurAtk.Equals(card.info.atk+"/"+card.info.def))
-                {
-                    mainwin.atk_1_6.Style = Application.Current.TryFindResource("tb_AtkDefStyleChanged") as Style;    
-                }
-                else
-                {
-                    mainwin.atk_1_6.Style = Application.Current.TryFindResource("tb_AtkDefStyle") as Style;
-                }
-                
-                //MessageBox.Show("修改了攻守");
+            //MainWindow mainwin = Application.Current.MainWindow as MainWindow;
 
-            });
+            #region 攻守显示绑定卡片
+
+            bindingAtk(cv, card);
+
+            #endregion
         }
+
+        
 
         /// <summary>
         /// 卡片以插入方式进入怪物区时，怪物区控件的操作
@@ -218,6 +209,7 @@ namespace iDuel_EvolutionX.UI
 
             if (cv.Children.Count > 1)
             {
+                card.reSetAtk();
                 int count = cv.Children.Count;
                 CardControl top = cv.Children[count - 1] as CardControl;
                 if (top.Status == Status.FRONT_ATK || top.Status == Status.BACK_ATK)
@@ -257,6 +249,9 @@ namespace iDuel_EvolutionX.UI
             int count = cv.Children.Count;
             if (count == 0)
             {
+                Binding bind = new Binding();
+                
+                cv.tb_atkDef.SetBinding(TextBlock.TextProperty, "");
                 return;
             }
             CardControl top = cv.Children[count - 1] as CardControl;
@@ -268,6 +263,7 @@ namespace iDuel_EvolutionX.UI
             {
 
             }
+            bindingAtk(cv, top);//绑定顶层卡片攻击力
         }
 
         #endregion
@@ -281,6 +277,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2MagicTrap(MyCanvas cv, CardControl card)
         {
+            card.reSetAtk();
             int count = cv.Children.Count;
             if (count == 1)
             {
@@ -315,6 +312,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Hand(MyCanvas cv, CardControl card)
         {
+            card.reSetAtk();
             int count = cv.Children.Count;
 
             Service.CardOperate.sort_HandCard(cv);
@@ -337,5 +335,38 @@ namespace iDuel_EvolutionX.UI
         }
 
         #endregion
+
+
+        /// <summary>
+        /// 更新攻击防守显示控件的绑定源
+        /// </summary>
+        /// <param name="cv"></param>
+        /// <param name="card"></param>
+        private static void bindingAtk(MyCanvas cv, CardControl card)
+        {
+            Binding bind = new Binding();
+            bind.Source = card;
+            bind.Path = new PropertyPath("CurAtk");
+            bind.NotifyOnTargetUpdated = true;
+            cv.tb_atkDef.SetBinding(TextBlock.TextProperty, bind);
+            cv.tb_atkDef.TargetUpdated += new EventHandler<DataTransferEventArgs>((o, e) =>
+            {
+                if (card.CurAtk == null)
+                {
+                    return;
+                }
+                if (!card.CurAtk.Equals(card.info.atk + "/" + card.info.def))
+                {
+                    cv.tb_atkDef.Style = Application.Current.TryFindResource("tb_AtkDefStyleChanged") as Style;
+                }
+                else
+                {
+                    cv.tb_atkDef.Style = Application.Current.TryFindResource("tb_AtkDefStyle") as Style;
+                }
+
+                //MessageBox.Show("修改了攻守");
+
+            });
+        }
     }
 }
