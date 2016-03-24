@@ -121,6 +121,9 @@
     <Compile Include="UI\OverOrInsert.xaml.cs">
       <DependentUpon>OverOrInsert.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\SignTextBlock.xaml.cs">
+      <DependentUpon>SignTextBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\UIAnimation.cs" />
     <Compile Include="UI\XYZmaterialView.xaml.cs">
       <DependentUpon>XYZmaterialView.xaml</DependentUpon>
@@ -172,6 +175,10 @@
     <Page Include="UI\ResourceDictionary\TextBlockNum.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SignTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\XYZmaterialView.xaml">
       <SubType>Designer</SubType>
