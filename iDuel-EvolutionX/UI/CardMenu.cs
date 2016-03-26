@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace iDuel_EvolutionX.UI
 {
@@ -93,22 +95,39 @@ namespace iDuel_EvolutionX.UI
                 mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 this.mi_12.Items.Add(mi_17);
-                mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                CommandBinding cb = new CommandBinding(CardCommands.AddSign);
+                cb.Executed += (o, target) => {
+
+                    MessageBox.Show("测试");
+                };
+                //mi_17.CommandBindings.Add(cb);
+                mi_17.Command = CardCommands.AddSign;
+                Binding bind = new Binding("PlacementTarget");
+                bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ContextMenu),1);
+                mi_17.SetBinding(MenuItem.CommandTargetProperty, bind);
+                //mi_17.DataContext = mi_17.FindCommonVisualAncestor(mi_12);
+                //mi_17.Command.CanExecute();
+                //mi_17.CommandTarget = this.mi_12;
+                //mi_17.CommandTarget = mi_12;
+                //Application.Current.MainWindow.CommandBindings.Add(cb);
+
+                //mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_18);
-                mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                mi_18.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_19);
                 mi_19.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.mi_12.Items.Add(mi_20);
                 mi_20.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
                 this.AddChild(mi_12);
-
+               
                 //mi_13.IsEnabled = false;
                 this.AddChild(mi_16);
                 mi_16.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 mi_13.IsEnabled = false;
+                
                 this.AddChild(mi_13);
-                mi_13.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //mi_13.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 //this.AddChild(mi_14);
                 mi_14.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);

@@ -52,7 +52,7 @@ namespace iDuel_EvolutionX.UI
         {
             if (e.Key == Key.Enter)
             {
-
+                
                 DuelOperate.getInstance().chatOrLife();
                 
             }

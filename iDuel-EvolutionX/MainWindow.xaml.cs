@@ -299,6 +299,15 @@ namespace iDuel_EvolutionX
 
             #endregion
 
+
+            CommandBinding cb = new CommandBinding(CardCommands.AddSign);
+            cb.Executed += (o, target) => {
+
+                MessageBox.Show("测试");
+            };
+            sp_sign_1_6.CommandBindings.Add(cb);
+            //card_1_6.CommandBindings.Add(cb);
+
             #endregion
 
             #region <-- 注册其他控件事件 -->

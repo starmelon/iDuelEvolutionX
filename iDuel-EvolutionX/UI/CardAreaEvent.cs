@@ -134,6 +134,10 @@ namespace iDuel_EvolutionX.UI
             }
             else
             {
+                card.ContextMenuOpening += (sender,e) => {
+
+                    card.ContextMenu.DataContext = card;
+                };
                 CardControl second = cv.Children[count - 2] as CardControl;
                 second.reSetAtk();//当被叠放时要重置攻击力
                 /*

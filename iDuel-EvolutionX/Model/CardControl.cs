@@ -1,10 +1,12 @@
-﻿using System;
+﻿using iDuel_EvolutionX.Service;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -85,6 +87,13 @@ namespace iDuel_EvolutionX.Model
             Width = 56;//设置卡片宽高
             Height = 81;
             RenderTransformOrigin = new Point(0.5, 0.5);
+
+            //CommandBinding cb = new CommandBinding(CardCommands.AddSign);
+            //cb.Executed += (o, target) => {
+
+            //    MessageBox.Show("测试");
+            //};
+            //this.CommandBindings.Add(cb);
         }
 
         #region 初始化卡片信息
@@ -254,6 +263,7 @@ namespace iDuel_EvolutionX.Model
 
             RotateTransform rotateTransform = new RotateTransform(-90);
             this.RenderTransform = rotateTransform;
+
         }
     }
 
