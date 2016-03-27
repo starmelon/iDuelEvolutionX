@@ -71,7 +71,7 @@ namespace iDuel_EvolutionX
                     //设置要绑定属性
                     textBinding.Path = new PropertyPath("Children.Count");
                     //设置转换器
-                    if (i==1)
+                    if (i == 1)
                     {
                         textBinding.Converter = this.TryFindResource("CountToDimensionConverter2") as IValueConverter;
                     }
@@ -79,17 +79,17 @@ namespace iDuel_EvolutionX
                     {
                         textBinding.Converter = this.TryFindResource("CountToDimensionConverter3") as IValueConverter;
                     }
-                    
+
                     //给转换器传送参数
-                    textBinding.ConverterParameter = this.FindName("card_"+ i +"_" + j);
+                    textBinding.ConverterParameter = this.FindName("card_" + i + "_" + j);
                     //设置绑定到要绑定的控件
                     //TextBlock tb = this.FindName("atk_" + i + "_" + j) as TextBlock;
                     //tb.SetBinding(TextBlock.TextProperty, textBinding);
                 }
             }
-            
 
-            
+
+
 
             #endregion
 
@@ -113,7 +113,7 @@ namespace iDuel_EvolutionX
             {
                 for (int j = 1; j < 6; j++)
                 {
-                    if (i == 1 ) CardOperate.cv_magictraps_1.Add(this.battle_zone_middle.FindName("card_" + i + "_" + j) as FrameworkElement);
+                    if (i == 1) CardOperate.cv_magictraps_1.Add(this.battle_zone_middle.FindName("card_" + i + "_" + j) as FrameworkElement);
                     else if (i == 2) CardOperate.cv_magictraps_2.Add(this.battle_zone_middle.FindName("card_" + i + "_" + j) as FrameworkElement);
                 }
                 for (int k = 6; k < 11; k++)
@@ -141,12 +141,29 @@ namespace iDuel_EvolutionX
             #endregion
 
 
-            #region 绑定卡片控件和攻守控件
+            #region 绑定怪物区卡片控件和攻守控件
             card_1_6.tb_atkDef = atk_1_6;
             card_1_7.tb_atkDef = atk_1_7;
             card_1_8.tb_atkDef = atk_1_8;
             card_1_9.tb_atkDef = atk_1_9;
             card_1_10.tb_atkDef = atk_1_10;
+
+            #endregion
+
+            #region 绑定卡区控件和指示物控件
+
+            card_1_1.signs = sp_sign_1_1;
+            card_1_2.signs = sp_sign_1_2;
+            card_1_3.signs = sp_sign_1_3;
+            card_1_4.signs = sp_sign_1_4;
+            card_1_5.signs = sp_sign_1_5;
+            card_1_6.signs = sp_sign_1_6;
+            card_1_7.signs = sp_sign_1_7;
+            card_1_8.signs = sp_sign_1_8;
+            card_1_9.signs = sp_sign_1_9;
+            card_1_10.signs = sp_sign_1_10;
+            card_1_Left.signs = sp_sign_left;
+            card_1_Right.signs = sp_sign_right;
 
             #endregion
 
@@ -174,7 +191,7 @@ namespace iDuel_EvolutionX
             card_1_9.Drop += new DragEventHandler(DuelEvent.card_Drop_Monster);
             card_1_10.Drop += new DragEventHandler(DuelEvent.card_Drop_Monster);
 
-            card_1_Deck.ContextMenu = AllMenu.cm_deck;
+            card_1_Deck.ContextMenu = AllMenu.Instance.cm_deck;
             card_1_Deck.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_1_Deck.Drop += new DragEventHandler(DuelEvent.card_Drop_Main);
             card_1_Extra.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
@@ -184,12 +201,14 @@ namespace iDuel_EvolutionX
             card_1_Left.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_1_Left.Drop += DuelEvent.card_Drop_Pendulum;
             card_1_Left.WhenAddChildren += CardAreaEvent.add2Pendulum;
+            card_1_Left.WhenRemoveChildren += CardAreaEvent.removeFromPendulum;
             card_1_Right.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_1_Right.Drop += DuelEvent.card_Drop_Pendulum;
             card_1_Right.WhenAddChildren += CardAreaEvent.add2Pendulum;
+            card_1_Right.WhenRemoveChildren += CardAreaEvent.removeFromPendulum;
             card_1_Graveyard.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
-            
-            
+
+
             card_1_Graveyard.Drop += new DragEventHandler(DuelEvent.card_Drop_Graveyard);
             card_1_Outside.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_1_Outside.Drop += new DragEventHandler(DuelEvent.card_Drop_Outside);
@@ -218,7 +237,7 @@ namespace iDuel_EvolutionX
 
             card_2_hand.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             card_2_hand.Drop += new DragEventHandler(DuelEvent.card_Drop_Hand2);
-            
+
             cv_main.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
             cv_main.Drop += new DragEventHandler(DuelEvent.sideMode_Drop);
             cv_extra.DragOver += new DragEventHandler(DuelEvent.card_DragOver);
@@ -299,14 +318,29 @@ namespace iDuel_EvolutionX
 
             #endregion
 
+            #region 绑定指示物控件的命令捕获
 
-            CommandBinding cb = new CommandBinding(CardCommands.AddSign);
-            cb.Executed += (o, target) => {
+            CommandBinding cb = new CommandBinding(CardCommands.AddBlueSign);
+            cb.Executed += SignOperate.execute_Addsign;
+            setSignCommandsHandleByMyCanvas(cb);
+            cb = new CommandBinding(CardCommands.AddBlackSign);
+            cb.Executed += SignOperate.execute_Addsign;
+            setSignCommandsHandleByMyCanvas(cb);
+            cb = new CommandBinding(CardCommands.AddRedSign);
+            cb.Executed += SignOperate.execute_Addsign;
+            setSignCommandsHandleByMyCanvas(cb);
+            cb = new CommandBinding(CardCommands.AddGreenSign);
+            cb.Executed += SignOperate.execute_Addsign;
+            setSignCommandsHandleByMyCanvas(cb);
 
-                MessageBox.Show("测试");
-            };
-            sp_sign_1_6.CommandBindings.Add(cb);
-            //card_1_6.CommandBindings.Add(cb);
+
+            #endregion
+
+
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.SetCardRemark, 
+                    MenuItemOperate.execute_setCardRemark));
 
             #endregion
 
@@ -319,7 +353,7 @@ namespace iDuel_EvolutionX
             view_Extra2.Click += new RoutedEventHandler(DuelEvent.view_Extra2_Click);         //查看额外（对手）
             view_Outside2.Click += new RoutedEventHandler(DuelEvent.view_Outside2_Click);     //查看除外（对手）
             view_Graveyard2.Click += new RoutedEventHandler(DuelEvent.view_Graveyard2_Click); //查看墓地（对手）
-         
+
 
 
             btn_choosezone.Click += new RoutedEventHandler(DuelEvent.btn_choosezone); //场地选择
@@ -371,17 +405,17 @@ namespace iDuel_EvolutionX
             mi_hand_2Outside.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_hand_2Main.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-            mi_field_2Graveyard.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);        
+            mi_field_2Graveyard.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_field_2hand.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_field_2hand2.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_field_2Outside.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_field_2Outside2.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             mi_field_shuffle.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-         
+
             #endregion
 
             #region <-- 加载全卡信息 -->
-            
+
             CardDataOperate.GetAllCard();
 
             #endregion
@@ -409,10 +443,27 @@ namespace iDuel_EvolutionX
 
             #endregion
 
-            
 
-            
+
+
         }
+
+        private void setSignCommandsHandleByMyCanvas(CommandBinding cb)
+        {
+            card_1_1.CommandBindings.Add(cb);
+            card_1_2.CommandBindings.Add(cb);
+            card_1_3.CommandBindings.Add(cb);
+            card_1_4.CommandBindings.Add(cb);
+            card_1_5.CommandBindings.Add(cb);
+            card_1_6.CommandBindings.Add(cb);
+            card_1_7.CommandBindings.Add(cb);
+            card_1_8.CommandBindings.Add(cb);
+            card_1_9.CommandBindings.Add(cb);
+            card_1_10.CommandBindings.Add(cb);
+            card_1_Left.CommandBindings.Add(cb);
+            card_1_Right.CommandBindings.Add(cb);
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

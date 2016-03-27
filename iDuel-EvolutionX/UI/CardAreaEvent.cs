@@ -25,7 +25,8 @@ namespace iDuel_EvolutionX.UI
             card.reSetAtk();
             card.centerAtVerticalInParent();
             card.set2FrontAtk();
-            card.ContextMenu = AllMenu.cm_graveyard;
+            card.clearSigns();
+            card.ContextMenu = AllMenu.Instance.cm_graveyard;
         }
 
         /// <summary>
@@ -51,7 +52,8 @@ namespace iDuel_EvolutionX.UI
         {
             card.reSetAtk();
             card.centerAtVerticalInParent();
-            card.ContextMenu = AllMenu.cm_outside;
+            card.clearSigns();
+            card.ContextMenu = AllMenu.Instance.cm_outside;
         }
 
         #endregion
@@ -67,7 +69,7 @@ namespace iDuel_EvolutionX.UI
         {
             card.reSetAtk();
             card.centerAtVerticalInParent();
-            card.ContextMenu = AllMenu.cm_pendulum;
+            card.ContextMenu = AllMenu.Instance.cm_pendulum;
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void removeFromPendulum(MyCanvas cv, CardControl card)
         {
-            
+            card.clearSigns();
         }
 
         #endregion
@@ -100,7 +102,8 @@ namespace iDuel_EvolutionX.UI
             int count = cv.Children.Count;
             card.reSetAtk();
             card.centerAtVerticalInParent();
-            card.ContextMenu = AllMenu.cm_deck;
+            card.clearSigns();
+            card.ContextMenu = AllMenu.Instance.cm_deck;
         }
 
         #endregion
@@ -118,6 +121,8 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Monster(MyCanvas cv, CardControl card)
         {
+
+
             int count = cv.Children.Count;
             if (count == 1)
             {
@@ -130,16 +135,21 @@ namespace iDuel_EvolutionX.UI
                 {
                     card.centerAtHorizontalInParent();
                 }
-                card.ContextMenu = AllMenu.cm_monster;
+                card.ContextMenu = AllMenu.Instance.cm_monster;
+
             }
             else
             {
-                card.ContextMenuOpening += (sender,e) => {
+                card.ContextMenuOpening += (sender, e) =>
+                {
 
                     card.ContextMenu.DataContext = card;
                 };
                 CardControl second = cv.Children[count - 2] as CardControl;
+
                 second.reSetAtk();//当被叠放时要重置攻击力
+                second.clearSigns();//当被叠放时要清除卡片指示物
+
                 /*
                 判断加入前最顶层的卡的状态，若是只要是存在背面或防守，则应先启动相关动画
                 */
@@ -186,9 +196,14 @@ namespace iDuel_EvolutionX.UI
             bindingAtk(cv, card);
 
             #endregion
+
+            //添加指示物
+            showSigns(cv, card);
         }
 
         
+
+
 
         /// <summary>
         /// 卡片以插入方式进入怪物区时，怪物区控件的操作
@@ -208,7 +223,7 @@ namespace iDuel_EvolutionX.UI
                 {
                     card.centerAtHorizontalInParent();
                 }
-                card.ContextMenu = AllMenu.cm_monster;
+                card.ContextMenu = AllMenu.Instance.cm_monster;
             }
 
             if (cv.Children.Count > 1)
@@ -250,12 +265,14 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void removeFromMonster(MyCanvas cv, CardControl card)
         {
+            
             int count = cv.Children.Count;
             if (count == 0)
             {
-                Binding bind = new Binding();
                 
-                cv.tb_atkDef.SetBinding(TextBlock.TextProperty, "");
+                Binding bind = new Binding();
+                BindingOperations.ClearBinding(cv.tb_atkDef, TextBlock.TextProperty);
+
                 return;
             }
             CardControl top = cv.Children[count - 1] as CardControl;
@@ -286,7 +303,9 @@ namespace iDuel_EvolutionX.UI
             if (count == 1)
             {
                 card.centerAtVerticalInParent();
-                card.ContextMenu = AllMenu.cm_magictrap;
+                card.ContextMenu = AllMenu.Instance.cm_magictrap;
+                //添加指示物
+                showSigns(cv, card);
             }
         }
 
@@ -316,11 +335,12 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Hand(MyCanvas cv, CardControl card)
         {
+            card.clearSigns();
             card.reSetAtk();
             int count = cv.Children.Count;
 
             Service.CardOperate.sort_HandCard(cv);
-            card.ContextMenu = AllMenu.cm_hand;
+            card.ContextMenu = AllMenu.Instance.cm_hand;
         }
 
         /// <summary>
@@ -371,6 +391,19 @@ namespace iDuel_EvolutionX.UI
                 //MessageBox.Show("修改了攻守");
 
             });
+        }
+
+        /// <summary>
+        /// 显示指示物
+        /// </summary>
+        /// <param name="cv"></param>
+        /// <param name="card"></param>
+        private static void showSigns(MyCanvas cv, CardControl card)
+        {
+            foreach (SignTextBlock item in card.signs)
+            {
+                cv.signs.Children.Add(item);
+            }
         }
     }
 }

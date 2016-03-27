@@ -89,6 +89,7 @@
     <Compile Include="Model\NotificationObject.cs" />
     <Compile Include="Service\AppConfigOperate.cs" />
     <Compile Include="Service\DeckManergerOperatre.cs" />
+    <Compile Include="Service\SignOperate.cs" />
     <Compile Include="Tools\BitmapImagehandle.cs" />
     <Compile Include="Tools\LogHelper.cs" />
     <Compile Include="UI\CardAnimation2.cs" />
@@ -113,6 +114,9 @@
     <Compile Include="UI\DragAdorner.cs" />
     <Compile Include="UI\DuelEvent.cs" />
     <Compile Include="UI\CardMenu.cs" />
+    <Compile Include="UI\EditRemark.xaml.cs">
+      <DependentUpon>EditRemark.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ModifyAtkOrDef.xaml.cs">
       <DependentUpon>ModifyAtkOrDef.xaml</DependentUpon>
     </Compile>
@@ -129,6 +133,10 @@
     <Compile Include="UI\XYZmaterialView.xaml.cs">
       <DependentUpon>XYZmaterialView.xaml</DependentUpon>
     </Compile>
+    <Page Include="UI\EditRemark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ModifyAtkOrDef.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

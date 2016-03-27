@@ -1,4 +1,5 @@
-﻿using iDuel_EvolutionX.Service;
+﻿using iDuel_EvolutionX.Model;
+using iDuel_EvolutionX.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,46 @@ namespace iDuel_EvolutionX.UI
     /// <summary>
     /// 添加菜单和注册菜单事件
     /// </summary>
-    public static class AllMenu
+    public sealed class AllMenu
     {
-        public static CardMenuDeck cm_deck = new CardMenuDeck();
-        public static CardMenuMonster cm_monster = new CardMenuMonster();
-        public static CardMenuMagicTrap cm_magictrap = new CardMenuMagicTrap();
-        public static CardMenuGraveyard cm_graveyard = new CardMenuGraveyard();
-        public static CardMenuHand cm_hand = new CardMenuHand();
-        public static CardMenuOutside cm_outside = new CardMenuOutside();
-        public static CardMenuPendulum cm_pendulum = new CardMenuPendulum();
+        private static readonly AllMenu _instance = new AllMenu();
+        public CardMenuDeck cm_deck;
+        public CardMenuMonster cm_monster;
+        public CardMenuMagicTrap cm_magictrap;
+        public CardMenuGraveyard cm_graveyard;
+        public CardMenuHand cm_hand;
+        public CardMenuOutside cm_outside;
+        public CardMenuPendulum cm_pendulum; 
+
+        
         //public static 
         //public static CardMenuXYZ cm_XYZ = new CardMenuXYZ();
         //public static CardMenuXYZ_material cm_XYZmeterial = new CardMenuXYZ_material();
 
+        public static AllMenu Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
 
+        static AllMenu()
+        {
+            
+        }
+
+        private AllMenu()
+        {
+            
+            cm_deck = new CardMenuDeck();
+            cm_monster = new CardMenuMonster();
+            cm_magictrap = new CardMenuMagicTrap();
+            cm_graveyard = new CardMenuGraveyard();
+            cm_hand = new CardMenuHand();
+            cm_outside = new CardMenuOutside();
+            cm_pendulum = new CardMenuPendulum();
+    }
 
         /// <summary>
         /// 怪物场区的菜单
@@ -46,15 +73,11 @@ namespace iDuel_EvolutionX.UI
             MenuItem mi_11 = new MenuItem { Header = "加入手卡" };      //OK
             MenuItem mi_12 = new MenuItem { Header = "指示物" };
 
-            MenuItem mi_13 = new MenuItem { Header = "修改备注" };
+            MenuItem setCardRemark = new MenuItem { Header = "修改备注" };
             MenuItem mi_14 = new MenuItem { Header = "返回额外区" };    //OK
             MenuItem mi_15 = new MenuItem { Header = "送入对手墓地" };  //OK
             MenuItem mi_16 = new MenuItem { Header = "修改攻守" };  //OK
-
-            MenuItem mi_17 = new MenuItem { Header = "黑" };  //OK
-            MenuItem mi_18 = new MenuItem { Header = "蓝" };  //OK
-            MenuItem mi_19 = new MenuItem { Header = "红" };  //OK
-            MenuItem mi_20 = new MenuItem { Header = "清除" };
+  
 
             public CardMenuMonster()
             {
@@ -94,39 +117,18 @@ namespace iDuel_EvolutionX.UI
                 //this.AddChild(mi_11);
                 mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-                this.mi_12.Items.Add(mi_17);
-                CommandBinding cb = new CommandBinding(CardCommands.AddSign);
-                cb.Executed += (o, target) => {
-
-                    MessageBox.Show("测试");
-                };
-                //mi_17.CommandBindings.Add(cb);
-                mi_17.Command = CardCommands.AddSign;
-                Binding bind = new Binding("PlacementTarget");
-                bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ContextMenu),1);
-                mi_17.SetBinding(MenuItem.CommandTargetProperty, bind);
-                //mi_17.DataContext = mi_17.FindCommonVisualAncestor(mi_12);
-                //mi_17.Command.CanExecute();
-                //mi_17.CommandTarget = this.mi_12;
-                //mi_17.CommandTarget = mi_12;
-                //Application.Current.MainWindow.CommandBindings.Add(cb);
-
-                //mi_17.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_12.Items.Add(mi_18);
-                mi_18.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_12.Items.Add(mi_19);
-                mi_19.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_12.Items.Add(mi_20);
-                mi_20.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                AllMenu.addSignMenuItems(mi_12);
                 this.AddChild(mi_12);
-               
+
                 //mi_13.IsEnabled = false;
                 this.AddChild(mi_16);
                 mi_16.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-                mi_13.IsEnabled = false;
-                
-                this.AddChild(mi_13);
+
+                AllMenu.setMenuItemBind(setCardRemark);
+                setCardRemark.Command = CardCommands.SetCardRemark;
+                this.AddChild(setCardRemark);
+
                 //mi_13.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 //this.AddChild(mi_14);
@@ -137,9 +139,13 @@ namespace iDuel_EvolutionX.UI
                 mi_15.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
             }
 
+            
+
+
+
+        }
 
         
-        }
 
         /// <summary>
         /// 魔陷场区的菜单，场地区的菜单
@@ -156,10 +162,7 @@ namespace iDuel_EvolutionX.UI
             MenuItem mi_8 = new MenuItem { Header = "指示物" };      
             MenuItem mi_9 = new MenuItem { Header = "修改备注" };
 
-            MenuItem mi_10 = new MenuItem { Header = "黑" };  //OK
-            MenuItem mi_11 = new MenuItem { Header = "蓝" };  //OK
-            MenuItem mi_12 = new MenuItem { Header = "红" };  //OK
-            MenuItem mi_13 = new MenuItem { Header = "清除" };
+            
 
             public CardMenuMagicTrap()
             {
@@ -185,15 +188,22 @@ namespace iDuel_EvolutionX.UI
                 //this.AddChild(mi_7);
                 //mi_7.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-                this.mi_8.Items.Add(mi_10);
-                mi_10.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_8.Items.Add(mi_11);
-                mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_8.Items.Add(mi_12);
-                mi_12.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-                this.mi_8.Items.Add(mi_13);
-                mi_13.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //this.mi_8.Items.Add(addSignBlue);
+                //this.mi_8.Items.Add(addSignBlack);
+                //this.mi_8.Items.Add(addSignRed);
+                //this.mi_8.Items.Add(addSignGreen);
+                AllMenu.addSignMenuItems(mi_8);
                 this.AddChild(mi_8);
+
+                //this.mi_8.Items.Add(mi_10);
+                //mi_10.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //this.mi_8.Items.Add(mi_11);
+                //mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //this.mi_8.Items.Add(mi_12);
+                //mi_12.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //this.mi_8.Items.Add(mi_13);
+                //mi_13.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //this.AddChild(mi_8);
                 //mi_8.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 mi_9.IsEnabled = false;
@@ -366,12 +376,15 @@ namespace iDuel_EvolutionX.UI
         
         }
 
+        /// <summary>
+        /// 灵摆区菜单
+        /// </summary>
         public class CardMenuPendulum : ContextMenu
         {
             MenuItem mi_1 = new MenuItem { Header = "效果发动" };
             MenuItem mi_2 = new MenuItem { Header = "返回额外区" };     //OK
             MenuItem mi_3 = new MenuItem { Header = "加入手卡" };       //OK
-
+            MenuItem sign = new MenuItem { Header = "指示物" };
 
             public CardMenuPendulum()
             {
@@ -385,7 +398,9 @@ namespace iDuel_EvolutionX.UI
                 this.AddChild(mi_3);
                 mi_3.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-             }
+                AllMenu.addSignMenuItems(sign);
+                this.AddChild(sign);
+            }
         }
 
         /// <summary>
@@ -527,6 +542,45 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        /// <summary>
+        /// 绑定命令
+        /// </summary>
+        /// <param name="menu"></param>
+        private static void setMenuItemBind(MenuItem menu)
+        {
+            Binding bind = new Binding("PlacementTarget");
+            bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ContextMenu), 1);
+            menu.SetBinding(MenuItem.CommandTargetProperty, bind);
+        }
 
+        /// <summary>
+        /// 添加指示物选项菜单
+        /// </summary>
+        /// <param name="menu"></param>
+        private static void addSignMenuItems(MenuItem menu)
+        {
+
+            Binding bind = new Binding("PlacementTarget");
+            bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ContextMenu), 1);
+
+            MenuItem addSignBlue = new MenuItem { Header = "蓝" };   //OK
+            addSignBlue.SetBinding(MenuItem.CommandTargetProperty, bind);
+            MenuItem addSignBlack = new MenuItem { Header = "黑" };  //OK
+            addSignBlack.SetBinding(MenuItem.CommandTargetProperty, bind);
+            MenuItem addSignRed = new MenuItem { Header = "红" };    //OK
+            addSignRed.SetBinding(MenuItem.CommandTargetProperty, bind);
+            MenuItem addSignGreen = new MenuItem { Header = "绿" };
+            addSignGreen.SetBinding(MenuItem.CommandTargetProperty, bind);
+
+            addSignBlue.Command = CardCommands.AddBlueSign;
+            addSignBlack.Command = CardCommands.AddBlackSign;
+            addSignRed.Command = CardCommands.AddRedSign;
+            addSignGreen.Command = CardCommands.AddGreenSign;
+
+            menu.Items.Add(addSignBlue);
+            menu.Items.Add(addSignBlack);
+            menu.Items.Add(addSignRed);
+            menu.Items.Add(addSignGreen);
+        }
     }
 }

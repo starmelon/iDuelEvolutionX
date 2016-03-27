@@ -18,9 +18,26 @@ namespace iDuel_EvolutionX.Service
     {
         public static MainWindow mainwindow;
         public static CardView cardview;
-     
-        //获得卡片
-        
+
+
+        /// <summary>
+        /// 修改卡片备注
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void execute_setCardRemark(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            EditRemark er = new EditRemark();
+            er.sendResult += (result) => {
+                card.ToolTip = result;
+            };
+            er.Owner = Application.Current.MainWindow;
+            Point p = card.PointToScreen(new Point(0, 0));
+            er.Top = p.Y - er.Height;
+            er.Left = p.X - ((er.Width - card.ActualWidth) / 2);
+            er.ShowDialog();
+        }
 
         //判断要执行的命令
         public static void Command_judge(object sender, string command)

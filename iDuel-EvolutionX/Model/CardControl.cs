@@ -1,6 +1,8 @@
 ﻿using iDuel_EvolutionX.Service;
+using iDuel_EvolutionX.UI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -22,7 +24,7 @@ namespace iDuel_EvolutionX.Model
         public BitmapImage originalImage;   //卡图
         private Status status;               //攻守正背
         private Location curLocation;        //当前位置（具体位置+所在层次）
-        public int[] point;                 //指示物
+        public List<SignTextBlock> signs;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -76,24 +78,18 @@ namespace iDuel_EvolutionX.Model
             }
         }
 
+
         public CardControl(BitmapImage backImg)
         {
             
             this.backImage = backImg;
             this.Status = Status.BACK_ATK;
-            //this.curLocation = location;
-            this.point = new int[3];
 
             Width = 56;//设置卡片宽高
             Height = 81;
             RenderTransformOrigin = new Point(0.5, 0.5);
-
-            //CommandBinding cb = new CommandBinding(CardCommands.AddSign);
-            //cb.Executed += (o, target) => {
-
-            //    MessageBox.Show("测试");
-            //};
-            //this.CommandBindings.Add(cb);
+            signs = new List<SignTextBlock>();
+  
         }
 
         #region 初始化卡片信息
@@ -206,6 +202,26 @@ namespace iDuel_EvolutionX.Model
 
         #endregion
 
+        #region 卡片操作
+
+        /// <summary>
+        /// 清除指示物
+        /// </summary>
+        public void clearSigns()
+        {
+            Panel parent;
+            foreach (SignTextBlock item in signs)
+            {
+                parent = item.Parent as Panel;
+                if (parent != null)
+                {
+                    parent.Children.Remove(item);
+                }
+                
+            }
+            signs.Clear();
+        }
+
         /// <summary>
         /// 脱离父控件
         /// </summary>
@@ -217,10 +233,19 @@ namespace iDuel_EvolutionX.Model
                 return true;
             }
 
-            Panel parents = this.Parent as Panel;
-            parents.Children.Remove(this);
+            Panel parent = this.Parent as Panel;
+            parent.Children.Remove(this);
             Canvas.SetLeft(this, 0);
             Canvas.SetTop(this, 0);
+            foreach (SignTextBlock item in signs)
+            {
+                parent = item.Parent as Panel;
+                if (parent != null)
+                {
+                    parent.Children.Remove(item);
+                }
+                
+            }
             return false;
             
         }
@@ -265,6 +290,8 @@ namespace iDuel_EvolutionX.Model
             this.RenderTransform = rotateTransform;
 
         }
+
+        #endregion
     }
 
 

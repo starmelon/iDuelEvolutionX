@@ -31,7 +31,6 @@ namespace iDuel_EvolutionX.UI
 
         public event MyDelegate sendResult;
 
-        
 
         public OverOrInsert()
         {

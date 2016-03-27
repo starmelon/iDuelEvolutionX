@@ -1,0 +1,40 @@
+﻿<Window x:Class="iDuel_EvolutionX.UI.EditRemark"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:iDuel_EvolutionX.UI"
+        mc:Ignorable="d"
+        WindowState="Normal"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        Title="修改备注" Height="60" Width="150">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Name="tb_remark">
+            <TextBox.Resources>
+                <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left" Viewbox="-0.1,0,1,1">
+                    <VisualBrush.Visual>
+                        <TextBlock Margin="5,0,0,0"  Text="请输入备注"/>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </TextBox.Resources>
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <Button Grid.Column="2" Content="OK" BorderThickness="0" Click="Button_Click"/>
+    </Grid>
+</Window>

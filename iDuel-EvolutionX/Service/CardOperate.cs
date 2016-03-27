@@ -161,6 +161,19 @@ namespace iDuel_EvolutionX.Service
 
         }
 
+        public static CardControl getCardFromMenuItem(MenuItem mi)
+        {    
+            CardControl card = null;
+            DependencyObject uie = mi;
+            
+            while (card == null)
+            {
+                uie = LogicalTreeHelper.GetParent(uie);
+                card = ContextMenuService.GetPlacementTarget(uie) as CardControl ;
+            }
+            return card;
+        }
+
         #endregion
 
         #region <-- 卡片的双击操作 -->
@@ -182,7 +195,7 @@ namespace iDuel_EvolutionX.Service
                 sort_CardView(cardview.card_1_Deck, 10);
                 mainwindow.card_1_hand.Children.Add(card);
                 card_FrontAtk(card);
-                card.ContextMenu = AllMenu.cm_hand;
+                card.ContextMenu = AllMenu.Instance.cm_hand;
                 sort_HandCard(mainwindow.card_1_hand);
                 string report = ("[" + card.info.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [<手卡>]");              
                 //DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex, report);
@@ -450,6 +463,20 @@ namespace iDuel_EvolutionX.Service
                 //获取放置容器
                 Canvas cv_aim = sender as Canvas;
 
+                //如果源目标是怪物区，则应去除指示物
+                switch (cv.Name)
+                {
+                    case "card_1_6":
+                    case "card_1_7": 
+                    case "card_1_8": 
+                    case "card_1_9": 
+                    case "card_1_10":
+                        card.clearSigns();
+                        break;
+                    default:
+                        break;
+                }
+
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
 
@@ -668,15 +695,29 @@ namespace iDuel_EvolutionX.Service
                     return;
                 }
 
+                //如果源目标是魔法陷阱区，则应该先清除指示物
+                switch (cv.Name)
+                {
+                    case "card_1_1":
+                    case "card_1_2":
+                    case "card_1_3":
+                    case "card_1_4":
+                    case "card_1_5":
+                        card.clearSigns();
+                        break;
+                    default:
+                        break;
+                }
+
                 //if (cv_monsters_1.Contains(cv) && cv_monsters_1.Contains(cv_aim))
                 //{
-                    
+
                 //    if (cv_aim.Children.Count > 0)
                 //    {
                 //        OverOrInsert oi = new OverOrInsert();
                 //        oi.Owner = mainwindow;
                 //        oi.ShowDialog();
-                        
+
 
                 //        Card top = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
 
@@ -714,21 +755,21 @@ namespace iDuel_EvolutionX.Service
                 //                #endregion
 
                 //            }
-                            
+
                 //        }
                 //        else
                 //        {
-                            
+
                 //            #region 清除指示物
 
                 //            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
                 //            if (sp != null) sp.Children.Clear();
 
                 //            #endregion
-                            
+
                 //        }
 
-                        
+
                 //    }
                 //    else 
                 //    {
@@ -800,7 +841,7 @@ namespace iDuel_EvolutionX.Service
 
                 
 
-                card.ContextMenu = AllMenu.cm_monster;
+                card.ContextMenu = AllMenu.Instance.cm_monster;
 
                 #region 目标卡区存在卡
 
@@ -3223,7 +3264,7 @@ namespace iDuel_EvolutionX.Service
                     //cv_aim.Children.Add(card_main);
                     //cards.Add(card_main);
                     //card_FrontAtk(card_main);
-                    card_draw.ContextMenu = AllMenu.cm_hand;
+                    card_draw.ContextMenu = AllMenu.Instance.cm_hand;
                     CardAnimation.setTransformGroup(card_draw);
                     //1.获取卡片相对于目的地的距离
                     Point start = card_draw.TranslatePoint(new Point(), cv_aim);
