@@ -303,6 +303,14 @@ namespace iDuel_EvolutionX
             #region 卡组
 
             card_1_Deck.WhenAddChildren += CardAreaEvent.add2Deck;
+            card_1_Deck.WhenInsertChildren += CardAreaEvent.insert2Deck;
+
+            #endregion
+
+            #region 额外
+
+            card_1_Extra.WhenAddChildren += CardAreaEvent.add2Extra;
+            card_1_Extra.WhenInsertChildren += CardAreaEvent.insert2Extra;
 
             #endregion
 
@@ -334,13 +342,25 @@ namespace iDuel_EvolutionX
             setSignCommandsHandleByMyCanvas(cb);
 
 
-            #endregion
-
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.SetCardRemark,
+                    MenuItemOperate.execute_setCardRemark));
 
             this.CommandBindings.Add(
                 new CommandBinding(
-                    CardCommands.SetCardRemark, 
-                    MenuItemOperate.execute_setCardRemark));
+                    CardCommands.Set2AtkOrDef,
+                    MenuItemOperate.excuete_set2AtkOrDef));
+
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Set2FrontOrBack,
+                    MenuItemOperate.excuete_set2FrontOrBack));
+
+            #endregion
+
+
+
 
             #endregion
 

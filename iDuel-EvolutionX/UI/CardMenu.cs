@@ -60,8 +60,8 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         public class CardMenuMonster : ContextMenu
         {        
-            MenuItem mi_1  = new MenuItem { Header = "攻/守形式转换" }; //OK
-            MenuItem mi_2  = new MenuItem { Header = "里侧/表侧转换" }; //OK
+            MenuItem set2AtkOrDef  = new MenuItem { Header = "攻/守形式转换" }; //OK
+            MenuItem set2FrontOrBack  = new MenuItem { Header = "里侧/表侧转换" }; //OK
             MenuItem mi_3  = new MenuItem { Header = "转为里侧守备" };  //OK
             MenuItem mi_4  = new MenuItem { Header = "攻击宣言" };
             MenuItem mi_5  = new MenuItem { Header = "效果发动" };
@@ -81,11 +81,16 @@ namespace iDuel_EvolutionX.UI
 
             public CardMenuMonster()
             {
-                this.AddChild(mi_1);
-                mi_1.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                this.AddChild(set2AtkOrDef);
+                AllMenu.setMenuItemBind(set2AtkOrDef);
+                set2AtkOrDef.Command = CardCommands.Set2AtkOrDef;
 
-                this.AddChild(mi_2);
-                mi_2.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //set2AtkOrDef.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+
+                this.AddChild(set2FrontOrBack);
+                AllMenu.setMenuItemBind(set2FrontOrBack);
+                set2FrontOrBack.Command = CardCommands.Set2FrontOrBack;
+                //set2FrontOrBack.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 this.AddChild(mi_3);
                 mi_3.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);

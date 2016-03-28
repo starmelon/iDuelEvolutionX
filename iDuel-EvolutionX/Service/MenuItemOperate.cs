@@ -39,6 +39,64 @@ namespace iDuel_EvolutionX.Service
             er.ShowDialog();
         }
 
+        /// <summary>
+        /// 卡片菜单：攻守处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void excuete_set2AtkOrDef(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                    CardAnimation.Rotate2FrontDef(card);
+                    break;
+                case Status.FRONT_DEF:
+                    CardAnimation.Rotate2FrontAtk(card);
+                    break;
+                case Status.BACK_ATK:
+                    CardAnimation.Rotate2BackDef(card);
+                    break;
+                case Status.BACK_DEF:
+                    CardAnimation.Rotate2FrontAtk2(card);
+                    break;
+                default:
+                    break;
+            }
+
+            
+        }
+
+        /// <summary>
+        /// 卡片菜单：攻守处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void excuete_set2FrontOrBack(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            //Canvas cv = card.Parent as Canvas;
+
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                    
+                case Status.FRONT_DEF:
+                    CardAnimation.turn2Back(card);
+                    break;
+                case Status.BACK_ATK:
+                case Status.BACK_DEF:
+                    CardAnimation.turn2Front(card);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {
@@ -1341,7 +1399,7 @@ namespace iDuel_EvolutionX.Service
             //            break;
             //        case "攻/守形式转换":
             //            {
-            //                def_or_Atk(card);
+                            //def_or_Atk(card);
 
             //                string report = "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
             //                DuelOperate.getInstance().sendMsg("FormChange=" + card.duelindex, report);
@@ -1550,59 +1608,59 @@ namespace iDuel_EvolutionX.Service
         #endregion
 
         #region <-- 攻/守形式转换 -->
-        private static void def_or_Atk(Card card)
+        private static void def_or_Atk(CardControl card)
         {
             
 
-            //before = DuelReportOperate.analyze_state(card);
-            Canvas cv = card.Parent as Canvas;
+            ////before = DuelReportOperate.analyze_state(card);
+            //Canvas cv = card.Parent as Canvas;
 
-            if (card.isDef && card.isBack)
-            {
-                card.isDef = false;
-                card.isBack = false;
+            //if (card.isDef && card.isBack)
+            //{
+            //    card.isDef = false;
+            //    card.isBack = false;
                 
-                //TextBlock tb = mainwindow.FindName(Base.getParerent(card).Name.Replace("card","atk")) as TextBlock;
-                //if (tb != null)
-                //{
-                //    tb.SetCurrentValue(TextBlock.TextProperty, card.cardAtk + "/" + card.cardDef);
-                //}
-                //CardAnimation.Rotate(card, 90, 0);
-                CardAnimation.Rotate2Atk(card);           
-                //CardAnimation.RotateOut(card, 90, 0);
-                CardOperate.sort_Canvas(cv);
-                //card.isDef = false;
-                //card.isBack = false;
-                //card.SetPic();
-            }
-            else if (card.isDef == false)
-            {
-                //RotateTransform rt = new RotateTransform();
-                //card.RenderTransform = rt;
-                CardAnimation.Def_or_Atk(card);
-                card.isDef = true;
-                if (cv.Children.Count > 1)
-                {
-                    CardOperate.sort_Canvas(cv);
-                }                          
+            //    //TextBlock tb = mainwindow.FindName(Base.getParerent(card).Name.Replace("card","atk")) as TextBlock;
+            //    //if (tb != null)
+            //    //{
+            //    //    tb.SetCurrentValue(TextBlock.TextProperty, card.cardAtk + "/" + card.cardDef);
+            //    //}
+            //    //CardAnimation.Rotate(card, 90, 0);
+            //    CardAnimation.Rotate2Atk(card);           
+            //    //CardAnimation.RotateOut(card, 90, 0);
+            //    CardOperate.sort_Canvas(cv);
+            //    //card.isDef = false;
+            //    //card.isBack = false;
+            //    //card.SetPic();
+            //}
+            //else if (card.isDef == false)
+            //{
+            //    //RotateTransform rt = new RotateTransform();
+            //    //card.RenderTransform = rt;
+            //    CardAnimation.Def_or_Atk(card);
+            //    card.isDef = true;
+            //    if (cv.Children.Count > 1)
+            //    {
+            //        CardOperate.sort_Canvas(cv);
+            //    }                          
                 
-            }
-            else if (card.isDef && card.isBack == false)
-            {
-                MyStoryboard msb = CardAnimation.Rotate(card, -90, 0);
-                msb.Completed += (object sender, EventArgs e) =>
-                {
-                    msb.card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
-                    msb.card.RenderTransform.SetValue(RotateTransform.AngleProperty, 0.0);
+            //}
+            //else if (card.isDef && card.isBack == false)
+            //{
+            //    MyStoryboard msb = CardAnimation.Rotate(card, -90, 0);
+            //    msb.Completed += (object sender, EventArgs e) =>
+            //    {
+            //        msb.card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
+            //        msb.card.RenderTransform.SetValue(RotateTransform.AngleProperty, 0.0);
                     
-                    //storyboard = null;
-                };
-                msb.Begin();           
-                card.isDef = false;
-                card.isBack = false;
-                CardOperate.sort_Canvas(cv);
-            }
-            //after = DuelReportOperate.analyze_state(card);
+            //        //storyboard = null;
+            //    };
+            //    msb.Begin();           
+            //    card.isDef = false;
+            //    card.isBack = false;
+            //    CardOperate.sort_Canvas(cv);
+            //}
+            ////after = DuelReportOperate.analyze_state(card);
 
             //战报
            // mainwindow.report.Text += "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
@@ -1614,16 +1672,16 @@ namespace iDuel_EvolutionX.Service
         #region <-- 里侧/表侧转换 -->
         private static void in_or_out(Card card)
         {
-            Canvas cv = card.Parent as Canvas;
+            //Canvas cv = card.Parent as Canvas;
 
-            card.isBack = card.isBack ? false : true;
-            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-            if (sp != null) sp.Children.Clear();
+            //card.isBack = card.isBack ? false : true;
+            //StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+            //if (sp != null) sp.Children.Clear();
             
-            CardAnimation.Rotate_card(card);
+            //CardAnimation.Rotate_card(card);
                       
-            //战报
-            //mainwindow.report.Text += "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
+            ////战报
+            ////mainwindow.report.Text += "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
         }
 
         #endregion
@@ -1631,49 +1689,49 @@ namespace iDuel_EvolutionX.Service
         #region <-- 转为里侧守备 -->
         private static void to_inDef(Card card)
         {
-            Canvas cv = card.Parent as Canvas;
+            //Canvas cv = card.Parent as Canvas;
 
-            #region 清除指示物
+            //#region 清除指示物
 
-            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-            if (sp != null) sp.Children.Clear();
+            //StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+            //if (sp != null) sp.Children.Clear();
 
-            #endregion
+            //#endregion
 
-            if (!card.isBack)
-            {
-                if (card.isDef)
-                {
-                    CardAnimation.Rotate_card(card);
-                    card.isBack = true;
-                }
-                else if (!card.isDef)
-                {
-                    CardAnimation.Rotate2Def(card);
-                    if (cv.Children.Count > 1)
-                    {
-                        CardOperate.sort_Canvas(cv);
-                    }
-                    card.isDef = true; 
-                    card.isBack = true;
-                }
+            //if (!card.isBack)
+            //{
+            //    if (card.isDef)
+            //    {
+            //        CardAnimation.Rotate_card(card);
+            //        card.isBack = true;
+            //    }
+            //    else if (!card.isDef)
+            //    {
+            //        CardAnimation.Rotate2Def(card);
+            //        if (cv.Children.Count > 1)
+            //        {
+            //            CardOperate.sort_Canvas(cv);
+            //        }
+            //        card.isDef = true; 
+            //        card.isBack = true;
+            //    }
 
-            }
-            else if (card.isBack)
-            {
-                if (card.isDef)
-                {
-                    return;
-                }
-                else if (!card.isDef)
-                {
-                    CardAnimation.Def_or_Atk(card);
-                    card.isDef = true;
-                }
-                card.SetPic();
-            }
+            //}
+            //else if (card.isBack)
+            //{
+            //    if (card.isDef)
+            //    {
+            //        return;
+            //    }
+            //    else if (!card.isDef)
+            //    {
+            //        CardAnimation.Def_or_Atk(card);
+            //        card.isDef = true;
+            //    }
+            //    card.SetPic();
+            //}
 
-            CardOperate.sort_Canvas(cv);
+            //CardOperate.sort_Canvas(cv);
             //mainwindow.report.Text += "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
         }
 

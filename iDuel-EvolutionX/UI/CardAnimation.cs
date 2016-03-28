@@ -527,156 +527,303 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
-        /// 攻←→守
+        /// 攻→守
         /// </summary>
         /// <param name="card"></param>
-        public static void Def_or_Atk(Card card)
+        public static void Rotate2FrontDef(CardControl card)
         {
-            double start = (double)card.RenderTransform.GetValue(RotateTransform.AngleProperty);
-            double end = start == 0 ? -90 : 0;
+            //setAnimePrepare(card);
 
-            RotateTransform rotate = new RotateTransform();
-            ScaleTransform scale = new ScaleTransform();
-            TransformGroup group = new TransformGroup();
-            group.Children.Add(scale);
-            group.Children.Add(rotate);
-            card.RenderTransform = group;
-
+            MyStoryboard msb = Rotate_A2D(300);
+            msb.card = card;
+            msb.Completed +=(sender, e) => {
+                msb.card.Status = Status.FRONT_DEF;
+            };
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-            
-
-            MyStoryboard msb = Rotate(card, start,end);
-            //msb.Completed += (object sender, EventArgs e) =>
-            //{
-            //    msb.card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
-            //    msb.card.RenderTransform.SetValue(RotateTransform.AngleProperty, 0.0);
-            //    //storyboard = null;
-            //};
-
             animator.Animates.Add(msb);
-            animator.Begin();
+            animator.Begin(card);
 
         }
 
+        /// <summary>
+        /// 守→攻
+        /// </summary>
+        /// <param name="card"></param>
+        public static void Rotate2FrontAtk(CardControl card)
+        {
+            MyStoryboard msb = Rotate_D2A(300);
+            msb.card = card;
+            msb.Completed += (sender, e) => {
+                msb.card.Status = Status.FRONT_ATK;
+            };
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.Animates.Add(msb);
+            animator.Begin(card);
+
+        }
+
+        public static void Rotate2BackDef(CardControl card)
+        {
+            MyStoryboard msb = Rotate_A2D(300);
+            msb.card = card;
+            msb.Completed += (sender, e) => {
+                msb.card.Status = Status.BACK_DEF;
+            };
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.Animates.Add(msb);
+            animator.Begin(card);
+
+        }
 
         /// <summary>
         /// 里守→表攻
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate2Atk(Card card)
+        public static void Rotate2FrontAtk2(CardControl card)
         {
-            //double angle = (double)card.RenderTransform.GetValue(RotateTransform.AngleProperty);
-            //Console.WriteLine(angle);
-            //ScaleTransform scaleTransform = new ScaleTransform();
-            
-            //card.RenderTransform.SetValue(RotateTransform.AngleProperty, angle);
+            //setAnimePrepare(card);
 
-            RotateTransform rotate = new RotateTransform();
-            ScaleTransform scale = new ScaleTransform();
-            TransformGroup group = new TransformGroup();
-            group.Children.Add(scale);
-            group.Children.Add(rotate);      
-            card.RenderTransform = group;
+            MyStoryboard msb0 = scalX_120_rotate_9020();
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
+                msb0.card.Status = Status.FRONT_ATK;
+            };
+            MyStoryboard msb1 = scalX_021();
 
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-
-            //MyStoryboard msb1 = Rotate(card, 90.0, 0.0);
-            //animator.Animates.Add(msb1);
-
-            MyStoryboard msb2 = scalX_120_rotate_9020(card);
-            msb2.Completed += (object c, EventArgs d) =>
-            {
-                //msb2.card.SetPic();
-            };
-            animator.Animates.Add(msb2);
-            
-
-    
-            MyStoryboard msb3 = scalX_021(card);
-
-            animator.Animates.Add(msb3);
-
-            animator.Begin();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
 
         }
 
-        /// <summary>
-        /// 表攻→里守
-        /// </summary>
-        /// <param name="card"></param>
-        public static void Rotate2Def(Card card)
+        public static void turn2Back(CardControl card)
         {
-            RotateTransform rotate = new RotateTransform();
+            //setAnimePrepare(card);
+
+            MyStoryboard msb0 =  scalX_120();
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
+                switch (msb0.card.Status)
+                {
+                    case Status.FRONT_ATK:
+                        msb0.card.Status = Status.BACK_ATK;
+                        break;
+                    case Status.FRONT_DEF:
+                        msb0.card.Status = Status.BACK_DEF;
+                        break;
+                    default:
+                        break;
+                }
+            };
+            MyStoryboard msb1 = scalX_021();
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+        }
+
+        public static void turn2Front(CardControl card)
+        {
+            //setAnimePrepare(card);
+
+            MyStoryboard msb0 = scalX_120();
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
+                switch (msb0.card.Status)
+                {
+                    case Status.BACK_ATK:
+                        msb0.card.Status = Status.FRONT_ATK;
+                        break;
+                    case Status.BACK_DEF:
+                        msb0.card.Status = Status.FRONT_DEF;
+                        break;
+                    default:
+                        break;
+                }
+            };
+            MyStoryboard msb1 = scalX_021();
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+        }
+
+
+        public static void turn2BackY(CardControl card)
+        {
+            //setAnimePrepare(card);
+
+            MyStoryboard msb0 = scalX_120();
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
+                switch (msb0.card.Status)
+                {
+                    case Status.FRONT_ATK:
+                        msb0.card.Status = Status.BACK_ATK;
+                        break;
+                    case Status.FRONT_DEF:
+                        msb0.card.Status = Status.BACK_DEF;
+                        break;
+                    default:
+                        break;
+                }
+            };
+            MyStoryboard msb1 = scalX_021();
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+        }
+
+        //public static void turn2Front(CardControl card)
+        //{
+        //    //setAnimePrepare(card);
+
+        //    MyStoryboard msb0 = scalX_120();
+        //    msb0.card = card;
+        //    msb0.Completed += (object c, EventArgs d) =>
+        //    {
+        //        switch (msb0.card.Status)
+        //        {
+        //            case Status.BACK_ATK:
+        //                msb0.card.Status = Status.FRONT_ATK;
+        //                break;
+        //            case Status.BACK_DEF:
+        //                msb0.card.Status = Status.FRONT_DEF;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    };
+        //    MyStoryboard msb1 = scalX_021();
+
+        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+        //    animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+        //}
+
+        //public static void Rotate2Def(CardControl card)
+        //{
+        //    setAnimePrepare(card);
+
+        //    MyStoryboard msb0 = scalX_120_rotate_9020(card);
+        //    msb0.Completed += (object c, EventArgs d) =>
+        //    {
+        //        msb0.card.Status = Status.FRONT_ATK;
+        //    };
+        //    MyStoryboard msb1 = scalX_021(card);
+
+        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+        //    animator.addAnime(msb0).addAnime(msb1).Begin();
+
+        //}
+
+
+
+        private static void setAnimePrepare(CardControl card)
+        {
+            RotateTransform rotate = null;
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                case Status.BACK_ATK:
+                    rotate = new RotateTransform();
+                    break;
+                case Status.BACK_DEF:
+                case Status.FRONT_DEF:
+                    rotate = new RotateTransform(-90);
+                    break;
+                default:
+                    break;
+            }
+            
             ScaleTransform scale = new ScaleTransform();
             TransformGroup group = new TransformGroup();
             group.Children.Add(scale);
             group.Children.Add(rotate);
             card.RenderTransform = group;
-
-            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-
-            //MyStoryboard msb1 = Rotate(card, 90.0, 0.0);
-            //animator.Animates.Add(msb1);
-
-            MyStoryboard msb2 = scalX_120_rotate_0290(card);
-            msb2.Completed += (object c, EventArgs d) =>
-            {
-                //msb2.card.SetPic();
-            };
-            animator.Animates.Add(msb2);
-
-
-
-            MyStoryboard msb3 = scalX_021(card);
-
-            animator.Animates.Add(msb3);
-
-            animator.Begin();
-
         }
+
+        ///// <summary>
+        ///// 表攻→里守
+        ///// </summary>
+        ///// <param name="card"></param>
+        //public static void Rotate2Def(CardControl card)
+        //{
+        //    RotateTransform rotate = new RotateTransform();
+        //    ScaleTransform scale = new ScaleTransform();
+        //    TransformGroup group = new TransformGroup();
+        //    group.Children.Add(scale);
+        //    group.Children.Add(rotate);
+        //    card.RenderTransform = group;
+
+        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
+        //    //MyStoryboard msb1 = Rotate(card, 90.0, 0.0);
+        //    //animator.Animates.Add(msb1);
+
+        //    MyStoryboard msb2 = scalX_120_rotate_0290(card);
+        //    msb2.Completed += (object c, EventArgs d) =>
+        //    {
+        //        //msb2.card.SetPic();
+        //    };
+        //    animator.Animates.Add(msb2);
+
+
+
+        //    MyStoryboard msb3 = scalX_021(card);
+
+        //    animator.Animates.Add(msb3);
+
+        //    animator.Begin();
+
+        //}
 
         /// <summary>
         /// 里侧←→表侧
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate_card(Card card)
-        {
-            //double angle = (double) card.RenderTransform.GetValue(RotateTransform.AngleProperty);
+        //public static void Rotate_card(CardControl card)
+        //{
+        //    //double angle = (double) card.RenderTransform.GetValue(RotateTransform.AngleProperty);
 
-            RotateTransform rotate = new RotateTransform();
-            if (card.isDef)
-            {
-                 rotate = new RotateTransform(-90);
-            }
-            ScaleTransform scale = new ScaleTransform();
-            TransformGroup group = new TransformGroup();
-            group.Children.Add(scale);
-            group.Children.Add(rotate);
-            card.RenderTransform = group;
+        //    RotateTransform rotate = new RotateTransform();
+        //    //if (card.isDef)
+        //    //{
+        //    //     rotate = new RotateTransform(-90);
+        //    //}
+        //    ScaleTransform scale = new ScaleTransform();
+        //    TransformGroup group = new TransformGroup();
+        //    group.Children.Add(scale);
+        //    group.Children.Add(rotate);
+        //    card.RenderTransform = group;
 
-            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-            MyStoryboard msb1 = scalX_120(card,300);
-            msb1.Completed += (object c, EventArgs d) =>
-            {
-                //msb1.card.RenderTransform.SetValue(RotateTransform.AngleProperty, angle);
-                //msb1.card.SetPic();
-                //CardOperate.card_FrontAtk(msb1.card);
-            };
-            animator.Animates.Add(msb1);
+        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+        //    MyStoryboard msb1 = scalX_120(card,300);
+        //    msb1.Completed += (object c, EventArgs d) =>
+        //    {
+        //        //msb1.card.RenderTransform.SetValue(RotateTransform.AngleProperty, angle);
+        //        //msb1.card.SetPic();
+        //        //CardOperate.card_FrontAtk(msb1.card);
+        //    };
+        //    animator.Animates.Add(msb1);
             
-            MyStoryboard msb2 = scalX_021(card);
-            msb2.Completed += (object c, EventArgs d) =>
-            {
-                msb2.card.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-                msb2.card.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, (double)1);
-                //msb2.
-                //card.RenderTransform = null;
-            };
+        //    MyStoryboard msb2 = scalX_021(card);
+        //    msb2.Completed += (object c, EventArgs d) =>
+        //    {
+        //        msb2.card.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        //        msb2.card.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, (double)1);
+        //        //msb2.
+        //        //card.RenderTransform = null;
+        //    };
 
-            animator.Animates.Add(msb2);
+        //    animator.Animates.Add(msb2);
 
-            animator.Begin();
-        }
+        //    animator.Begin();
+        //}
 
         /// <summary>
         /// 卡片顺时针翻旋-P1
@@ -731,45 +878,21 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card"></param>
         /// <returns></returns>
-        public static MyStoryboard scalX_120_rotate_9020(Card card)
+        public static MyStoryboard scalX_120_rotate_9020()
         {
-            //ScaleTransform scaleTransform = new ScaleTransform();
-            //scaleTransform.ScaleX = 1;
-            //card.RenderTransform = scaleTransform;
-
             //新建动画故事版
             MyStoryboard sb = new MyStoryboard();
 
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
-            //DoubleAnimation yA = new DoubleAnimation(-90, 0, TimeSpan.FromMilliseconds(150));
+            //设定X和Y坐标的方向动画
+            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
+            DoubleAnimation yA = new DoubleAnimation(-90, 0, TimeSpan.FromMilliseconds(150));
 
-            //sb.Children.Add(xA);
-            //sb.Children.Add(yA);
-            ////sb.Children.Add(yA);
-            ////sb.GetCurrentTime();
+            //关联具体要执行动画的依赖属性
+            Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
+            Storyboard.SetTargetProperty(yA, new PropertyPath("RenderTransform.Children[1].Angle"));
 
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            //Storyboard.SetTarget(yA, card);
-
-            //DependencyProperty[] propertyChain = new DependencyProperty[]
-            //{
-            //    Card.RenderTransformProperty,
-            //    //TransformGroup.ChildrenProperty,
-                
-            //    ScaleTransform.ScaleXProperty
-            //   // TranslateTransform.XProperty
-            //};
-
-
-            ////关联具体要执行动画的依赖属性
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(0).(1)",propertyChain));
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            //Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
-
-            //sb.card = card;
+            sb.Children.Add(xA);
+            sb.Children.Add(yA);
 
             return sb;
         }
@@ -779,7 +902,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card"></param>
         /// <returns></returns>
-        public static MyStoryboard scalX_120_rotate_0290(Card card)
+        public static MyStoryboard scalX_120_rotate_0290(CardControl card)
         {
             //ScaleTransform scaleTransform = new ScaleTransform();
             //scaleTransform.ScaleX = 1;
@@ -788,36 +911,36 @@ namespace iDuel_EvolutionX.UI
             //新建动画故事版
             MyStoryboard sb = new MyStoryboard();
 
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
-            //DoubleAnimation yA = new DoubleAnimation(0, -90, TimeSpan.FromMilliseconds(150));
+            //设定X和Y坐标的方向动画
+            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
+            DoubleAnimation yA = new DoubleAnimation(0, -90, TimeSpan.FromMilliseconds(150));
 
-            //sb.Children.Add(xA);
+            sb.Children.Add(xA);
+            sb.Children.Add(yA);
             //sb.Children.Add(yA);
-            ////sb.Children.Add(yA);
-            ////sb.GetCurrentTime();
+            //sb.GetCurrentTime();
 
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            //Storyboard.SetTarget(yA, card);
+            //关联操作的卡片和方向动画
+            Storyboard.SetTarget(xA, card);
+            Storyboard.SetTarget(yA, card);
 
-            //DependencyProperty[] propertyChain = new DependencyProperty[]
-            //{
-            //    Card.RenderTransformProperty,
-            //    //TransformGroup.ChildrenProperty,
+            DependencyProperty[] propertyChain = new DependencyProperty[]
+            {
+                Card.RenderTransformProperty,
+                //TransformGroup.ChildrenProperty,
                 
-            //    ScaleTransform.ScaleXProperty
-            //   // TranslateTransform.XProperty
-            //};
+                ScaleTransform.ScaleXProperty
+               // TranslateTransform.XProperty
+            };
 
 
-            ////关联具体要执行动画的依赖属性
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(0).(1)",propertyChain));
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            //Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
+            //关联具体要执行动画的依赖属性
+            //Storyboard.SetTargetProperty(xA, new PropertyPath("(0).(1)",propertyChain));
+            Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
+            Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
+            //Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
 
-            //sb.card = card;
+            sb.card = card;
 
             return sb;
         }
@@ -827,42 +950,25 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card"></param>
         /// <returns></returns>
-        public static MyStoryboard scalX_120(Card card,double time)
+        public static MyStoryboard scalX_120()
         {
-            //ScaleTransform scaleTransform = new ScaleTransform();
-            //scaleTransform.ScaleX = 1;
-            //card.RenderTransform = scaleTransform;
 
             //新建动画故事版
             MyStoryboard sb = new MyStoryboard();
 
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(time));
+            //设定X和Y坐标的方向动画
+            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300));
 
-            //sb.Children.Add(xA);
-            ////sb.Children.Add(yA);
-            ////sb.GetCurrentTime();
+            EasingFunctionBase easing = new CubicEase()
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+            xA.EasingFunction = easing;
 
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            ////Storyboard.SetTarget(yA, btn);
+            //关联具体要执行动画的依赖属性
+            Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
 
-            //DependencyProperty[] propertyChain = new DependencyProperty[]
-            //{
-            //    Card.RenderTransformProperty,
-            //    //TransformGroup.ChildrenProperty,
-                
-            //    ScaleTransform.ScaleXProperty
-            //   // TranslateTransform.XProperty
-            //};
-            
-
-            ////关联具体要执行动画的依赖属性
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(0).(1)",propertyChain));
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
-
-            //sb.card = card;
+            sb.Children.Add(xA);
 
             return sb;
         }
@@ -872,39 +978,25 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card"></param>
         /// <returns></returns>
-        public static MyStoryboard scalX_021(Card card)
+        public static MyStoryboard scalX_021()
         {
-            //ScaleTransform scaleTransform = new ScaleTransform();
-            //scaleTransform.ScaleX = 1;
-            //card.RenderTransform = scaleTransform;
-
             //新建动画故事版
             MyStoryboard sb = new MyStoryboard();
 
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300));
+            //设定X和Y坐标的方向动画
+            DoubleAnimation xA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300));
 
-            //sb.Children.Add(xA);
-            ////sb.Children.Add(yA);
-            ////sb.GetCurrentTime();
+            //使用缓动函数
+            EasingFunctionBase easing = new CubicEase()
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+            xA.EasingFunction = easing;
 
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            ////Storyboard.SetTarget(yA, btn);
+            //关联具体要执行动画的依赖属性
+            Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
 
-            //DependencyProperty[] propertyChain = new DependencyProperty[]
-            //{
-            //    Card.RenderTransformProperty,
-            //    //TransformGroup.ChildrenProperty,
-            //    ScaleTransform.ScaleXProperty
-            //};
-
-            ////关联具体要执行动画的依赖属性
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(0).(1)", propertyChain));
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            ////Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.X)"));
-
-            //sb.card = card;
+            sb.Children.Add(xA);
 
             return sb;
         }
@@ -1350,8 +1442,8 @@ namespace iDuel_EvolutionX.UI
                 EasingMode = EasingMode.EaseOut
             };
             da.EasingFunction = easing;
-            Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
-
+            //Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
+            Storyboard.SetTargetProperty(da, new PropertyPath("RenderTransform.Children[1].Angle"));
             return da;
         }
 

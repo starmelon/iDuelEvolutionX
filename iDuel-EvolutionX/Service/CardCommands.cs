@@ -15,6 +15,8 @@ namespace iDuel_EvolutionX.Service
         private static RoutedUICommand addGreenSign;
         //private static RoutedUICommand add
         private static RoutedUICommand setCardRemark;
+        private static RoutedUICommand set2AtkOrDef;
+        private static RoutedUICommand set2FrontOrBack;
 
         static CardCommands()
         {
@@ -24,6 +26,8 @@ namespace iDuel_EvolutionX.Service
             addGreenSign = new RoutedUICommand("addGreenSign", "addGreenSign", typeof(CardCommands));
 
             setCardRemark = new RoutedUICommand("setCardRemark", "setCardRemark", typeof(CardCommands));
+            set2AtkOrDef = new RoutedUICommand("set2AtkOrDef", "set2AtkOrDef", typeof(CardCommands));
+            set2FrontOrBack = new RoutedUICommand("set2FrontOrBack", "set2FrontOrBack", typeof(CardCommands));
         }
 
         public static RoutedUICommand AddBlueSign
@@ -68,6 +72,24 @@ namespace iDuel_EvolutionX.Service
             get
             {
                 return setCardRemark;
+            }
+
+        }
+
+        public static RoutedUICommand Set2AtkOrDef
+        {
+            get
+            {
+                return set2AtkOrDef;
+            }
+
+        }
+
+        public static RoutedUICommand Set2FrontOrBack
+        {
+            get
+            {
+                return set2FrontOrBack;
             }
 
         }

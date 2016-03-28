@@ -87,7 +87,16 @@ namespace iDuel_EvolutionX.Model
 
             Width = 56;//设置卡片宽高
             Height = 81;
+
+
             RenderTransformOrigin = new Point(0.5, 0.5);
+            RotateTransform rotate = new RotateTransform();
+            ScaleTransform scale = new ScaleTransform();
+            TransformGroup group = new TransformGroup();
+            group.Children.Add(scale);
+            group.Children.Add(rotate);
+            this.RenderTransform = group;
+
             signs = new List<SignTextBlock>();
   
         }
@@ -265,9 +274,14 @@ namespace iDuel_EvolutionX.Model
             double left = this.ActualWidth == double.NaN || this.ActualHeight == 0 ? (parent.ActualWidth - this.Width) / 2.0 : (parent.ActualWidth - this.ActualWidth) / 2.0;
             Canvas.SetTop(this, top);
             Canvas.SetLeft(this, left);
-
-            RotateTransform rotateTransform = new RotateTransform(0);
-            this.RenderTransform = rotateTransform;
+            TransformGroup tfg = this.RenderTransform as TransformGroup;
+            RotateTransform rt = tfg.Children[1] as RotateTransform;
+            rt.Angle = 0;
+            //tfg.Children[1].an
+            ////this.RenderTransform.SetValue(new PropertyPath("RenderTransform.Children[1].Angle"), 90);
+            ////this.SetValue(new DependencyPropertyPath("RenderTransform.Children[1].Angle"), 90);
+            //RotateTransform rotateTransform = new RotateTransform(0);
+            //this.RenderTransform = rotateTransform;
         }
 
         /// <summary>
@@ -286,8 +300,11 @@ namespace iDuel_EvolutionX.Model
             Canvas.SetTop(this, top);
             Canvas.SetLeft(this, left);
 
-            RotateTransform rotateTransform = new RotateTransform(-90);
-            this.RenderTransform = rotateTransform;
+            TransformGroup tfg = this.RenderTransform as TransformGroup;
+            RotateTransform rt = tfg.Children[1] as RotateTransform;
+            rt.Angle = -90;
+            //RotateTransform rotateTransform = new RotateTransform(-90);
+            //this.RenderTransform = rotateTransform;
 
         }
 

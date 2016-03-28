@@ -3265,7 +3265,7 @@ namespace iDuel_EvolutionX.Service
                     //cards.Add(card_main);
                     //card_FrontAtk(card_main);
                     card_draw.ContextMenu = AllMenu.Instance.cm_hand;
-                    CardAnimation.setTransformGroup(card_draw);
+                    //CardAnimation.setTransformGroup(card_draw);
                     //1.获取卡片相对于目的地的距离
                     Point start = card_draw.TranslatePoint(new Point(), cv_aim);
                     //2.获取卡片在卡框中的相对距离
@@ -3311,18 +3311,8 @@ namespace iDuel_EvolutionX.Service
                     CardOperate.sort_HandCard(cv_aim);
                     foreach (CardControl card in cards)
                     {
-                        MyStoryboard msb = CardAnimation.ScaleX_120(100);
-                        msb.card = card;
-                        msb.Completed += (object e, EventArgs f) =>
-                        {
-                            card.set2FrontAtk();
-                            //card_FrontAtk(msb.card);
-                            //msb.card.isBack = false;
-                            //msb.card.SetPic();
-                            CardAnimation.ScaleX_021(150).Begin(msb.card);
+                        CardAnimation.turn2Front(card);
 
-                        };
-                        msb.Begin(card);
                     }
                     cv_aim.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2Hand);
 
@@ -3401,9 +3391,9 @@ namespace iDuel_EvolutionX.Service
             //card.isDef = false;
             //card.isBack = false;
             //card.SetPic();
-            card.set2FrontAtk();
-            card.showImg();
-            CardAnimation.setTransformGroup(card);
+            //card.set2FrontAtk();
+            //card.showImg();
+            //CardAnimation.setTransformGroup(card);
  
         }
 
@@ -3413,10 +3403,10 @@ namespace iDuel_EvolutionX.Service
         /// <param name="card">要修改的卡片</param>
         public static void card_BackAtk(CardControl card)
         {
-            card.Visibility = Visibility.Visible;
-            RotateTransform rotateTransform = new RotateTransform(0);
-            card.RenderTransform = rotateTransform;
-            card.set2BackAtk();
+            //card.Visibility = Visibility.Visible;
+            //RotateTransform rotateTransform = new RotateTransform(0);
+            //card.RenderTransform = rotateTransform;
+            //card.set2BackAtk();
             //card.showImg();
             
 

@@ -86,7 +86,30 @@ namespace iDuel_EvolutionX.UI
 
         #region 额外区控件事件
 
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2Extra(MyCanvas cv, CardControl card)
+        {
+            card.reSetAtk();
+            card.set2BackAtk();
+            card.centerAtVerticalInParent();
+            card.clearSigns();
+            
+        }
 
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void insert2Extra(MyCanvas cv, CardControl card)
+        {
+            add2Extra(cv, card);
+           
+        }
 
         #endregion
 
@@ -99,11 +122,22 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Deck(MyCanvas cv, CardControl card)
         {
-            int count = cv.Children.Count;
             card.reSetAtk();
+            card.set2BackAtk();
             card.centerAtVerticalInParent();
             card.clearSigns();
             card.ContextMenu = AllMenu.Instance.cm_deck;
+        }
+
+        /// <summary>
+        /// 卡片以插入方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void insert2Deck(MyCanvas cv, CardControl card)
+        {
+            add2Deck(cv, card);
+
         }
 
         #endregion
@@ -200,10 +234,6 @@ namespace iDuel_EvolutionX.UI
             //添加指示物
             showSigns(cv, card);
         }
-
-        
-
-
 
         /// <summary>
         /// 卡片以插入方式进入怪物区时，怪物区控件的操作
