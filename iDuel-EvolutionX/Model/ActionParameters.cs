@@ -50,9 +50,9 @@ namespace iDuel_EvolutionX.Model
         {
             mainwindow = mainwindow_;
             Canvas cv = card.Parent as Canvas;
-            cv_num = mainwindow.MySpace.Children.IndexOf(cv);
+            cv_num = mainwindow.Battle.Children.IndexOf(cv);
             cv_children_num = cv.Children.IndexOf(card);
-            cv_aim_num = mainwindow.MySpace.Children.IndexOf(cv_aim);
+            cv_aim_num = mainwindow.Battle.Children.IndexOf(cv_aim);
  
         }
 
@@ -64,13 +64,13 @@ namespace iDuel_EvolutionX.Model
 
         public void cv_aim2num(Canvas cv_aim)
         {
-            Cv_aim_num = mainwindow.MySpace.Children.IndexOf(cv_aim);
+            Cv_aim_num = mainwindow.Battle.Children.IndexOf(cv_aim);
         }
 
         public void cv2num (Card card)
         {
             Canvas cv = card.Parent as Canvas;
-            Cv_num = mainwindow.MySpace.Children.IndexOf(cv);
+            Cv_num = mainwindow.Battle.Children.IndexOf(cv);
         }
 
     }

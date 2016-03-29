@@ -101,7 +101,7 @@ namespace iDuel_EvolutionX.UI
             sb.Completed += (object c, EventArgs d) =>
             {
                 //从移动面板Canvas分离
-                mainwindow.MySpace.Children.Remove(card);
+                mainwindow.Battle.Children.Remove(card);
 
                 //清空属性和动画的关联绑定
                 card.BeginAnimation(Canvas.LeftProperty, null);
@@ -1717,19 +1717,19 @@ namespace iDuel_EvolutionX.UI
 
             //foreach (CardControl card in cards)
             //{
-            //    //Point start = card.TranslatePoint(new Point(), mainwindow.MySpace);
-            //    Point start = card.TranslatePoint(new Point(), mainwindow.MySpace);
+            //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
+            //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    if (field.Equals("2"))
             //    {
-            //        start = card.TranslatePoint(new Point(), mainwindow.OpSpace);
+            //        start = card.TranslatePoint(new Point(), mainwindow.OpBattle);
             //    }
 
-            //    //if (end != mainwindow.card_1_Graveyard.TranslatePoint(new Point(), mainwindow.MySpace))
+            //    //if (end != mainwindow.card_1_Graveyard.TranslatePoint(new Point(), mainwindow.MyBattle))
             //    //{
             //    //    Canvas cv = card.Parent as Canvas;
             //    //    if (card == cv.Children[cv.Children.Count - 1])
             //    //    {
-            //    //        end = mainwindow.card_1_Extra.TranslatePoint(new Point(), mainwindow.MySpace);
+            //    //        end = mainwindow.card_1_Extra.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    //    }
             //    //}
 
@@ -1754,11 +1754,11 @@ namespace iDuel_EvolutionX.UI
             //    Base.getawayParerent(card);
             //    if (field.Equals("2"))
             //    {
-            //        mainwindow.OpSpace.Children.Add(card);
+            //        mainwindow.OpBattle.Children.Add(card);
             //    }
             //    else if (field.Equals("1"))
             //    {
-            //        mainwindow.MySpace.Children.Add(card);
+            //        mainwindow.MyBattle.Children.Add(card);
             //    }
             //    //
                 
@@ -1821,20 +1821,20 @@ namespace iDuel_EvolutionX.UI
 
             //foreach (CardControl card in cards)
             //{
-            //    //Point start = card.TranslatePoint(new Point(), mainwindow.MySpace);
-            //    Point start = card.TranslatePoint(new Point(), mainwindow.MySpace);
+            //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
+            //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    if (field.Equals("2"))
             //    {
-            //        start = card.TranslatePoint(new Point(), mainwindow.OpSpace);
+            //        start = card.TranslatePoint(new Point(), mainwindow.OpBattle);
             //    }
                 
 
-            //    //if (end != mainwindow.card_1_Graveyard.TranslatePoint(new Point(), mainwindow.MySpace))
+            //    //if (end != mainwindow.card_1_Graveyard.TranslatePoint(new Point(), mainwindow.MyBattle))
             //    //{
             //    //    Canvas cv = card.Parent as Canvas;
             //    //    if (card == cv.Children[cv.Children.Count - 1])
             //    //    {
-            //    //        end = mainwindow.card_1_Extra.TranslatePoint(new Point(), mainwindow.MySpace);
+            //    //        end = mainwindow.card_1_Extra.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    //    }
             //    //}
 
@@ -1857,14 +1857,14 @@ namespace iDuel_EvolutionX.UI
             //    card.RenderTransform = group;
 
             //    Base.getawayParerent(card);
-            //    //mainwindow.MySpace.Children.Add(card);
+            //    //mainwindow.MyBattle.Children.Add(card);
             //    if (field.Equals("2"))
             //    {
-            //        mainwindow.OpSpace.Children.Add(card);
+            //        mainwindow.OpBattle.Children.Add(card);
             //    }
             //    else if (field.Equals("1"))
             //    {
-            //        mainwindow.MySpace.Children.Add(card);
+            //        mainwindow.MyBattle.Children.Add(card);
             //    }
                 
 
@@ -2172,11 +2172,11 @@ namespace iDuel_EvolutionX.UI
             MyStoryboard msb = new MyStoryboard();
             
 
-            double p1x = start.X / mainwindow.OpSpace.ActualWidth;
-            double p1y = start.Y / mainwindow.OpSpace.ActualHeight;
+            double p1x = start.X / mainwindow.OpBattle.ActualWidth;
+            double p1y = start.Y / mainwindow.OpBattle.ActualHeight;
 
-            double p2x = end.X / mainwindow.OpSpace.ActualWidth;
-            double p2y = end.Y / mainwindow.OpSpace.ActualHeight;
+            double p2x = end.X / mainwindow.OpBattle.ActualWidth;
+            double p2y = end.Y / mainwindow.OpBattle.ActualHeight;
 
             Line line = new Line();
             line.Stroke = new SolidColorBrush();
@@ -2200,7 +2200,7 @@ namespace iDuel_EvolutionX.UI
             //line.SetValue(Line.OpacityProperty, 0.3);
             line.Opacity = 0.8;
 
-            mainwindow.OpSpace.Children.Add(line);
+            mainwindow.OpBattle.Children.Add(line);
 
             DoubleAnimation da = new DoubleAnimation
             {
@@ -2263,11 +2263,11 @@ namespace iDuel_EvolutionX.UI
         {
             double angle = Math.Atan2(end.Y - start.Y, end.X - start.X) * (180 / Math.PI) + 90;
 
-            //double p1x = start.X / mainwindow.OpSpace.ActualWidth;
-            //double p1y = start.Y / mainwindow.OpSpace.ActualHeight;
+            //double p1x = start.X / mainwindow.OpBattle.ActualWidth;
+            //double p1y = start.Y / mainwindow.OpBattle.ActualHeight;
 
-            //double p2x = end.X / mainwindow.OpSpace.ActualWidth;
-            //double p2y = end.Y / mainwindow.OpSpace.ActualHeight;
+            //double p2x = end.X / mainwindow.OpBattle.ActualWidth;
+            //double p2y = end.Y / mainwindow.OpBattle.ActualHeight;
 
 
             //Line line = new Line();
@@ -2292,7 +2292,7 @@ namespace iDuel_EvolutionX.UI
             ////line.SetValue(Line.OpacityProperty, 0.3);
             //line.Opacity = 0.4;
             
-            //mainwindow.OpSpace.Children.Add(line);
+            //mainwindow.OpBattle.Children.Add(line);
 
             MyStoryboard msb = new MyStoryboard();
             Image sword = new Image();
@@ -2304,7 +2304,7 @@ namespace iDuel_EvolutionX.UI
             sword.Source = new BitmapImage(new Uri("/Image/attack.png", UriKind.RelativeOrAbsolute));
             Canvas.SetLeft(sword, start.X - (sword.Width/2));
             Canvas.SetTop(sword, start.Y - (sword.Height/2));
-            mainwindow.OpSpace.Children.Add(sword);
+            mainwindow.OpBattle.Children.Add(sword);
 
             //DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
             //keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));

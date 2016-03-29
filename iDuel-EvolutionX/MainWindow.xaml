@@ -1002,8 +1002,8 @@
 
             </Grid>
 
-            <Canvas Grid.Column="3"  x:Name="MySpace" />
-            <Canvas Grid.Column="3" RenderTransformOrigin="0.5,0.5" x:Name="OpSpace">
+            <Canvas Grid.Column="3"  x:Name="Battle" />
+            <Canvas Grid.Column="3" RenderTransformOrigin="0.5,0.5" x:Name="OpBattle">
                 <Canvas.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

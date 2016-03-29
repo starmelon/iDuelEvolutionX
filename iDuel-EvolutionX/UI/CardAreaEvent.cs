@@ -208,7 +208,7 @@ namespace iDuel_EvolutionX.UI
                 }
                 if (second.Status == Status.FRONT_DEF)
                 {
-                    MyStoryboard msb = CardAnimation.Rotate_D2A(150);
+                    MyStoryboard msb = CardAnimation.Rotate_D2A();
                     msb.card = second;
                     msb.Completed += (object sender_, EventArgs e_) =>
                     {

@@ -1467,37 +1467,37 @@ namespace iDuel_EvolutionX.Service
                 //        {
                 //            #region 攻击动画
 
-                //            Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpSpace);
-                //            Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpSpace);
+                //            Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
+                //            Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
                 //            //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
                 //            MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
                 //            msb.Completed += (object sender_, EventArgs e_) =>
                 //            {
-                //                mainwindow.OpSpace.Children.Remove(msb.sword);
+                //                mainwindow.OpBattle.Children.Remove(msb.sword);
                 //                msb.sword = null;
 
                 //            };
                 //            MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
                 //            msb2.Completed += (object sender_, EventArgs e_) =>
                 //            {
-                //                mainwindow.OpSpace.Children.Remove(msb2.sword);
+                //                mainwindow.OpBattle.Children.Remove(msb2.sword);
                 //                msb2.sword = null;
                 //            };
                 //            MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
                 //            msb3.Completed += (object sender_, EventArgs e_) =>
                 //            {
-                //                mainwindow.OpSpace.Children.Remove(msb3.sword);
+                //                mainwindow.OpBattle.Children.Remove(msb3.sword);
                 //                msb3.sword = null;
 
                 //            };
                 //            MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
                 //            msb4.Completed += (object sender_, EventArgs e_) =>
                 //            {
-                //                mainwindow.OpSpace.Children.Remove(msb4.sword);
+                //                mainwindow.OpBattle.Children.Remove(msb4.sword);
                 //                msb4.sword = null;
-                //                //mainwindow.OpSpace.Children.Remove(msb4.sword);
+                //                //mainwindow.OpBattle.Children.Remove(msb4.sword);
                 //                //msb4.sword = null;
 
                 //            };
@@ -1754,37 +1754,37 @@ namespace iDuel_EvolutionX.Service
                 {
                     #region 攻击动画
 
-                    Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpSpace);
-                    Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpSpace);
+                    Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
+                    Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
                     //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
                     MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
                     msb.Completed += (object sender_, EventArgs e_) =>
                     {
-                        mainwindow.OpSpace.Children.Remove(msb.sword);
+                        mainwindow.OpBattle.Children.Remove(msb.sword);
                         msb.sword = null;
 
                     };
                     MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
                     msb2.Completed += (object sender_, EventArgs e_) =>
                     {
-                        mainwindow.OpSpace.Children.Remove(msb2.sword);
+                        mainwindow.OpBattle.Children.Remove(msb2.sword);
                         msb2.sword = null;
                     };
                     MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
                     msb3.Completed += (object sender_, EventArgs e_) =>
                     {
-                        mainwindow.OpSpace.Children.Remove(msb3.sword);
+                        mainwindow.OpBattle.Children.Remove(msb3.sword);
                         msb3.sword = null;
 
                     };
                     MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
                     msb4.Completed += (object sender_, EventArgs e_) =>
                     {
-                        mainwindow.OpSpace.Children.Remove(msb4.sword);
+                        mainwindow.OpBattle.Children.Remove(msb4.sword);
                         msb4.sword = null;
-                        //mainwindow.OpSpace.Children.Remove(msb4.sword);
+                        //mainwindow.OpBattle.Children.Remove(msb4.sword);
                         //msb4.sword = null;
 
                     };
@@ -1984,37 +1984,37 @@ namespace iDuel_EvolutionX.Service
 
                 //        #region 攻击动画
 
-                //        Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpSpace);
-                //        Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpSpace);
+                //        Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
+                //        Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
                 //        double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
                 //        MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
                 //        msb.Completed += (object sender_, EventArgs e_) =>
                 //        {
-                //            mainwindow.OpSpace.Children.Remove(msb.sword);
+                //            mainwindow.OpBattle.Children.Remove(msb.sword);
                 //            msb.sword = null;
 
                 //        };
                 //        MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
                 //        msb2.Completed += (object sender_, EventArgs e_) =>
                 //        {
-                //            mainwindow.OpSpace.Children.Remove(msb2.sword);
+                //            mainwindow.OpBattle.Children.Remove(msb2.sword);
                 //            msb2.sword = null;
                 //        };
                 //        MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
                 //        msb3.Completed += (object sender_, EventArgs e_) =>
                 //        {
-                //            mainwindow.OpSpace.Children.Remove(msb3.sword);
+                //            mainwindow.OpBattle.Children.Remove(msb3.sword);
                 //            msb3.sword = null;
 
                 //        };
                 //        MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
                 //        msb4.Completed += (object sender_, EventArgs e_) =>
                 //        {
-                //            mainwindow.OpSpace.Children.Remove(msb4.sword);
+                //            mainwindow.OpBattle.Children.Remove(msb4.sword);
                 //            msb4.sword = null;
-                //            //mainwindow.OpSpace.Children.Remove(msb4.sword);
+                //            //mainwindow.OpBattle.Children.Remove(msb4.sword);
                 //            //msb4.sword = null;
 
                 //        };

@@ -97,6 +97,28 @@ namespace iDuel_EvolutionX.Service
 
         }
 
+        public static void excuete_set2BackDef(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            //Canvas cv = card.Parent as Canvas;
+            if (card.Status == Status.BACK_DEF)
+            {
+                return;
+            }
+
+            CardAnimation.turn2BackDef(card);
+
+        }
+
+        public static void excuete_release2Graveyard(object sender, ExecutedRoutedEventArgs e)
+        {
+            //MainWindow main = sender as MainWindow;
+            CardControl card = e.OriginalSource as CardControl;
+
+            CardAnimation.move2Graveyard(card);
+
+        }
+
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {

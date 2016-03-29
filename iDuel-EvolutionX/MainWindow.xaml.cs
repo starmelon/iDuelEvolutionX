@@ -357,6 +357,21 @@ namespace iDuel_EvolutionX
                     CardCommands.Set2FrontOrBack,
                     MenuItemOperate.excuete_set2FrontOrBack));
 
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Set2BackDef,
+                    MenuItemOperate.excuete_set2BackDef));
+
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Release2Graveyard,
+                    MenuItemOperate.excuete_release2Graveyard));
+
+            this.Battle.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Release2Banish,
+                    MenuItemOperate.excuete_set2BackDef));
+
             #endregion
 
 

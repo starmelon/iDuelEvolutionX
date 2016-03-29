@@ -62,62 +62,55 @@ namespace iDuel_EvolutionX.UI
         {        
             MenuItem set2AtkOrDef  = new MenuItem { Header = "攻/守形式转换" }; //OK
             MenuItem set2FrontOrBack  = new MenuItem { Header = "里侧/表侧转换" }; //OK
-            MenuItem mi_3  = new MenuItem { Header = "转为里侧守备" };  //OK
+            MenuItem set2BackDef  = new MenuItem { Header = "转为里侧守备" };  //OK
             MenuItem mi_4  = new MenuItem { Header = "攻击宣言" };
             MenuItem mi_5  = new MenuItem { Header = "效果发动" };
             MenuItem mi_6  = new MenuItem { Header = "转移控制权" };
-            MenuItem mi_7  = new MenuItem { Header = "放回卡组顶端" };  //OK
-            MenuItem mi_8  = new MenuItem { Header = "送入墓地" };      //OK
-            MenuItem mi_9  = new MenuItem { Header = "从游戏中除外" };  //OK      
-            MenuItem mi_10 = new MenuItem { Header = "解放" };          //OK
-            MenuItem mi_11 = new MenuItem { Header = "加入手卡" };      //OK
+            MenuItem mi_7  = new MenuItem { Header = "放回卡组顶端" };  
+            MenuItem mi_8  = new MenuItem { Header = "送入墓地" };      
+            MenuItem mi_9  = new MenuItem { Header = "从游戏中除外" };
+                   
+            MenuItem release = new MenuItem { Header = "解放" };
+            MenuItem release2Graveyard = new MenuItem { Header = "→墓地" };
+            MenuItem release2Banish = new MenuItem { Header = "→除外" };
+
+
+            MenuItem mi_11 = new MenuItem { Header = "加入手卡" };      
             MenuItem mi_12 = new MenuItem { Header = "指示物" };
 
             MenuItem setCardRemark = new MenuItem { Header = "修改备注" };
-            MenuItem mi_14 = new MenuItem { Header = "返回额外区" };    //OK
-            MenuItem mi_15 = new MenuItem { Header = "送入对手墓地" };  //OK
-            MenuItem mi_16 = new MenuItem { Header = "修改攻守" };  //OK
+            MenuItem mi_14 = new MenuItem { Header = "返回额外区" };    
+            MenuItem mi_15 = new MenuItem { Header = "送入对手墓地" };  
+            MenuItem mi_16 = new MenuItem { Header = "修改攻守" };  
   
 
             public CardMenuMonster()
             {
                 this.AddChild(set2AtkOrDef);
                 AllMenu.setMenuItemBind(set2AtkOrDef);
-                set2AtkOrDef.Command = CardCommands.Set2AtkOrDef;
-
-                //set2AtkOrDef.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                set2AtkOrDef.Command = CardCommands.Set2AtkOrDef; 
 
                 this.AddChild(set2FrontOrBack);
                 AllMenu.setMenuItemBind(set2FrontOrBack);
                 set2FrontOrBack.Command = CardCommands.Set2FrontOrBack;
-                //set2FrontOrBack.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-
-                this.AddChild(mi_3);
-                mi_3.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                
+                this.AddChild(set2BackDef);
+                AllMenu.setMenuItemBind(set2BackDef);
+                set2BackDef.Command = CardCommands.Set2BackDef;
 
                 mi_4.IsEnabled = false;
                 //this.AddChild(mi_4);
                 mi_4.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
-                //mi_5.IsEnabled = false;
-                this.AddChild(mi_5);
-                mi_5.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                
+                release.Items.Add(release2Graveyard);
+                AllMenu.setMenuItemBind(release2Graveyard);
+                release2Graveyard.Command = CardCommands.Release2Graveyard;
+                release.Items.Add(release2Banish);
+                AllMenu.setMenuItemBind(release2Banish);
+                this.AddChild(release);
 
-                //mi_6.IsEnabled = false;
-                //this.AddChild(mi_6);
-                mi_6.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-
-                //this.AddChild(mi_7);
-                mi_7.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-
-                //this.AddChild(mi_8);
-                mi_8.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-
-                //this.AddChild(mi_9);
-                mi_9.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
-
-                this.AddChild(mi_10);
-                mi_10.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
+                //release.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
 
                 //this.AddChild(mi_11);
                 mi_11.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
