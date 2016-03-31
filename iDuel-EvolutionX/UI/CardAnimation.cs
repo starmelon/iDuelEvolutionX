@@ -685,71 +685,135 @@ namespace iDuel_EvolutionX.UI
 
         public static void move2Graveyard(CardControl card)
         {
-            
 
-            
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
 
-            if (card.Status != Status.FRONT_ATK)
+            MainWindow main = Application.Current.MainWindow as MainWindow;
+            MyCanvas mcv = card.Parent as MyCanvas;
+            Point start = card.TranslatePoint(new Point(), main.Battle);
+            Point end = main.card_1_Graveyard.TranslatePoint(new Point(), main.Battle);
+            end.X += (main.card_1_Graveyard.ActualWidth - card.Width) / 2;
+            end.Y += (main.card_1_Graveyard.ActualHeight - card.Height) / 2;
+
+            if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
             {
-                TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
 
-                #region 先变为表攻
 
-                if (card.Status == Status.BACK_DEF || card.Status == Status.BACK_ATK)
+                start.X += (mcv.ActualHeight - card.Width) / 2 - (mcv.ActualWidth - card.Height) / 2;
+                start.Y += -card.Width - (mcv.ActualHeight - card.Width) / 2 + (mcv.ActualWidth - card.Height) / 2;
+
+
+                card.getAwayFromParents();
+                Canvas.SetLeft(card, start.X);
+                Canvas.SetTop(card, start.Y);
+                main.Battle.Children.Add(card);
+                MyStoryboard msb = Rotate_CanvasXY(-90, 0, start, end, 300, 300);
+                //MyStoryboard msb = CanvasXY(start, end, 500);
+                msb.card = card;
+                msb.Completed += (object c, EventArgs d) =>
                 {
-                    MyStoryboard msb0 = null;
+                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    msb.card.getAwayFromParents();
                     switch (card.Status)
                     {
-                        case Status.BACK_DEF:
-                            msb0 = scalX_120_rotate_9020();
+                        case Status.FRONT_DEF:
+                            msb.card.set2FrontAtk();
                             break;
-                        case Status.BACK_ATK:
-                            msb0 = scalX_120();
+                        case Status.BACK_DEF:
+                            msb.card.set2BackAtk();
+                            break;
+                        default:
                             break;
                     }
+                    
+                    main.card_1_Graveyard.Children.Add(msb.card);
+                };
+                msb.Begin(card);
 
-                    msb0.card = card;
-                    msb0.Completed += (object c, EventArgs d) =>
-                    {
-                        msb0.card.set2FrontAtk();
-                    };
-                    animator.addAnime(msb0);
-
-                    MyStoryboard msb2 = scalX_021();
-                    msb2 .Completed += (object c, EventArgs d) =>
-                    {
-                        frontAtk2Graveyard(card);
-                    };
-                    animator.addAnime(msb2);
-                }
-                else
-                {
-                    MyStoryboard msb1 = Rotate_D2A();
-                    msb1.Completed += (object c, EventArgs d) =>
-                    {
-                        frontAtk2Graveyard(card);
-                    };
-                    animator.addAnime(msb1);
-
-                }
-
-                animator.Begin(card);
-                #endregion
+                //MyStoryboard msb = Rotate_CanvasXY(-90,0,)
             }
             else
             {
-                frontAtk2Graveyard(card);
-                //MainWindow main = Application.Current.MainWindow as MainWindow;
-                //Point start = card.TranslatePoint(new Point(), main.Battle);
-                //Point end = main.card_1_Graveyard.TranslatePoint(new Point(), main.Battle);
 
-                //card.getAwayFromParents();
-                //Canvas.SetLeft(card, start.X);
-                //Canvas.SetTop(card, start.Y);
-                //main.Battle.Children.Add(card);
-                //MyStoryboard msb3 = CanvasXY(start, end, 500);
-                //animator.addAnime(msb3);
+                card.getAwayFromParents();
+                Canvas.SetLeft(card, start.X);
+                Canvas.SetTop(card, start.Y);
+                main.Battle.Children.Add(card);
+                MyStoryboard msb = CanvasXY(start, end, 500);
+                msb.card = card;
+                msb.Completed += (object c, EventArgs d) =>
+                {
+                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    msb.card.getAwayFromParents();
+                    main.card_1_Graveyard.Children.Add(msb.card);
+                };
+                msb.Begin(card);
             }
+
+
+            if (card.Status != Status.FRONT_ATK)
+            {
+                
+            }
+            //    #region 先变为表攻
+
+            //    if (card.Status == Status.BACK_DEF || card.Status == Status.BACK_ATK)
+            //    {
+            //        MyStoryboard msb0 = null;
+            //        switch (card.Status)
+            //        {
+            //            case Status.BACK_DEF:
+            //                msb0 = scalX_120_rotate_9020();
+            //                break;
+            //            case Status.BACK_ATK:
+            //                msb0 = scalX_120();
+            //                break;
+            //        }
+
+            //        msb0.card = card;
+            //        msb0.Completed += (object c, EventArgs d) =>
+            //        {
+            //            msb0.card.set2FrontAtk();
+            //        };
+            //        animator.addAnime(msb0);
+
+            //        MyStoryboard msb2 = scalX_021();
+            //        msb2 .Completed += (object c, EventArgs d) =>
+            //        {
+            //            frontAtk2Graveyard(card);
+            //        };
+            //        animator.addAnime(msb2);
+            //    }
+            //    else
+            //    {
+            //        MyStoryboard msb1 = Rotate_D2A();
+            //        msb1.Completed += (object c, EventArgs d) =>
+            //        {
+            //            frontAtk2Graveyard(card);
+            //        };
+            //        animator.addAnime(msb1);
+
+            //    }
+
+            //    animator.Begin(card);
+            //    #endregion
+            //}
+            //else
+            //{
+            //    frontAtk2Graveyard(card);
+            //    //MainWindow main = Application.Current.MainWindow as MainWindow;
+            //    //Point start = card.TranslatePoint(new Point(), main.Battle);
+            //    //Point end = main.card_1_Graveyard.TranslatePoint(new Point(), main.Battle);
+
+            //    //card.getAwayFromParents();
+            //    //Canvas.SetLeft(card, start.X);
+            //    //Canvas.SetTop(card, start.Y);
+            //    //main.Battle.Children.Add(card);
+            //    //MyStoryboard msb3 = CanvasXY(start, end, 500);
+            //    //animator.addAnime(msb3);
+            //}
 
             
 
@@ -1932,8 +1996,9 @@ namespace iDuel_EvolutionX.UI
         {
             MyStoryboard msb = new MyStoryboard();
             msb.Children.Add(Rotate(startAngle, endAngle, time1));
-            msb.Children.Add(CanvasX(start.X, end.X, time2));
-            msb.Children.Add(CanvasY(start.Y, end.Y, time2));
+            msb.Children.Add(CanvasXY(start, end, time2));
+            //msb.Children.Add(CanvasX(start.X, end.X, time2));
+            //msb.Children.Add(CanvasY(start.Y, end.Y, time2));
             return msb;
         }
 

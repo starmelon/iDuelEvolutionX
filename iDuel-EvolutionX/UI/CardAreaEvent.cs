@@ -22,10 +22,20 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2Graveyrad(MyCanvas cv, CardControl card)
         {
+
             card.reSetAtk();
             card.centerAtVerticalInParent();
-            card.set2FrontAtk();
             card.clearSigns();
+            if (card.Status == Status.BACK_ATK)
+            {
+                CardAnimation.turn2Front(card);
+            }
+            else
+            {
+                card.set2FrontAtk();
+            }
+            //card.set2FrontAtk();
+            
             card.ContextMenu = AllMenu.Instance.cm_graveyard;
         }
 
@@ -188,13 +198,14 @@ namespace iDuel_EvolutionX.UI
                 判断加入前最顶层的卡的状态，若是只要是存在背面或防守，则应先启动相关动画
                 */
 
-                CardAnimation.setTransformGroup(second);
+                //CardAnimation.setTransformGroup(second);
                 TransLibrary.StoryboardChain animator0 = new TransLibrary.StoryboardChain();
 
                 if (second.Status == Status.BACK_DEF)
                 {
 
-                    MyStoryboard msb1 = CardAnimation.ScaleX_120_Rotate(-90, 0, 150, 200);
+                    //MyStoryboard msb1 = CardAnimation.ScaleX_120_Rotate(-90, 0, 150, 200);
+                    MyStoryboard msb1 = CardAnimation.scalX_120_rotate_9020();
                     msb1.card = second;
                     msb1.Completed += (object sender_, EventArgs e_) =>
                     {
@@ -203,7 +214,7 @@ namespace iDuel_EvolutionX.UI
                         //msb1.card.showImg();
                     };
                     animator0.Animates.Add(msb1);
-                    MyStoryboard msb2 = CardAnimation.ScaleX_021(150);
+                    MyStoryboard msb2 = CardAnimation.scalX_021();
                     animator0.Animates.Add(msb2);
                 }
                 if (second.Status == Status.FRONT_DEF)
