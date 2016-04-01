@@ -174,6 +174,7 @@ namespace iDuel_EvolutionX.Model
         {
             Status = Status.FRONT_ATK;
             showImg();
+            setAngle2zero();
         }
 
         /// <summary>
@@ -183,6 +184,7 @@ namespace iDuel_EvolutionX.Model
         {
             Status = Status.FRONT_DEF;
             showImg();
+            
         }
 
         /// <summary>
@@ -201,8 +203,12 @@ namespace iDuel_EvolutionX.Model
         {
             Status = Status.BACK_ATK;
             showImg();
+            setAngle2zero();
         }
 
+        /// <summary>
+        /// 重置攻击力
+        /// </summary>
         public void reSetAtk()
         {
             CurAtk = info.atk;
@@ -274,15 +280,15 @@ namespace iDuel_EvolutionX.Model
             double left = this.ActualWidth == double.NaN || this.ActualHeight == 0 ? (parent.ActualWidth - this.Width) / 2.0 : (parent.ActualWidth - this.ActualWidth) / 2.0;
             Canvas.SetTop(this, top);
             Canvas.SetLeft(this, left);
-            TransformGroup tfg = this.RenderTransform as TransformGroup;
-            RotateTransform rt = tfg.Children[1] as RotateTransform;
-            rt.Angle = 0;
+            setAngle2zero();
             //tfg.Children[1].an
             ////this.RenderTransform.SetValue(new PropertyPath("RenderTransform.Children[1].Angle"), 90);
             ////this.SetValue(new DependencyPropertyPath("RenderTransform.Children[1].Angle"), 90);
             //RotateTransform rotateTransform = new RotateTransform(0);
             //this.RenderTransform = rotateTransform;
         }
+
+        
 
         /// <summary>
         /// 横向居中于父控件
@@ -306,6 +312,13 @@ namespace iDuel_EvolutionX.Model
             //RotateTransform rotateTransform = new RotateTransform(-90);
             //this.RenderTransform = rotateTransform;
 
+        }
+
+        private void setAngle2zero()
+        {
+            TransformGroup tfg = this.RenderTransform as TransformGroup;
+            RotateTransform rt = tfg.Children[1] as RotateTransform;
+            rt.Angle = 0;
         }
 
         #endregion

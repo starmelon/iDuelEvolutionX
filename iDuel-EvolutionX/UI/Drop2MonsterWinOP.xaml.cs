@@ -13,42 +13,42 @@ using System.Windows.Shapes;
 
 namespace iDuel_EvolutionX.UI
 {
-    public enum CardAction
+    public enum Drop2MonsterWinOPResult
     {
         INSERT,
-        OVERLAY
+        ATK
 
     }
 
-    public delegate void MyDelegate(CardAction action);
+    public delegate void Drop2MonsterOPDelegate(Drop2MonsterWinOPResult result);
 
     /// <summary>
     /// OverOrInsert.xaml 的交互逻辑
     /// </summary>
-    public partial class OverOrInsert : Window
+    public partial class Drop2MonsterWinOP : Window
     {
         
 
-        public event MyDelegate sendResult;
+        public event Drop2MonsterOPDelegate sendResult;
 
 
-        public OverOrInsert()
+        public Drop2MonsterWinOP()
         {
             InitializeComponent();
 
             btn_insert.Click += new RoutedEventHandler(insertClick);
-            btn_add.Click += new RoutedEventHandler(addClick);
+            btn_atk.Click += new RoutedEventHandler(atkClick);
         }
 
         private void insertClick(object sender, RoutedEventArgs e)
         {
-            sendResult(CardAction.INSERT);
+            sendResult(Drop2MonsterWinOPResult.INSERT);
             this.Close();
         }
 
-        private void addClick(object sender, RoutedEventArgs e)
+        private void atkClick(object sender, RoutedEventArgs e)
         {
-            sendResult(CardAction.OVERLAY);
+            sendResult(Drop2MonsterWinOPResult.ATK);
             this.Close();
         }
     }

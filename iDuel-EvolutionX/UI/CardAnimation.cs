@@ -26,299 +26,34 @@ namespace iDuel_EvolutionX.UI
             
         }
 
-        /// <summary>
-        /// 翻转动画
-        /// </summary>
-        /// <param name="card">卡片对象</param>
-        /// <param name="angle_star">起始角度</param>
-        /// <param name="angle_end">终止角度</param>
-        public static void RotateOut(Card card, double angle_star, double angle_end)
-        {
+        
 
-            RotateTransform rtf = new RotateTransform();
-            card.RenderTransform = rtf;
+        
 
-            //da.From = 0;    //起始值
-            //da.To = 1;      //结束值
-            //da.Duration = TimeSpan.FromSeconds(3);         //动画持续时间
-            //this.textBlock1.BeginAnimation(card.OpacityProperty, da);//开始动画
-
-            Storyboard storyboard = new Storyboard();
-
-            DoubleAnimation rotate = new DoubleAnimation(angle_star, angle_end, new Duration(TimeSpan.FromMilliseconds(300)));
-            storyboard.Children.Add(rotate);
-            Storyboard.SetTarget(rotate, card);
-            Storyboard.SetTargetProperty(rotate, new PropertyPath("RenderTransform.Angle"));
-
-
-            DoubleAnimation da = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(300)));
-            storyboard.Children.Add(da);
-            Storyboard.SetTarget(da, card);
-            Storyboard.SetTargetProperty(da, new PropertyPath("Opacity"));
-
-            storyboard.Completed += (object c, EventArgs d) =>
-            {
-                card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
-                card.RenderTransform.SetValue(RotateTransform.AngleProperty, angle_end);
-                storyboard = null;
-            };
-
-            storyboard.Begin();
-        }
-
-        /// <summary>
-        /// 卡片移动动画
-        /// </summary>
-        /// <param name="card">卡片实例</param>
-        /// <param name="start">起始位置</param>
-        /// <param name="end">终止位置</param>
-        /// <param name="time">运行时间</param>
-        public static void MoveAnimation(CardControl card, Point start, Point end, string to, int time)
-        {
-            //新建动画故事版
-            Storyboard sb = new Storyboard();
-
-            //设定X和Y坐标的方向动画
-            DoubleAnimation xA = new DoubleAnimation(start.X, end.X, TimeSpan.FromMilliseconds(time));
-            DoubleAnimation yA = new DoubleAnimation(start.Y, end.Y, TimeSpan.FromMilliseconds(time));
-
-            //把方向动画加入故事版
-            sb.Children.Add(xA);
-            sb.Children.Add(yA);
-
-            //关联操作的卡片和方向动画
-            Storyboard.SetTarget(xA, card);
-            Storyboard.SetTarget(yA, card);
-
-            //关联具体要执行动画的依赖属性
-            Storyboard.SetTargetProperty(xA, new PropertyPath("(Canvas.Left)"));
-            Storyboard.SetTargetProperty(yA, new PropertyPath("(Canvas.Top)"));
-
-            //该部分为动画执行完成后调用
-            //1.从移动面板中取出
-            //2.确定目的地
-            //3.取消动画对移动对线依赖属性的影响，即置空
-            sb.Completed += (object c, EventArgs d) =>
-            {
-                //从移动面板Canvas分离
-                mainwindow.Battle.Children.Remove(card);
-
-                //清空属性和动画的关联绑定
-                card.BeginAnimation(Canvas.LeftProperty, null);
-                card.BeginAnimation(Canvas.TopProperty, null);
-                //card.Margin = new Thickness(3, 3, 3, 3);
-
-                //对被操作过的属性置0
-                if (!to.Equals("手卡") && !to.Equals("对手前场"))
-                {
-                    Canvas.SetTop(card, 0);
-                    Canvas.SetLeft(card, 0);
-                }
-
-                switch (to)
-                {
-                    case "手卡":
-                        card.Margin = new Thickness(0);                   
-                        mainwindow.card_1_hand.Children.Add(card);
-                        CardOperate.sort_HandCard(mainwindow.card_1_hand);
-                        break;
-                    case "墓地":                            
-                        mainwindow.card_1_Graveyard.Children.Add(card);
-                        CardOperate.card_FrontAtk(card);
-                        CardOperate.sort_SingleCard(card);
-                        
-                        break;
-                    case "除外":
-                        mainwindow.card_1_Outside.Children.Add(card);
-                        break;
-                    case "额外":
-                        //CardOperate.card_ExtraSort(card, mainwindow.card_1_Extra);
-                        CardOperate.card_BackAtk(card);
-                        //CardOperate.CardSortsingle(mainwindow.card_1_Extra, card, 56, 81);
-                        
-                        break;
-                    case "怪物":
-
-                        break;
-                    case "魔陷": break;
-                    case "场地":
-                        //CardOperate.get_Firstcard2Battle(6);
-                        mainwindow.card_1_Area.Children.Add(card);
-                        break;
-                    case "卡组":
-                        
-                        mainwindow.card_1_Deck.Children.Add(card);
-                        CardOperate.card_BackAtk(card);
-                        CardOperate.sort_SingleCard(card);
-                        break;
-                    case "对手墓地":
-                        //mainwindow.card_1_Deck.Children.Insert(0, card);
-                        mainwindow.card_2_Graveyard.Children.Add(card);
-                        CardOperate.card_FrontAtk(card);
-                        //RotateTransform rtf = new RotateTransform(180);
-                        CardOperate.sort_SingleCard(card);
-                        // CardOperate.HandCardSort();
-                        break;
-                    case "对手前场":
-                        //mainwindow.card_1_Deck.Children.Insert(0, card);
-                        //mainwindow.card_2_Graveyard.Children.Add(card);
-                        if (mainwindow.card_2_6.Children.Count == 0)
-                        {
-                            mainwindow.card_2_6.Children.Add(card);
-                        }
-                        else if (mainwindow.card_2_7.Children.Count == 0)
-                        {
-                            mainwindow.card_2_7.Children.Add(card);
-                        }
-                        else if (mainwindow.card_2_8.Children.Count == 0)
-                        {
-                            mainwindow.card_2_8.Children.Add(card);
-                        }
-                        else if (mainwindow.card_2_9.Children.Count == 0)
-                        {
-                            mainwindow.card_2_9.Children.Add(card);
-                        }
-                        else if (mainwindow.card_2_10.Children.Count == 0)
-                        {
-                            mainwindow.card_2_10.Children.Add(card);
-                        }
-                        Canvas cv = card.Parent as Canvas;
-                        CardOperate.sort_Canvas(cv);
-
-                        //Canvas.SetLeft(card, 12.5);
-                        //Canvas.SetTop(card, 0);
-                        //Canvas.SetBottom(card, 3);
-
-
-                        card.ContextMenu = null;//取消菜单命令
-                        //card.PreviewMouseMove -= CardEvent.CardDragStart;
-                        //card.MouseDown -= CardEvent.ClikDouble;
-                        
-                        //card.Margin = new Thickness(0);
-                        break;
-
-                       
-                }
-
-                
-
-
-                //清理动画
-                sb.Remove(card);
-                sb = null;
-                GC.Collect();
-                Console.WriteLine("清理内存");
-            };
-
-            //动画开始
-            sb.Begin();
-        }
-
-        public static MyStoryboard FadeOut(Card card,double time)
+        public static MyStoryboard FadeOut(double time)
         {
             MyStoryboard msb = new MyStoryboard();
-            //msb.card = card;
-            //DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
-            //keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time+50));
-            //Storyboard.SetTarget(keyFramesAnimation, card);
-            //Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("Opacity"));
-
-            //LinearDoubleKeyFrame keyFram = new LinearDoubleKeyFrame();
-            //keyFram.Value = 0;
-            //keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
-            //keyFramesAnimation.KeyFrames.Add(keyFram);
-
-            //msb.Children.Add(keyFramesAnimation);
-
-            return msb;
-        }
-
-        public static MyStoryboard FadeIn(Card card, double time)
-        {
-            MyStoryboard msb = new MyStoryboard();
-            //msb.card = card;
-            //DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
-            //keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
-            //Storyboard.SetTarget(keyFramesAnimation, card);
-            //Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("Opacity"));
-
-            ////0秒位置是0
-            //LinearDoubleKeyFrame keyFram = new LinearDoubleKeyFrame();
-            //keyFram.Value = 0;
-            //keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0));
-            //keyFramesAnimation.KeyFrames.Add(keyFram);
-
-            ////1秒位置是1
-            //LinearDoubleKeyFrame keyFram2 = new LinearDoubleKeyFrame();
-            //keyFram2.Value = 1;
-            //keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
-            //keyFramesAnimation.KeyFrames.Add(keyFram2);
-
-            //msb.Children.Add(keyFramesAnimation);
-
-            return msb;
-        }
-
-        /// <summary>
-        /// 卡片淡出淡入
-        /// </summary>
-        /// <param name="card">卡片对象</param>
-        /// <param name="aim_controls">目标位置控件</param>
-        public static void FadeOut(CardControl card,object aim_controls,bool isback) 
-        {
-            Storyboard sb = new Storyboard();
             DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
-            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(300));
-            Storyboard.SetTarget(keyFramesAnimation, card);
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
+
             Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("Opacity"));
 
             LinearDoubleKeyFrame keyFram = new LinearDoubleKeyFrame();
             keyFram.Value = 0;
-            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(250));
+            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
             keyFramesAnimation.KeyFrames.Add(keyFram);
 
-            sb.Children.Add(keyFramesAnimation);
+            msb.Children.Add(keyFramesAnimation);
 
-            sb.Completed += (object c, EventArgs d) =>
-            {
-                card.BeginAnimation(Card.OpacityProperty, null);
-                
-                //card.Opacity = 0;
-                //card.SetValue(Card.OpacityProperty, 1.0);
-                Canvas cv_par = card.Parent as Canvas;
-                Base.getawayParerent(card);
-                Canvas cv = aim_controls as Canvas;
-
-                CardOperate.sort_Canvas(cv_par);
-                
-                CardOperate.sort_HandCard(mainwindow.card_1_hand);
-                CardOperate.sort_HandCard(mainwindow.card_2_hand);
-                cv.Children.Add(card);
-                CardOperate.sort_SingleCard(card);
-                if (!isback) CardOperate.card_FrontAtk(card);
-                //Console.WriteLine(cv.Name);
-                ////card.Margin = new Thickness(3,3,3,3);
-                //RotateTransform rotateTransform = new RotateTransform(0);
-                //card.RenderTransform = rotateTransform;
-                //CardOperate.HandCardSort();
-                //CardOperate.card_lay(cv_par, cv, card, cardview,isback);
-                //CardOperate.get_Firstcard2Battle(6);
-                //if(cv.Name.Equals("card_1_Extra")) CardAnimation.RotateOut(card,)
-                //cv.Children.Add(card);
-                FadeIn(card,aim_controls);
-                
-                sb = null;
-            };
-
-            sb.Begin();
+            return msb;
         }
 
-        public static void FadeIn(CardControl card,object aim_controls) 
+        public static MyStoryboard FadeIn(double time)
         {
-            Storyboard sb = new Storyboard();
+            MyStoryboard msb = new MyStoryboard();
+
             DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
-            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(1000));
-            Storyboard.SetTarget(keyFramesAnimation, card);
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
             Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("Opacity"));
 
             //0秒位置是0
@@ -330,22 +65,17 @@ namespace iDuel_EvolutionX.UI
             //1秒位置是1
             LinearDoubleKeyFrame keyFram2 = new LinearDoubleKeyFrame();
             keyFram2.Value = 1;
-            keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1));
+            keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
             keyFramesAnimation.KeyFrames.Add(keyFram2);
 
-            sb.Children.Add(keyFramesAnimation);
+            msb.Children.Add(keyFramesAnimation);
 
-            sb.Completed += (object c, EventArgs d) =>
-            {
-                card.BeginAnimation(Card.OpacityProperty, null);
-                
-                //card.Opacity = 1;
-                
-                sb = null;
-            };
-
-            sb.Begin();
+            return msb;
         }
+
+        
+
+        
 
 
         /// <summary>
@@ -402,131 +132,11 @@ namespace iDuel_EvolutionX.UI
 
 
         #region
- 
-        /// <summary>
-        /// 普通召唤
-        /// </summary>
-        /// <param name="card"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public static MyStoryboard MoveAnimation2Summon(Card card, Point start, Point end, int time)
-        {
-            MyStoryboard sb = new MyStoryboard();
-
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(start.X, end.X, TimeSpan.FromMilliseconds(time));
-            //DoubleAnimation yA = new DoubleAnimation(start.Y, end.Y, TimeSpan.FromMilliseconds(time));
-            //DoubleAnimation dA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300));
-
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            //Storyboard.SetTarget(yA, card);
-            //Storyboard.SetTarget(dA, card);
-
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(Canvas.Left)"));
-            //Storyboard.SetTargetProperty(yA, new PropertyPath("(Canvas.Top)"));
-            //Storyboard.SetTargetProperty(dA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-
-            ////把方向动画加入故事版
-            //sb.Children.Add(xA);
-            //sb.Children.Add(yA);
-            //sb.Children.Add(dA);
-
-            //sb.card = card;
-
-            return sb;
- 
-        }
-        
-        /// <summary>
-        /// 防守盖放
-        /// </summary>
-        /// <param name="card"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public static MyStoryboard MoveAnimation2Def(Card card, Point start, Point end, int time)
-        {
-
-            MyStoryboard sb = new MyStoryboard();
-
-           // //设定X和Y坐标的方向动画
-           // DoubleAnimation xA = new DoubleAnimation(start.X, end.X, TimeSpan.FromMilliseconds(time));
-           // DoubleAnimation yA = new DoubleAnimation(start.Y, end.Y, TimeSpan.FromMilliseconds(time));
-           // //DoubleAnimation dA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300));
-           // DoubleAnimation rA = new DoubleAnimation(0, -90, new Duration(TimeSpan.FromMilliseconds(200)));
-            
-            
-
-           // //关联操作的卡片和方向动画
-           // Storyboard.SetTarget(xA, card);
-           // Storyboard.SetTarget(yA, card);
-           // //Storyboard.SetTarget(dA, card);
-           // Storyboard.SetTarget(rA, card);
 
 
-           // //关联具体要执行动画的依赖属性
-           // Storyboard.SetTargetProperty(xA, new PropertyPath("(Canvas.Left)"));
-           // Storyboard.SetTargetProperty(yA, new PropertyPath("(Canvas.Top)"));
-           //// Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(Canvas.Left)"));
-           // //Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(Canvas.Top)"));
-           // //Storyboard.SetTargetProperty(dA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-           // Storyboard.SetTargetProperty(rA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
-
-
-            
-
-           // //把方向动画加入故事版
-           // sb.Children.Add(xA);
-           // sb.Children.Add(yA);
-           // //sb.Children.Add(dA);
-           // sb.Children.Add(rA);
-
-
-           // sb.card = card;
-
-            return sb;
-
-        }
-
-        public static MyStoryboard MoveAnimation2Atk(Card card, Point start, Point end, int time)
-        {
-
-            MyStoryboard sb = new MyStoryboard();
-
-            ////设定X和Y坐标的方向动画
-            //DoubleAnimation xA = new DoubleAnimation(start.X, end.X, TimeSpan.FromMilliseconds(time));
-            //DoubleAnimation yA = new DoubleAnimation(start.Y, end.Y, TimeSpan.FromMilliseconds(time));
-            //DoubleAnimation rA = new DoubleAnimation(-90,0, new Duration(TimeSpan.FromMilliseconds(300)));
-
-            ////关联操作的卡片和方向动画
-            //Storyboard.SetTarget(xA, card);
-            //Storyboard.SetTarget(yA, card);
-            ////Storyboard.SetTarget(dA, card);
-            //Storyboard.SetTarget(rA, card);
-
-
-            ////关联具体要执行动画的依赖属性
-            //Storyboard.SetTargetProperty(xA, new PropertyPath("(Canvas.Left)"));
-            //Storyboard.SetTargetProperty(yA, new PropertyPath("(Canvas.Top)"));
-            //Storyboard.SetTargetProperty(rA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
-
-            ////把方向动画加入故事版
-            //sb.Children.Add(xA);
-            //sb.Children.Add(yA);
-            //sb.Children.Add(rA);
-
-
-            //sb.card = card;
-
-            return sb;
-
-        }
 
         /// <summary>
+        /// 表示形式变更
         /// 攻→守
         /// </summary>
         /// <param name="card"></param>
@@ -546,6 +156,7 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
+        /// 表示形式变更
         /// 守→攻
         /// </summary>
         /// <param name="card"></param>
@@ -562,6 +173,11 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        /// <summary>
+        /// 表示形式变更
+        /// 旋转→背面防守
+        /// </summary>
+        /// <param name="card"></param>
         public static void Rotate2BackDef(CardControl card)
         {
             MyStoryboard msb = Rotate_A2D();
@@ -576,6 +192,7 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
+        /// 表示形式变更
         /// 里守→表攻
         /// </summary>
         /// <param name="card"></param>
@@ -596,6 +213,46 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        /// <summary>
+        /// 表示形式变更
+        /// →背面防守
+        /// </summary>
+        /// <param name="card"></param>
+        public static void turn2BackDef(CardControl card)
+        {
+            MyStoryboard msb0 = null;
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                    msb0 = scalX_120_rotate_0290();
+                    break;
+                case Status.FRONT_DEF:
+                    msb0 = scalX_120();
+                    break;
+                case Status.BACK_ATK:
+                    msb0 = Rotate_A2D();
+                    break;
+            }
+
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
+                msb0.card.set2BackDef();
+            };
+
+            MyStoryboard msb1 = scalX_021();
+
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+        }
+
+        /// <summary>
+        /// 表示形式改变
+        /// 正面→背面
+        /// </summary>
+        /// <param name="card"></param>
         public static void turn2Back(CardControl card)
         {
             //setAnimePrepare(card);
@@ -623,6 +280,11 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        /// <summary>
+        /// 表示形式变更
+        /// 背面→正面
+        /// </summary>
+        /// <param name="card"></param>
         public static void turn2Front(CardControl card)
         {
             //setAnimePrepare(card);
@@ -651,35 +313,7 @@ namespace iDuel_EvolutionX.UI
         }
 
 
-        public static void turn2BackDef(CardControl card)
-        {
-            MyStoryboard msb0 = null;
-            switch (card.Status)
-            {
-                case Status.FRONT_ATK:
-                    msb0 = scalX_120_rotate_0290();
-                    break;
-                case Status.FRONT_DEF:
-                    msb0 = scalX_120();
-                    break;
-                case Status.BACK_ATK:
-                    msb0 = Rotate_A2D();
-                    break;
-            }
-
-            msb0.card = card;
-            msb0.Completed += (object c, EventArgs d) =>
-            {
-                msb0.card.set2BackDef();
-            };
-
-            MyStoryboard msb1 = scalX_021();
-
-            
-            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-            animator.addAnime(msb0).addAnime(msb1).Begin(card);
-
-        }
+        
 
 
 
@@ -757,70 +391,6 @@ namespace iDuel_EvolutionX.UI
             {
                 
             }
-            //    #region 先变为表攻
-
-            //    if (card.Status == Status.BACK_DEF || card.Status == Status.BACK_ATK)
-            //    {
-            //        MyStoryboard msb0 = null;
-            //        switch (card.Status)
-            //        {
-            //            case Status.BACK_DEF:
-            //                msb0 = scalX_120_rotate_9020();
-            //                break;
-            //            case Status.BACK_ATK:
-            //                msb0 = scalX_120();
-            //                break;
-            //        }
-
-            //        msb0.card = card;
-            //        msb0.Completed += (object c, EventArgs d) =>
-            //        {
-            //            msb0.card.set2FrontAtk();
-            //        };
-            //        animator.addAnime(msb0);
-
-            //        MyStoryboard msb2 = scalX_021();
-            //        msb2 .Completed += (object c, EventArgs d) =>
-            //        {
-            //            frontAtk2Graveyard(card);
-            //        };
-            //        animator.addAnime(msb2);
-            //    }
-            //    else
-            //    {
-            //        MyStoryboard msb1 = Rotate_D2A();
-            //        msb1.Completed += (object c, EventArgs d) =>
-            //        {
-            //            frontAtk2Graveyard(card);
-            //        };
-            //        animator.addAnime(msb1);
-
-            //    }
-
-            //    animator.Begin(card);
-            //    #endregion
-            //}
-            //else
-            //{
-            //    frontAtk2Graveyard(card);
-            //    //MainWindow main = Application.Current.MainWindow as MainWindow;
-            //    //Point start = card.TranslatePoint(new Point(), main.Battle);
-            //    //Point end = main.card_1_Graveyard.TranslatePoint(new Point(), main.Battle);
-
-            //    //card.getAwayFromParents();
-            //    //Canvas.SetLeft(card, start.X);
-            //    //Canvas.SetTop(card, start.Y);
-            //    //main.Battle.Children.Add(card);
-            //    //MyStoryboard msb3 = CanvasXY(start, end, 500);
-            //    //animator.addAnime(msb3);
-            //}
-
-            
-
-            
-
-            //animator.addAnime(msb2).Begin(card);
-
             
 
         }
@@ -849,127 +419,26 @@ namespace iDuel_EvolutionX.UI
             msb.Begin(card);
         }
 
-        //public static void turn2Front(CardControl card)
-        //{
-        //    //setAnimePrepare(card);
 
-        //    MyStoryboard msb0 = scalX_120();
-        //    msb0.card = card;
-        //    msb0.Completed += (object c, EventArgs d) =>
-        //    {
-        //        switch (msb0.card.Status)
-        //        {
-        //            case Status.BACK_ATK:
-        //                msb0.card.Status = Status.FRONT_ATK;
-        //                break;
-        //            case Status.BACK_DEF:
-        //                msb0.card.Status = Status.FRONT_DEF;
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    };
-        //    MyStoryboard msb1 = scalX_021();
+        public static void fadeOut2FadeIn (CardControl card)
+        {
+            MyStoryboard msb0 = FadeOut(300);
+            msb0.card = card;
+            msb0.Completed += (object c, EventArgs d) =>
+            {
 
-        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-        //    animator.addAnime(msb0).addAnime(msb1).Begin(card);
+                card.getAwayFromParents();
+                card.set2FrontAtk();
+                mainwindow.card_1_Outside.Children.Add(msb0.card);
+            };
+            MyStoryboard msb1 = FadeIn(300);
 
-        //}
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+        }
+        
 
-        //public static void Rotate2Def(CardControl card)
-        //{
-        //    setAnimePrepare(card);
-
-        //    MyStoryboard msb0 = scalX_120_rotate_9020(card);
-        //    msb0.Completed += (object c, EventArgs d) =>
-        //    {
-        //        msb0.card.Status = Status.FRONT_ATK;
-        //    };
-        //    MyStoryboard msb1 = scalX_021(card);
-
-        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-        //    animator.addAnime(msb0).addAnime(msb1).Begin();
-
-        //}
-
-
-        ///// <summary>
-        ///// 表攻→里守
-        ///// </summary>
-        ///// <param name="card"></param>
-        //public static void Rotate2Def(CardControl card)
-        //{
-        //    RotateTransform rotate = new RotateTransform();
-        //    ScaleTransform scale = new ScaleTransform();
-        //    TransformGroup group = new TransformGroup();
-        //    group.Children.Add(scale);
-        //    group.Children.Add(rotate);
-        //    card.RenderTransform = group;
-
-        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-
-        //    //MyStoryboard msb1 = Rotate(card, 90.0, 0.0);
-        //    //animator.Animates.Add(msb1);
-
-        //    MyStoryboard msb2 = scalX_120_rotate_0290(card);
-        //    msb2.Completed += (object c, EventArgs d) =>
-        //    {
-        //        //msb2.card.SetPic();
-        //    };
-        //    animator.Animates.Add(msb2);
-
-
-
-        //    MyStoryboard msb3 = scalX_021(card);
-
-        //    animator.Animates.Add(msb3);
-
-        //    animator.Begin();
-
-        //}
-
-        /// <summary>
-        /// 里侧←→表侧
-        /// </summary>
-        /// <param name="card"></param>
-        //public static void Rotate_card(CardControl card)
-        //{
-        //    //double angle = (double) card.RenderTransform.GetValue(RotateTransform.AngleProperty);
-
-        //    RotateTransform rotate = new RotateTransform();
-        //    //if (card.isDef)
-        //    //{
-        //    //     rotate = new RotateTransform(-90);
-        //    //}
-        //    ScaleTransform scale = new ScaleTransform();
-        //    TransformGroup group = new TransformGroup();
-        //    group.Children.Add(scale);
-        //    group.Children.Add(rotate);
-        //    card.RenderTransform = group;
-
-        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-        //    MyStoryboard msb1 = scalX_120(card,300);
-        //    msb1.Completed += (object c, EventArgs d) =>
-        //    {
-        //        //msb1.card.RenderTransform.SetValue(RotateTransform.AngleProperty, angle);
-        //        //msb1.card.SetPic();
-        //        //CardOperate.card_FrontAtk(msb1.card);
-        //    };
-        //    animator.Animates.Add(msb1);
-
-        //    MyStoryboard msb2 = scalX_021(card);
-        //    msb2.Completed += (object c, EventArgs d) =>
-        //    {
-        //        msb2.card.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-        //        msb2.card.RenderTransform.SetValue(ScaleTransform.ScaleXProperty, (double)1);
-        //        //msb2.
-        //        //card.RenderTransform = null;
-        //    };
-
-        //    animator.Animates.Add(msb2);
-
-        //    animator.Begin();
-        //}
+        
 
         /// <summary>
         /// 卡片顺时针翻旋-P1

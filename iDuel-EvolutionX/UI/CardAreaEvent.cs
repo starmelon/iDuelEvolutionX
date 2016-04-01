@@ -378,6 +378,7 @@ namespace iDuel_EvolutionX.UI
         {
             card.clearSigns();
             card.reSetAtk();
+            card.set2FrontAtk();
             int count = cv.Children.Count;
 
             Service.CardOperate.sort_HandCard(cv);

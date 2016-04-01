@@ -82,7 +82,6 @@ namespace iDuel_EvolutionX.Service
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
-                    
                 case Status.FRONT_DEF:
                     CardAnimation.turn2Back(card);
                     break;
@@ -117,6 +116,12 @@ namespace iDuel_EvolutionX.Service
 
             CardAnimation.move2Graveyard(card);
 
+        }
+
+        public static void excuete_release2Banish(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            CardAnimation.fadeOut2FadeIn(card);
         }
 
         //判断要执行的命令
@@ -1582,6 +1587,8 @@ namespace iDuel_EvolutionX.Service
 
 
         }
+
+        
 
 
         #region <-- 将顶牌放回卡组底部 -->

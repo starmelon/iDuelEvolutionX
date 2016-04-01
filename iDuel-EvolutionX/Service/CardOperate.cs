@@ -847,20 +847,21 @@ namespace iDuel_EvolutionX.Service
 
                 if (cv_aim.Children.Count > 0)
                 {
-                    OverOrInsert oi = new OverOrInsert();
+                    Drop2MonsterWin oi = new Drop2MonsterWin();
                     oi.Owner = mainwindow;
-                    oi.sendResult += new MyDelegate(result => {
+                    oi.sendResult += new Drop2MonsterDelegate(result => {
 
+                       
                         switch (result)
                         {
-                            case CardAction.INSERT:
+                            case Drop2MonsterWinResult.INSERT:
                                 cv_aim.Children.Insert(0, card);
                                 //card.set2FrontAtk();
                                 //Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
                                 //Canvas.SetLeft(card, cv_aim.ActualWidth - card.ActualWidth);
                                 //sort(cv_aim, null);
                                 break;
-                            case CardAction.OVERLAY:
+                            case Drop2MonsterWinResult.OVERLAY:
                                 cv_aim.Children.Add(card);
                                 break;
                             default:
@@ -1051,17 +1052,37 @@ namespace iDuel_EvolutionX.Service
                 {
                     return;
                 }
-                
-                #region 清除指示物
 
-                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                if (sp != null) sp.Children.Clear();
+                Drag2MainDeckWin oi = new Drag2MainDeckWin();
+                oi.Owner = mainwindow;
+                oi.sendResult += new Drop2MainDeckDelegate(result => {
 
-                #endregion
+                    card.getAwayFromParents();
+                    card.set2BackAtk();
 
-                card.getAwayFromParents();
-                card.set2BackAtk();
-                cv_aim.Children.Add(card);
+                    switch (result)
+                    {
+                        case Drop2MainDeckResult.UP:
+                            cv_aim.Children.Add(card);
+                            break;
+                        case Drop2MainDeckResult.MIDDLE:
+                            break;
+                        case Drop2MainDeckResult.BOTTOM:
+                            cv_aim.Children.Insert(0, card);
+                            break;
+                        default:
+                            break;
+                    }
+
+                });
+
+                //Point p = new Point();
+                Point p = cv_aim.PointToScreen(new Point(0, 0));
+                oi.Top = p.Y - oi.Height;
+                oi.Left = p.X - ((oi.Width - cv_aim.ActualWidth) / 2);
+                oi.ShowDialog();
+
+               
      
             }
         }

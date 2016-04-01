@@ -367,10 +367,10 @@ namespace iDuel_EvolutionX
                     CardCommands.Release2Graveyard,
                     MenuItemOperate.excuete_release2Graveyard));
 
-            this.Battle.CommandBindings.Add(
+            this.CommandBindings.Add(
                 new CommandBinding(
                     CardCommands.Release2Banish,
-                    MenuItemOperate.excuete_set2BackDef));
+                    MenuItemOperate.excuete_release2Banish));
 
             #endregion
 

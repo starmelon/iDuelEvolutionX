@@ -1,0 +1,24 @@
+﻿<Window x:Class="iDuel_EvolutionX.UI.Drag2MainDeckWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:iDuel_EvolutionX.UI"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        WindowStartupLocation="Manual"
+        ResizeMode="NoResize"
+        Title="OverOrInsert" Height="50" Width="150">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button Name="btn_up" Grid.Column="0" Content="顶部"/>
+        <Button Name="btn_middle" Grid.Column="1" Content="洗切"/>
+        <Button Name="btn_bottom" Grid.Column="2" Content="底部"/>
+        
+    </Grid>
+</Window>

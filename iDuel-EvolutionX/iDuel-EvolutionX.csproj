@@ -112,6 +112,9 @@
     <Compile Include="UI\Base.cs" />
     <Compile Include="UI\CardAnimation.cs" />
     <Compile Include="UI\DragAdorner.cs" />
+    <Compile Include="UI\Drop2MonsterWinOP.xaml.cs">
+      <DependentUpon>Drop2MonsterWinOP.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\DuelEvent.cs" />
     <Compile Include="UI\CardMenu.cs" />
     <Compile Include="UI\EditRemark.xaml.cs">
@@ -123,8 +126,11 @@
     <Compile Include="UI\MyCanvas.xaml.cs">
       <DependentUpon>MyCanvas.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\OverOrInsert.xaml.cs">
-      <DependentUpon>OverOrInsert.xaml</DependentUpon>
+    <Compile Include="UI\Drop2MainDeckWin.xaml.cs">
+      <DependentUpon>Drop2MainDeckWin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Drop2MonsterWin.xaml.cs">
+      <DependentUpon>Drop2MonsterWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\SignTextBlock.xaml.cs">
       <DependentUpon>SignTextBlock.xaml</DependentUpon>
@@ -133,6 +139,10 @@
     <Compile Include="UI\XYZmaterialView.xaml.cs">
       <DependentUpon>XYZmaterialView.xaml</DependentUpon>
     </Compile>
+    <Page Include="UI\Drop2MonsterWinOP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\EditRemark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,7 +155,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\OverOrInsert.xaml">
+    <Page Include="UI\Drop2MainDeckWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Drop2MonsterWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

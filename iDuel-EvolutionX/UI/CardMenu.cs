@@ -108,6 +108,8 @@ namespace iDuel_EvolutionX.UI
                 release2Graveyard.Command = CardCommands.Release2Graveyard;
                 release.Items.Add(release2Banish);
                 AllMenu.setMenuItemBind(release2Banish);
+                release2Banish.Command = CardCommands.Release2Banish;
+
                 this.AddChild(release);
 
                 //release.Click += new RoutedEventHandler(DuelEvent.MenuItem_Handle);
