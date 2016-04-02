@@ -18,8 +18,8 @@ namespace iDuel_EvolutionX.Model
     {
         public int id;
         public CardInfo info;               //卡片信息
-        private string curAtk;               //当前攻击力
-        private string curDef;               //当前防守力
+        public string curAtk;               //当前攻击力
+        public string curDef;               //当前防守力
         public BitmapImage backImage;       //卡背
         public BitmapImage originalImage;   //卡图
         private Status status;               //攻守正背
@@ -98,8 +98,61 @@ namespace iDuel_EvolutionX.Model
             this.RenderTransform = group;
 
             signs = new List<SignTextBlock>();
-  
+
+
+            
+
+            this.ContextMenuOpening += CardControl_ContextMenuOpening;
+            this.MouseWheel += CardControl_MouseWheel;
         }
+
+        #region 弹出菜单操作
+
+        private void CardControl_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            //屏蔽右键弹出
+            e.Handled = true;
+        }
+
+        private void CardControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (this.ContextMenu == null)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            if (e.Delta > 0)
+            {
+
+                
+                this.ContextMenu.PlacementTarget = this;
+                this.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
+                this.ContextMenu.IsOpen = true;
+                switch (status)
+                {
+                    case Status.FRONT_ATK:
+                    case Status.BACK_ATK:
+                        this.ContextMenu.VerticalOffset = 0;
+                        this.ContextMenu.HorizontalOffset = -(this.ContextMenu.ActualWidth - this.Width) / 2;
+                        break;
+                    case Status.FRONT_DEF:
+                    case Status.BACK_DEF:
+                        this.ContextMenu.HorizontalOffset = this.Width;
+                        this.ContextMenu.VerticalOffset = -(this.ContextMenu.ActualWidth - this.Height) / 2;
+                        break;
+                    default:
+                        break;
+                }
+                
+                
+            }
+           
+            ///关闭事件则在菜单初始化所注册
+
+        }
+
+        #endregion
 
         #region 初始化卡片信息
 
@@ -281,11 +334,7 @@ namespace iDuel_EvolutionX.Model
             Canvas.SetTop(this, top);
             Canvas.SetLeft(this, left);
             setAngle2zero();
-            //tfg.Children[1].an
-            ////this.RenderTransform.SetValue(new PropertyPath("RenderTransform.Children[1].Angle"), 90);
-            ////this.SetValue(new DependencyPropertyPath("RenderTransform.Children[1].Angle"), 90);
-            //RotateTransform rotateTransform = new RotateTransform(0);
-            //this.RenderTransform = rotateTransform;
+
         }
 
         
@@ -309,8 +358,6 @@ namespace iDuel_EvolutionX.Model
             TransformGroup tfg = this.RenderTransform as TransformGroup;
             RotateTransform rt = tfg.Children[1] as RotateTransform;
             rt.Angle = -90;
-            //RotateTransform rotateTransform = new RotateTransform(-90);
-            //this.RenderTransform = rotateTransform;
 
         }
 

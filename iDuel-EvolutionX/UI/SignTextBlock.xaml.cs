@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iDuel_EvolutionX.Model;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,14 +76,23 @@ namespace iDuel_EvolutionX.UI
         /// <param name="e"></param>
         private void content_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            Console.WriteLine(e.Delta);
             if (e.Delta>0)
             {
-                this.Content = (Convert.ToInt32(this.Content) + 5).ToString();
+                this.Content = (Convert.ToInt32(this.Content) + 3).ToString();
             }
             else
             {
-                int temp = Convert.ToInt32(this.Content) - 5;
-                this.Content = (temp < 0 ? 0 : temp ).ToString();
+                int temp = Convert.ToInt32(this.Content) - 1;
+                if (temp < 1)
+                {
+                    clearSelf();
+                }
+                else
+                {
+                    this.Content = temp.ToString(); ;
+                }
+                //this.Content = (temp < 0 ? 0 : temp ).ToString();
             }
             
         }
@@ -94,25 +104,33 @@ namespace iDuel_EvolutionX.UI
         /// <param name="e"></param>
         private void content_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.Content = (Convert.ToInt32(this.Content) + 1).ToString();
-                }
-                if (e.RightButton == MouseButtonState.Pressed)
-                {
-                    int temp = Convert.ToInt32(this.Content) - 1;
-                    this.Content = (temp < 0 ? 0 : temp).ToString();
-                }
+                this.Content = (Convert.ToInt32(this.Content) + 1).ToString();
             }
+
             
             
+        }
+
+        public void clearSelf()
+        {
+            CardControl card = this.Tag as CardControl;
+            if (card == null)
+            {
+                return;
+            }
+            card.signs.Remove(this);
+            Tag = null;
+            (this.Parent as StackPanel).Children.Remove(this);
+            Dispose();
         }
 
         public void Dispose()
         {
             BindingOperations.ClearBinding(this, SignTextBlock.ContentProperty);
         }
+
+
     }
 }

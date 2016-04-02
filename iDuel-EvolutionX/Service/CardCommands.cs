@@ -13,7 +13,7 @@ namespace iDuel_EvolutionX.Service
         private static RoutedUICommand addBlackSign;
         private static RoutedUICommand addRedSign;
         private static RoutedUICommand addGreenSign;
-        //private static RoutedUICommand add
+
         private static RoutedUICommand setCardRemark;
         private static RoutedUICommand set2AtkOrDef;
         private static RoutedUICommand set2FrontOrBack;
@@ -21,6 +21,8 @@ namespace iDuel_EvolutionX.Service
 
         private static RoutedUICommand release2Graveyard;
         private static RoutedUICommand release2Banish;
+
+        private static RoutedUICommand back2MainDeck;
 
         static CardCommands()
         {
@@ -37,6 +39,7 @@ namespace iDuel_EvolutionX.Service
             release2Graveyard = new RoutedUICommand("release2Graveyard", "release2Graveyard", typeof(CardCommands));
             release2Banish = new RoutedUICommand("release2Banish", "release2Banish", typeof(CardCommands));
 
+            back2MainDeck = new RoutedUICommand("back2MainDeck", "back2MainDeck", typeof(CardCommands));
         }
 
         public static RoutedUICommand AddBlueSign
@@ -126,6 +129,15 @@ namespace iDuel_EvolutionX.Service
             get
             {
                 return release2Banish;
+            }
+
+        }
+
+        public static RoutedUICommand Back2MainDeck
+        {
+            get
+            {
+                return back2MainDeck;
             }
 
         }

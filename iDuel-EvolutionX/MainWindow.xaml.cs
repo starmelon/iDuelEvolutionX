@@ -342,6 +342,7 @@ namespace iDuel_EvolutionX
             setSignCommandsHandleByMyCanvas(cb);
 
 
+
             this.CommandBindings.Add(
                 new CommandBinding(
                     CardCommands.SetCardRemark,
@@ -372,10 +373,23 @@ namespace iDuel_EvolutionX
                     CardCommands.Release2Banish,
                     MenuItemOperate.excuete_release2Banish));
 
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Back2MainDeck,
+                    MenuItemOperate.excuete_back2MainDeck));
+
             #endregion
 
 
+            #region 注册攻守显示控件事件
 
+            atk_1_6.MouseDown += CardOperate.setAtkOrDef;
+            atk_1_7.MouseDown += CardOperate.setAtkOrDef;
+            atk_1_8.MouseDown += CardOperate.setAtkOrDef;
+            atk_1_9.MouseDown += CardOperate.setAtkOrDef;
+            atk_1_10.MouseDown += CardOperate.setAtkOrDef;
+
+            #endregion
 
             #endregion
 
@@ -601,14 +615,24 @@ namespace iDuel_EvolutionX
             
         }
 
-        
-    
-        
+        private void atk_1_6_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            TextBlock tb = sender as TextBlock;
+            if (tb.Text.Equals("?") || String.IsNullOrEmpty(tb.Text))
+            {
+                return;
+            }
+            CardControl card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardControl;
 
-        
-
-        
-        
+            if (e.Delta>0)
+            {
+                card.CurAtk = (Convert.ToDouble(card.curAtk) + 100d).ToString();
+            }
+            else
+            {
+                card.CurAtk = (Convert.ToDouble(card.curAtk) - 100d ).ToString();
+            }
+        }
     }
 
     

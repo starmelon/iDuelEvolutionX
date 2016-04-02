@@ -120,8 +120,8 @@
     <Compile Include="UI\EditRemark.xaml.cs">
       <DependentUpon>EditRemark.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ModifyAtkOrDef.xaml.cs">
-      <DependentUpon>ModifyAtkOrDef.xaml</DependentUpon>
+    <Compile Include="UI\ModifyAtkOrDefWin.xaml.cs">
+      <DependentUpon>ModifyAtkOrDefWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\MyCanvas.xaml.cs">
       <DependentUpon>MyCanvas.xaml</DependentUpon>
@@ -147,7 +147,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ModifyAtkOrDef.xaml">
+    <Page Include="UI\ModifyAtkOrDefWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -168,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ResourceDictionary\MyCanvasAnimation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ResourceDictionary\MyMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -96,6 +96,11 @@ namespace iDuel_EvolutionX.Service
 
         }
 
+        /// <summary>
+        /// 卡片菜单：里守处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void excuete_set2BackDef(object sender, ExecutedRoutedEventArgs e)
         {
             CardControl card = e.OriginalSource as CardControl;
@@ -124,13 +129,28 @@ namespace iDuel_EvolutionX.Service
             CardAnimation.fadeOut2FadeIn(card);
         }
 
+        public static void excuete_setAtkOrDef(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            ModifyAtkOrDefWin mad = new ModifyAtkOrDefWin(card);
+            mad.Owner = Application.Current.MainWindow;       
+            Point p = card.PointToScreen(new Point(0, 0));
+            mad.Top = p.Y - mad.Height;
+            mad.Left = p.X - ((mad.Width - card.ActualWidth) / 2);
+            mad.ShowDialog();
+        }
+
+        public static void excuete_back2MainDeck(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardControl card = e.OriginalSource as CardControl;
+            CardAnimation.move2MainDeck(card);
+        }
+
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {
-            CardControl card = CardOperate.getCard(sender) as CardControl;
-            ModifyAtkOrDef mad = new ModifyAtkOrDef(card);
-            mad.Owner = mainwindow;
-            mad.ShowDialog();
+            //CardControl card = CardOperate.getCard(sender) as CardControl;
+            
             //MenuItem mi = sender as MenuItem;
             //MenuItem mi_par = mi.Parent as MenuItem;
 
@@ -1589,6 +1609,8 @@ namespace iDuel_EvolutionX.Service
         }
 
         
+
+
 
 
         #region <-- 将顶牌放回卡组底部 -->

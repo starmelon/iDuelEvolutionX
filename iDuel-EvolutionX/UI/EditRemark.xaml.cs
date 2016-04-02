@@ -25,7 +25,8 @@ namespace iDuel_EvolutionX.UI
         public EditRemark()
         {
             InitializeComponent();
-
+            tb_remark.Focus();
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

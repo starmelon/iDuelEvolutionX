@@ -390,7 +390,7 @@ namespace NBX3.Service
             for (int i = 0; i < myself.deck.Main.Count; i++)
             {
                 card = myself.deck.Main[i];
-                Base.getawayParerent(card);
+                card.getAwayFromParents();
                 //card.duelindex = myself.userindex + card_duelindex.ToString();
                 card_duelindex ++;
                 
@@ -406,10 +406,9 @@ namespace NBX3.Service
                 #endregion
 
                 //CardOperate.CardSortsingle(mainwindow.card_1_Deck, main_1[i], 56, 81);
+                card.set2BackAtk();
                 mainwindow.card_1_Deck.Children.Insert(0, card);
-                
-                CardOperate.card_BackAtk(card);
-                CardOperate.sort_SingleCard(card);
+                card.centerAtVerticalInParent();
 
                 //msg += card.cheatcode;
             }
@@ -419,7 +418,7 @@ namespace NBX3.Service
             for (int i = 0; i < myself.deck.Extra.Count; i++)
             {
                 card = myself.deck.Extra[i];
-                Base.getawayParerent(card);
+                card.getAwayFromParents();
                 //card.duelindex = myself.userindex + card_duelindex.ToString();
                 card_duelindex++;
                 
@@ -434,9 +433,10 @@ namespace NBX3.Service
 
                 #endregion
                 //CardOperate.CardSortsingle(mainwindow.card_1_Extra, extra_1[i], 56, 81);
+
+                card.set2BackAtk();
                 mainwindow.card_1_Extra.Children.Insert(0, card);
-                CardOperate.card_BackAtk(card);
-                CardOperate.sort_SingleCard(card);
+                card.centerAtVerticalInParent();
 
                 //msg += card.cheatcode;
             }
@@ -569,7 +569,7 @@ namespace NBX3.Service
         {
             mainwindow.btn_firstAtk.IsEnabled = false;
             mainwindow.btn_secondAtk.IsEnabled = false;
-            List<CardControl> cards = CardOperate.card_Draw(5, 300);
+            List<CardControl> cards = CardOperate.card_Draw(5, 200);
             //string command = "FirstAtk="+cards[0].duelindex;
             for (int i = 1; i < cards.Count; i++)
             {

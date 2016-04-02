@@ -17,7 +17,7 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Grid>
-                            <Border x:Name="ellipse" CornerRadius="12.5" BorderThickness="2" BorderBrush="{TemplateBinding UserControl.BorderBrush}"  Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Style="{DynamicResource bd_style}" >
+                            <Border x:Name="ellipse" CornerRadius="12.5" BorderThickness="2" BorderBrush="{TemplateBinding UserControl.BorderBrush}"  Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Style="{DynamicResource bd_style}" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" >
                                 <Border.Effect>
                                     <DropShadowEffect Color="#d24726" BlurRadius="5" Direction="225"  ShadowDepth="0" Opacity="1" />
                                 </Border.Effect>

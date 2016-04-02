@@ -4059,8 +4059,27 @@ namespace iDuel_EvolutionX.Service
 
         #endregion
 
+        public static void setAtkOrDef(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                TextBlock tb = sender as TextBlock;
+                if (tb.Text.Equals("?")||String.IsNullOrEmpty(tb.Text))
+                {
+                    return;
+                }
+                CardControl card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardControl;
+                ModifyAtkOrDefWin mad = new ModifyAtkOrDefWin(card);
+                mad.Owner = Application.Current.MainWindow;
+                Point p = tb.PointToScreen(new Point(0, 0));
+                mad.Top = p.Y + tb.Height;
+                mad.Left = p.X + (tb.ActualWidth / 2) - mad.Width /2;
+                mad.ShowDialog();
+                //MessageBox.Show(tb.Name);
+            }
+        }
 
 
-        
+
     }
 }

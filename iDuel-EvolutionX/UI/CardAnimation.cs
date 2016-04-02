@@ -220,11 +220,14 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card"></param>
         public static void turn2BackDef(CardControl card)
         {
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
             MyStoryboard msb0 = null;
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
                     msb0 = scalX_120_rotate_0290();
+
                     break;
                 case Status.FRONT_DEF:
                     msb0 = scalX_120();
@@ -239,12 +242,18 @@ namespace iDuel_EvolutionX.UI
             {
                 msb0.card.set2BackDef();
             };
+            animator.addAnime(msb0);
 
-            MyStoryboard msb1 = scalX_021();
+            if (card.Status != Status.BACK_ATK)
+            {
+                MyStoryboard msb1 = scalX_021();
+                animator.addAnime(msb1);
+            }
 
 
-            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+
+
+            animator.Begin(card);
 
         }
 
@@ -392,6 +401,84 @@ namespace iDuel_EvolutionX.UI
                 
             }
             
+
+        }
+
+        public static void move2MainDeck(CardControl card)
+        {
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
+            MainWindow main = Application.Current.MainWindow as MainWindow;
+            MyCanvas mcv = card.Parent as MyCanvas;
+            Point start = card.TranslatePoint(new Point(), main.Battle);
+            Point end = main.card_1_Deck.TranslatePoint(new Point(), main.Battle);
+            end.X += (main.card_1_Deck.ActualWidth - card.Width) / 2;
+            end.Y += (main.card_1_Deck.ActualHeight - card.Height) / 2;
+
+            if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
+            {
+
+
+                start.X += (mcv.ActualHeight - card.Width) / 2 - (mcv.ActualWidth - card.Height) / 2;
+                start.Y += -card.Width - (mcv.ActualHeight - card.Width) / 2 + (mcv.ActualWidth - card.Height) / 2;
+
+
+                card.getAwayFromParents();
+                Canvas.SetLeft(card, start.X);
+                Canvas.SetTop(card, start.Y);
+                main.Battle.Children.Add(card);
+                MyStoryboard msb = Rotate_CanvasXY(-90, 0, start, end, 300, 300);
+                //MyStoryboard msb = CanvasXY(start, end, 500);
+                msb.card = card;
+                msb.Completed += (object c, EventArgs d) =>
+                {
+                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    msb.card.getAwayFromParents();
+                    switch (card.Status)
+                    {
+                        case Status.FRONT_DEF:
+                            msb.card.set2FrontAtk();
+                            break;
+                        case Status.BACK_DEF:
+                            msb.card.set2BackAtk();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    main.card_1_Deck.Children.Add(msb.card);
+                };
+                msb.Begin(card);
+
+                //MyStoryboard msb = Rotate_CanvasXY(-90,0,)
+            }
+            else
+            {
+
+                card.getAwayFromParents();
+                Canvas.SetLeft(card, start.X);
+                Canvas.SetTop(card, start.Y);
+                main.Battle.Children.Add(card);
+                MyStoryboard msb = CanvasXY(start, end, 500);
+                msb.card = card;
+                msb.Completed += (object c, EventArgs d) =>
+                {
+                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    msb.card.getAwayFromParents();
+                    main.card_1_Deck.Children.Add(msb.card);
+                };
+                msb.Begin(card);
+            }
+
+
+            if (card.Status != Status.FRONT_ATK)
+            {
+
+            }
+
 
         }
 

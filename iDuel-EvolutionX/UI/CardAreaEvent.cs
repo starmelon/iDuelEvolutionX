@@ -133,9 +133,16 @@ namespace iDuel_EvolutionX.UI
         public static void add2Deck(MyCanvas cv, CardControl card)
         {
             card.reSetAtk();
-            card.set2BackAtk();
             card.centerAtVerticalInParent();
             card.clearSigns();
+            if (card.Status == Status.FRONT_ATK)
+            {
+                CardAnimation.turn2Back(card);
+            }
+            else
+            {
+                card.set2BackAtk();
+            }
             card.ContextMenu = AllMenu.Instance.cm_deck;
         }
 
@@ -313,7 +320,7 @@ namespace iDuel_EvolutionX.UI
                 
                 Binding bind = new Binding();
                 BindingOperations.ClearBinding(cv.tb_atkDef, TextBlock.TextProperty);
-
+                cv.tb_atkDef.IsHitTestVisible = false;
                 return;
             }
             CardControl top = cv.Children[count - 1] as CardControl;
@@ -414,6 +421,7 @@ namespace iDuel_EvolutionX.UI
             bind.Source = card;
             bind.Path = new PropertyPath("CurAtk");
             bind.NotifyOnTargetUpdated = true;
+            cv.tb_atkDef.IsHitTestVisible = true;
             cv.tb_atkDef.SetBinding(TextBlock.TextProperty, bind);
             cv.tb_atkDef.TargetUpdated += new EventHandler<DataTransferEventArgs>((o, e) =>
             {

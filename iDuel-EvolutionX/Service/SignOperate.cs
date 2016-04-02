@@ -40,6 +40,7 @@ namespace iDuel_EvolutionX.Service
                     break;
             }
             card.signs.Add(stb);
+            stb.Tag = card;
             sp.Children.Add(stb);
             e.Handled = true;
             //addBlueSign = new RoutedUICommand("addBlueSign", "addBlueSign", typeof(CardCommands));

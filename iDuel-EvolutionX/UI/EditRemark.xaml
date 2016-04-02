@@ -7,14 +7,14 @@
         mc:Ignorable="d"
         WindowState="Normal"
         ResizeMode="NoResize"
-        WindowStyle="SingleBorderWindow"
-        Title="修改备注" Height="60" Width="150">
+        WindowStyle="SingleBorderWindow" 
+        Title="修改备注" Height="60" Width="150" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="tb_remark">
+        <TextBox Name="tb_remark" >
             <TextBox.Resources>
                 <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left" Viewbox="-0.1,0,1,1">
                     <VisualBrush.Visual>
@@ -35,6 +35,6 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-        <Button Grid.Column="2" Content="OK" BorderThickness="0" Click="Button_Click"/>
+        <Button Grid.Column="2" Content="OK" BorderThickness="0" Click="Button_Click" IsDefault="True"/>
     </Grid>
 </Window>

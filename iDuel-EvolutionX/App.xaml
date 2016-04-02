@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="UI/ResourceDictionary/MyTabControl.xaml"/>
                 <ResourceDictionary Source="UI/ResourceDictionary/TextBlockNum.xaml"/>
                 <ResourceDictionary Source="UI/ResourceDictionary/MyBorder.xaml"/>
+                <ResourceDictionary Source="UI/ResourceDictionary/MyMenuItem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
