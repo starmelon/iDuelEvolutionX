@@ -341,7 +341,10 @@ namespace iDuel_EvolutionX
             cb.Executed += SignOperate.execute_Addsign;
             setSignCommandsHandleByMyCanvas(cb);
 
-
+            bd_1_6.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.ActiveCard,
+                    MenuItemOperate.execute_activeCard));
 
             this.CommandBindings.Add(
                 new CommandBinding(
@@ -622,7 +625,7 @@ namespace iDuel_EvolutionX
             {
                 return;
             }
-            CardControl card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardControl;
+            CardUI card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardUI;
 
             if (e.Delta>0)
             {

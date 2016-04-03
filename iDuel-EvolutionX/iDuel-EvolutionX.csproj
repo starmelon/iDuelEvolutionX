@@ -94,6 +94,12 @@
     <Compile Include="Tools\LogHelper.cs" />
     <Compile Include="UI\CardAnimation2.cs" />
     <Compile Include="UI\CardAreaEvent.cs" />
+    <Compile Include="UI\CardsView.xaml.cs">
+      <DependentUpon>CardsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CardUI.xaml.cs">
+      <DependentUpon>CardUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\CardView.xaml.cs">
       <DependentUpon>CardView.xaml</DependentUpon>
     </Compile>
@@ -139,6 +145,14 @@
     <Compile Include="UI\XYZmaterialView.xaml.cs">
       <DependentUpon>XYZmaterialView.xaml</DependentUpon>
     </Compile>
+    <Page Include="UI\CardsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\CardUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Drop2MonsterWinOP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

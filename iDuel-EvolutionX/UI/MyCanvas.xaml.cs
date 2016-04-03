@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 namespace iDuel_EvolutionX.UI
 {
     //定义一个当控件拥有元素发生变化时所接受的委托
-    public delegate void CollectionChangeDelegate(MyCanvas mcv,CardControl card);
+    public delegate void CollectionChangeDelegate(MyCanvas mcv,CardUI card);
 
     /// <summary>
     /// MyCanvas.xaml 的交互逻辑
@@ -126,7 +126,7 @@ namespace iDuel_EvolutionX.UI
             //UIElementCollection vc = value as UIElementCollection;
             if (mcv.Children.Count > 0)
             {
-                CardControl card = mcv.Children[mcv.Children.Count - 1] as CardControl;
+                CardUI card = mcv.Children[mcv.Children.Count - 1] as CardUI;
                 if ( card.info.sCardType.Contains("魔法") || card.info.sCardType.Contains("陷阱") )
                 {
                     return null;
@@ -219,7 +219,7 @@ namespace iDuel_EvolutionX.UI
             OnPropertyChanged("Item[]");
             if (owner.WhenAddChildren != null)
             {
-                owner.WhenAddChildren(owner,element as CardControl);
+                owner.WhenAddChildren(owner,element as CardUI);
             }
             
             return index;
@@ -242,7 +242,7 @@ namespace iDuel_EvolutionX.UI
             OnPropertyChanged("Item[]");
             if (owner.WhenInsertChildren != null)
             {
-                owner.WhenInsertChildren(owner, element as CardControl);
+                owner.WhenInsertChildren(owner, element as CardUI);
             }
         }
 
@@ -258,7 +258,7 @@ namespace iDuel_EvolutionX.UI
                 OnPropertyChanged("Item[]");
                 if (owner.WhenRemoveChildren != null)
                 {
-                    owner.WhenRemoveChildren(owner, element as CardControl);
+                    owner.WhenRemoveChildren(owner, element as CardUI);
                 }
     
             }

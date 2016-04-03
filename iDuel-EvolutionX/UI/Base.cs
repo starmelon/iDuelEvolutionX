@@ -18,7 +18,7 @@ namespace iDuel_EvolutionX.UI
         /// 卡片脱离父控件
         /// </summary>
         /// <param name="card"></param>
-        public static void getawayParerent(CardControl card)
+        public static void getawayParerent(CardUI card)
         {
             //获得卡片所在父控件并解离
             if (card.Parent != null)
@@ -36,7 +36,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card"></param>
         /// <returns></returns>
-        public static Canvas getParerent(CardControl card)
+        public static Canvas getParerent(CardUI card)
         {
             if (card.Parent != null)
             {

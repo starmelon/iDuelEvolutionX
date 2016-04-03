@@ -1,5 +1,6 @@
 ﻿using iDuel_EvolutionX.ADO;
 using iDuel_EvolutionX.Service;
+using iDuel_EvolutionX.UI;
 using iDuel_EvolutionX.Tools;
 using System;
 using System.Collections.Generic;
@@ -208,7 +209,7 @@ namespace iDuel_EvolutionX.Model
                     deck[i] = MyDecks.add0(deck[i]);
                     if (deck[i] != null)
                     {
-                        CardControl card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
+                        CardUI card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
                         if (card == null)
                         {
                             string cardName;
@@ -295,7 +296,7 @@ namespace iDuel_EvolutionX.Model
                     deck[i] = MyDecks.add0(deck[i]);
                     if (deck[i] != null)
                     {
-                        CardControl card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
+                        CardUI card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
                         if (card == null)
                         {
                             string cardName;
@@ -349,7 +350,7 @@ namespace iDuel_EvolutionX.Model
                     deck[i] = MyDecks.add0(deck[i]);
                     if (deck[i] != null)
                     {
-                        CardControl card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
+                        CardUI card = CardDataOperate.getCardWithInfoByCheatcode(deck[i]);
                         if (card == null)
                         {
                             string cardName;
@@ -397,7 +398,7 @@ namespace iDuel_EvolutionX.Model
                 List<string> extra_ = new List<string>();     //额外卡组
                 List<string> side_ = new List<string>();      //side
 
-                List<CardControl> templay = _deck.Main;
+                List<CardUI> templay = _deck.Main;
 
                 for (int i = 0; i < deck.Count; i++)
                 {
@@ -424,7 +425,7 @@ namespace iDuel_EvolutionX.Model
 
                     string cardName = deck[i].Split('[')[1].Split(']')[0];
 
-                    //CardControl card = CardDataOperate.getCardByName(cardName);
+                    //CardUI card = CardDataOperate.getCardByName(cardName);
                     //if (card != null)
                     //{
                     //    templay.Add(card);

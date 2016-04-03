@@ -16,7 +16,7 @@ namespace iDuel_EvolutionX.Service
     {
         public static void execute_Addsign(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             StackPanel sp = (sender as MyCanvas).signs;
             SignTextBlock stb = new SignTextBlock();
             stb.Height = 25;

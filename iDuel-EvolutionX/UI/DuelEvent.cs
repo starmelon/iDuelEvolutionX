@@ -84,7 +84,7 @@ namespace iDuel_EvolutionX.UI
             if (e.ClickCount==2 )
             {
 
-                CardControl card = sender as CardControl;
+                CardUI card = sender as CardUI;
                 CardOperate.Card_DoubleClick(card,e);
                 
             }

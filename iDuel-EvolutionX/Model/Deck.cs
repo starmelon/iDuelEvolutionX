@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iDuel_EvolutionX.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,23 +24,23 @@ namespace iDuel_EvolutionX.Model
             set { name = value; }
         }
 
-        List<CardControl> main;
+        List<CardUI> main;
 
-        public List<CardControl> Main
+        public List<CardUI> Main
         {
             get { return main; }
             set { main = value; }
         }
-        List<CardControl> extra;
+        List<CardUI> extra;
 
-        public List<CardControl> Extra
+        public List<CardUI> Extra
         {
             get { return extra; }
             set { extra = value; }
         }
-        List<CardControl> side;
+        List<CardUI> side;
 
-        public List<CardControl> Side
+        public List<CardUI> Side
         {
             get { return side; }
             set { side = value; }
@@ -48,9 +49,9 @@ namespace iDuel_EvolutionX.Model
 
         public Deck()
         {
-            main = new List<CardControl>();
-            extra = new List<CardControl>();
-            side = new List<CardControl>();
+            main = new List<CardUI>();
+            extra = new List<CardUI>();
+            side = new List<CardUI>();
         }
 
         

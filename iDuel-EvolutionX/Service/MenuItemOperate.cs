@@ -27,7 +27,7 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void execute_setCardRemark(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             EditRemark er = new EditRemark();
             er.sendResult += (result) => {
                 card.ToolTip = result;
@@ -46,7 +46,7 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void excuete_set2AtkOrDef(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
 
             switch (card.Status)
             {
@@ -76,7 +76,7 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void excuete_set2FrontOrBack(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             //Canvas cv = card.Parent as Canvas;
 
             switch (card.Status)
@@ -103,7 +103,7 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void excuete_set2BackDef(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             //Canvas cv = card.Parent as Canvas;
             if (card.Status == Status.BACK_DEF)
             {
@@ -114,24 +114,39 @@ namespace iDuel_EvolutionX.Service
 
         }
 
+        /// <summary>
+        /// 解放→墓地
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void excuete_release2Graveyard(object sender, ExecutedRoutedEventArgs e)
         {
             //MainWindow main = sender as MainWindow;
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
 
             CardAnimation.move2Graveyard(card);
 
         }
 
+        /// <summary>
+        /// 解放→除外
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void excuete_release2Banish(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             CardAnimation.fadeOut2FadeIn(card);
         }
 
+        /// <summary>
+        /// 设置攻守
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void excuete_setAtkOrDef(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             ModifyAtkOrDefWin mad = new ModifyAtkOrDefWin(card);
             mad.Owner = Application.Current.MainWindow;       
             Point p = card.PointToScreen(new Point(0, 0));
@@ -140,16 +155,30 @@ namespace iDuel_EvolutionX.Service
             mad.ShowDialog();
         }
 
+        /// <summary>
+        /// 返回卡组
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void excuete_back2MainDeck(object sender, ExecutedRoutedEventArgs e)
         {
-            CardControl card = e.OriginalSource as CardControl;
+            CardUI card = e.OriginalSource as CardUI;
             CardAnimation.move2MainDeck(card);
+        }
+
+
+        public static void execute_activeCard(object sender, ExecutedRoutedEventArgs e)
+        {
+            MyStoryboard msb = CardAnimation.EffectOrigin();
+            
+            msb.Begin(sender as Border);
+            
         }
 
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {
-            //CardControl card = CardOperate.getCard(sender) as CardControl;
+            //CardUI card = CardOperate.getCard(sender) as CardUI;
             
             //MenuItem mi = sender as MenuItem;
             //MenuItem mi_par = mi.Parent as MenuItem;
@@ -366,7 +395,7 @@ namespace iDuel_EvolutionX.Service
             //    {
             //        if (cvs[j].Children.Count == 1)
             //        {
-            //            CardControl card = cvs[j].Children[0] as CardControl;       
+            //            CardUI card = cvs[j].Children[0] as CardUI;       
             //            Grid gd = Base.getParerent(card).Parent as Grid;
             //            if (gd != null)
             //            {
@@ -423,14 +452,14 @@ namespace iDuel_EvolutionX.Service
             //                        //2.获取卡片在卡框中的相对距离
             //                        Point end2 = new Point((cvs[i].ActualWidth - shuffle_cards[i].ActualWidth) / 2.0, (cvs[i].ActualHeight - shuffle_cards[i].ActualHeight) / 2.0);
             //                        //脱离原控件
-            //                        Base.getawayParerent(shuffle_cards[i] as CardControl);
+            //                        Base.getawayParerent(shuffle_cards[i] as CardUI);
             //                        //利用1设置初始位置
             //                        Canvas.SetTop(shuffle_cards[i], start2.Y);
             //                        Canvas.SetLeft(shuffle_cards[i], start2.X);
             //                        //加入目的地控件
             //                        cvs[i].Children.Add(shuffle_cards[i]);
             //                        MyStoryboard msb2 = CardAnimation.CanvasXY(end2, 200);
-            //                        msb2.card = shuffle_cards[i] as CardControl;
+            //                        msb2.card = shuffle_cards[i] as CardUI;
             //                        msb2.Completed += (object a, EventArgs b) =>
             //                        {
             //                            msb2.card.BeginAnimation(Canvas.LeftProperty, null);
@@ -500,10 +529,10 @@ namespace iDuel_EvolutionX.Service
             //        m = 36;
             //    }
 
-            //    List<CardControl> cards_1 = new List<CardControl>();
-            //    List<CardControl> cards_2 = new List<CardControl>();
-            //    List<CardControl> cards_3 = new List<CardControl>();//返回手卡时每个卡位的第一张XYZ怪
-            //    List<CardControl> cards_4 = new List<CardControl>();//返回手卡时每个卡位的卡片素材
+            //    List<CardUI> cards_1 = new List<CardUI>();
+            //    List<CardUI> cards_2 = new List<CardUI>();
+            //    List<CardUI> cards_3 = new List<CardUI>();//返回手卡时每个卡位的第一张XYZ怪
+            //    List<CardUI> cards_4 = new List<CardUI>();//返回手卡时每个卡位的卡片素材
 
             //    for (int i = n; i < m; i++)
             //    {
@@ -521,7 +550,7 @@ namespace iDuel_EvolutionX.Service
             //            {
             //                #region
 
-            //                CardControl top = cv.Children[cv.Children.Count - 1] as CardControl;
+            //                CardUI top = cv.Children[cv.Children.Count - 1] as CardUI;
             //                if (top.isBack)
             //                {
             //                    cards_1.Add(top);
@@ -828,7 +857,7 @@ namespace iDuel_EvolutionX.Service
             //            MyStoryboard msb2 = CardAnimation.Cards_move(cards_2, end, 150, "1");
             //            msb2.Completed += (object sender_, EventArgs e_) =>
             //            {
-            //                foreach (CardControl card in msb2.cards)
+            //                foreach (CardUI card in msb2.cards)
             //                {
             //                    card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
             //                    card.RenderTransform.SetValue(RotateTransform.AngleProperty, 0.0);
@@ -860,7 +889,7 @@ namespace iDuel_EvolutionX.Service
             //            MyStoryboard msb3 = CardAnimation.Cards_disappear(cards_2, 150);
             //            msb3.Completed += (object sender_, EventArgs e_) =>
             //            {
-            //                foreach (CardControl card in msb3.cards)
+            //                foreach (CardUI card in msb3.cards)
             //                {
             //                    Base.getawayParerent(card);
             //                    card.RenderTransform = new RotateTransform();
@@ -872,7 +901,7 @@ namespace iDuel_EvolutionX.Service
             //                    CardOperate.sort_SingleCard(card);
             //                }
 
-            //                foreach (CardControl card in cards_4)
+            //                foreach (CardUI card in cards_4)
             //                {
             //                    card.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, null);
             //                    card.RenderTransform.SetValue(RotateTransform.AngleProperty, 0.0);
@@ -1613,6 +1642,8 @@ namespace iDuel_EvolutionX.Service
 
 
 
+
+
         #region <-- 将顶牌放回卡组底部 -->
         private static void top2buttom()
         {
@@ -1659,7 +1690,7 @@ namespace iDuel_EvolutionX.Service
         #endregion
 
         #region <-- 攻/守形式转换 -->
-        private static void def_or_Atk(CardControl card)
+        private static void def_or_Atk(CardUI card)
         {
             
 
@@ -1737,56 +1768,6 @@ namespace iDuel_EvolutionX.Service
 
         #endregion
 
-        #region <-- 转为里侧守备 -->
-        private static void to_inDef(Card card)
-        {
-            //Canvas cv = card.Parent as Canvas;
-
-            //#region 清除指示物
-
-            //StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-            //if (sp != null) sp.Children.Clear();
-
-            //#endregion
-
-            //if (!card.isBack)
-            //{
-            //    if (card.isDef)
-            //    {
-            //        CardAnimation.Rotate_card(card);
-            //        card.isBack = true;
-            //    }
-            //    else if (!card.isDef)
-            //    {
-            //        CardAnimation.Rotate2Def(card);
-            //        if (cv.Children.Count > 1)
-            //        {
-            //            CardOperate.sort_Canvas(cv);
-            //        }
-            //        card.isDef = true; 
-            //        card.isBack = true;
-            //    }
-
-            //}
-            //else if (card.isBack)
-            //{
-            //    if (card.isDef)
-            //    {
-            //        return;
-            //    }
-            //    else if (!card.isDef)
-            //    {
-            //        CardAnimation.Def_or_Atk(card);
-            //        card.isDef = true;
-            //    }
-            //    card.SetPic();
-            //}
-
-            //CardOperate.sort_Canvas(cv);
-            //mainwindow.report.Text += "将 " + (DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 变更为 <" + DuelReportOperate.analyze_state(card) + ">" + Environment.NewLine);
-        }
-
-        #endregion
 
         #region <-- 送去墓地,放回卡组顶部,返回额外区 -->
 

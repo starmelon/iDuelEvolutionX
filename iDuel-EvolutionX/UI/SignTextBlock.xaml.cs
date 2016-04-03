@@ -115,7 +115,7 @@ namespace iDuel_EvolutionX.UI
 
         public void clearSelf()
         {
-            CardControl card = this.Tag as CardControl;
+            CardUI card = this.Tag as CardUI;
             if (card == null)
             {
                 return;

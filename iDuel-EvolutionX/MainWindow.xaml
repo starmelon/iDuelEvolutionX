@@ -851,11 +851,16 @@
                     </Button>
 
                     <!--己方怪物区-->
-                    <local:MyCanvas x:Name = "card_1_10" Grid.Column="8"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
+                    <Border x:Name="bd_1_10" Grid.Column="8" Grid.Row="7" BorderThickness="3" BorderBrush="LightBlue"  >
+                        <local:MyCanvas x:Name = "card_1_10" Grid.Column="8"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
+                    </Border>
+                    
                     <local:MyCanvas x:Name = "card_1_9"  Grid.Column="6"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
                     <local:MyCanvas x:Name = "card_1_8"  Grid.Column="4"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
                     <local:MyCanvas x:Name = "card_1_7"  Grid.Column="2"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
-                    <local:MyCanvas x:Name = "card_1_6"  Grid.Column="0"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
+                    <Border x:Name="bd_1_6" Grid.Column="0" Grid.Row="7" BorderThickness="3" BorderBrush="LightBlue"  >
+                        <local:MyCanvas x:Name = "card_1_6"  Grid.Column="0"  Grid.Row="7" AllowDrop = "True" Background="LightBlue" />
+                    </Border>
 
                     <!--己方魔陷区-->
                     <local:MyCanvas x:Name = "card_1_5"  Grid.Column="8"  Grid.Row="9" AllowDrop = "True" Background="LightBlue" />
@@ -888,7 +893,7 @@
                     <Border x:Name="bd_1_3" Grid.Column="4" Grid.Row="9" BorderThickness="3" BorderBrush="Transparent"  />
                     <Border x:Name="bd_1_4" Grid.Column="6" Grid.Row="9" BorderThickness="3" BorderBrush="Transparent"  />
                     <Border x:Name="bd_1_5" Grid.Column="8" Grid.Row="9" BorderThickness="3" BorderBrush="Transparent"  />
-                    <Border x:Name="bd_1_6" Grid.Column="0" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  />
+                    <!--<Border x:Name="bd_1_6" Grid.Column="0" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  />-->
                     <Border x:Name="bd_1_7" Grid.Column="2" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  >
 
                         <!--<Border.Triggers>
@@ -906,8 +911,8 @@
                     </Border.Triggers>-->
                     </Border>
                     <Border x:Name="bd_1_8" Grid.Column="4" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  />
-                    <Border x:Name="bd_1_9" Grid.Column="6" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  />
-                    <Border x:Name="bd_1_10" Grid.Column="8" Grid.Row="7" BorderThickness="3" BorderBrush="Transparent"  />
+                    
+                    
 
 
                     <!-- 指示物栈 -->

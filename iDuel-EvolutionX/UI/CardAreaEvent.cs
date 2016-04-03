@@ -20,7 +20,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">墓地控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Graveyrad(MyCanvas cv, CardControl card)
+        public static void add2Graveyrad(MyCanvas cv, CardUI card)
         {
 
             card.reSetAtk();
@@ -44,7 +44,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">墓地控件</param>
         /// <param name="card">卡片</param>
-        public static void romoveFromGraveyard(MyCanvas cv , CardControl card)
+        public static void romoveFromGraveyard(MyCanvas cv , CardUI card)
         {
 
         }  
@@ -58,7 +58,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Banish(MyCanvas cv, CardControl card)
+        public static void add2Banish(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
             card.centerAtVerticalInParent();
@@ -75,7 +75,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">P卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Pendulum(MyCanvas cv, CardControl card)
+        public static void add2Pendulum(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
             card.centerAtVerticalInParent();
@@ -87,7 +87,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void removeFromPendulum(MyCanvas cv, CardControl card)
+        public static void removeFromPendulum(MyCanvas cv, CardUI card)
         {
             card.clearSigns();
         }
@@ -101,7 +101,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Extra(MyCanvas cv, CardControl card)
+        public static void add2Extra(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
             card.set2BackAtk();
@@ -115,7 +115,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void insert2Extra(MyCanvas cv, CardControl card)
+        public static void insert2Extra(MyCanvas cv, CardUI card)
         {
             add2Extra(cv, card);
            
@@ -130,7 +130,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Deck(MyCanvas cv, CardControl card)
+        public static void add2Deck(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
             card.centerAtVerticalInParent();
@@ -151,7 +151,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void insert2Deck(MyCanvas cv, CardControl card)
+        public static void insert2Deck(MyCanvas cv, CardUI card)
         {
             add2Deck(cv, card);
 
@@ -170,7 +170,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Monster(MyCanvas cv, CardControl card)
+        public static void add2Monster(MyCanvas cv, CardUI card)
         {
 
 
@@ -196,7 +196,7 @@ namespace iDuel_EvolutionX.UI
 
                     card.ContextMenu.DataContext = card;
                 };
-                CardControl second = cv.Children[count - 2] as CardControl;
+                CardUI second = cv.Children[count - 2] as CardUI;
 
                 second.reSetAtk();//当被叠放时要重置攻击力
                 second.clearSigns();//当被叠放时要清除卡片指示物
@@ -258,7 +258,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void insert2Monster(MyCanvas cv, CardControl card)
+        public static void insert2Monster(MyCanvas cv, CardUI card)
         {
             if (cv.Children.Count == 0)
             {
@@ -278,7 +278,7 @@ namespace iDuel_EvolutionX.UI
             {
                 card.reSetAtk();
                 int count = cv.Children.Count;
-                CardControl top = cv.Children[count - 1] as CardControl;
+                CardUI top = cv.Children[count - 1] as CardUI;
                 if (top.Status == Status.FRONT_ATK || top.Status == Status.BACK_ATK)
                 {
                     Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
@@ -311,7 +311,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void removeFromMonster(MyCanvas cv, CardControl card)
+        public static void removeFromMonster(MyCanvas cv, CardUI card)
         {
             
             int count = cv.Children.Count;
@@ -323,7 +323,7 @@ namespace iDuel_EvolutionX.UI
                 cv.tb_atkDef.IsHitTestVisible = false;
                 return;
             }
-            CardControl top = cv.Children[count - 1] as CardControl;
+            CardUI top = cv.Children[count - 1] as CardUI;
             if (top.Status == Status.BACK_ATK || top.Status == Status.FRONT_ATK)
             {
                 Service.CardOperate.sort_XYZ_atk(cv);
@@ -344,7 +344,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2MagicTrap(MyCanvas cv, CardControl card)
+        public static void add2MagicTrap(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
             int count = cv.Children.Count;
@@ -362,7 +362,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void removeFromMagicTrap(MyCanvas cv, CardControl card)
+        public static void removeFromMagicTrap(MyCanvas cv, CardUI card)
         {
             int count = cv.Children.Count;
             if (count == 0)
@@ -381,7 +381,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2Hand(MyCanvas cv, CardControl card)
+        public static void add2Hand(MyCanvas cv, CardUI card)
         {
             card.clearSigns();
             card.reSetAtk();
@@ -397,7 +397,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
-        public static void removeFromHand(MyCanvas cv, CardControl card)
+        public static void removeFromHand(MyCanvas cv, CardUI card)
         {
             int count = cv.Children.Count;
             if (count == 0)
@@ -415,7 +415,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv"></param>
         /// <param name="card"></param>
-        private static void bindingAtk(MyCanvas cv, CardControl card)
+        private static void bindingAtk(MyCanvas cv, CardUI card)
         {
             Binding bind = new Binding();
             bind.Source = card;
@@ -448,7 +448,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv"></param>
         /// <param name="card"></param>
-        private static void showSigns(MyCanvas cv, CardControl card)
+        private static void showSigns(MyCanvas cv, CardUI card)
         {
             foreach (SignTextBlock item in card.signs)
             {

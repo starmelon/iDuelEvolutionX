@@ -73,7 +73,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="start">起始位置</param>
         /// <param name="end">终止位置</param>
         /// <param name="time">运行时间</param>
-        public static void MoveAnimation(CardControl card, Point start, Point end, string to, int time)
+        public static void MoveAnimation(CardUI card, Point start, Point end, string to, int time)
         {
             //新建动画故事版
             Storyboard sb = new Storyboard();
@@ -264,7 +264,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="card">卡片对象</param>
         /// <param name="aim_controls">目标位置控件</param>
-        public static void FadeOut(CardControl card,object aim_controls,bool isback) 
+        public static void FadeOut(CardUI card,object aim_controls,bool isback) 
         {
             Storyboard sb = new Storyboard();
             DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
@@ -313,7 +313,7 @@ namespace iDuel_EvolutionX.UI
             sb.Begin();
         }
 
-        public static void FadeIn(CardControl card,object aim_controls) 
+        public static void FadeIn(CardUI card,object aim_controls) 
         {
             Storyboard sb = new Storyboard();
             DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
@@ -1710,12 +1710,12 @@ namespace iDuel_EvolutionX.UI
         /// <param name="cv"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static MyStoryboard Cards_move(List<CardControl> cards,Point end, double time,string field)
+        public static MyStoryboard Cards_move(List<CardUI> cards,Point end, double time,string field)
         {
             MyStoryboard msb = new MyStoryboard();
             //msb.cards = cards;
 
-            //foreach (CardControl card in cards)
+            //foreach (CardUI card in cards)
             //{
             //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
@@ -1814,12 +1814,12 @@ namespace iDuel_EvolutionX.UI
         /// <param name="cv"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static MyStoryboard Cards_move2(List<CardControl> cards, Point end, double time, string field)
+        public static MyStoryboard Cards_move2(List<CardUI> cards, Point end, double time, string field)
         {
             MyStoryboard msb = new MyStoryboard();
             //msb.cards = cards;
 
-            //foreach (CardControl card in cards)
+            //foreach (CardUI card in cards)
             //{
             //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);

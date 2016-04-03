@@ -110,7 +110,7 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void Card_showpic(object sender, MouseEventArgs e)
         {
-            CardControl card = sender as CardControl;
+            CardUI card = sender as CardUI;
             Canvas cv = card.Parent as Canvas;
             
 
@@ -161,15 +161,15 @@ namespace iDuel_EvolutionX.Service
 
         }
 
-        public static CardControl getCardFromMenuItem(MenuItem mi)
+        public static CardUI getCardFromMenuItem(MenuItem mi)
         {    
-            CardControl card = null;
+            CardUI card = null;
             DependencyObject uie = mi;
             
             while (card == null)
             {
                 uie = LogicalTreeHelper.GetParent(uie);
-                card = ContextMenuService.GetPlacementTarget(uie) as CardControl ;
+                card = ContextMenuService.GetPlacementTarget(uie) as CardUI ;
             }
             return card;
         }
@@ -182,7 +182,7 @@ namespace iDuel_EvolutionX.Service
         /// 卡片的双击操作
         /// </summary>
         /// <param name="card"></param>
-        public static void Card_DoubleClick(CardControl card,MouseButtonEventArgs e)
+        public static void Card_DoubleClick(CardUI card,MouseButtonEventArgs e)
         {
             cardview = CardView.getInstance(mainwindow); ;
             Canvas cv = card.Parent as Canvas;
@@ -307,10 +307,10 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void CardDragStart(object sender, MouseEventArgs e)
         {
-            Image card = sender as Image;
+            CardUI card = sender as CardUI;
             if (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed)
             {
-                CardControl card_ = card as CardControl;
+                CardUI card_ = card as CardUI;
                 Canvas cv = card_.Parent as Canvas;
                 if (e.RightButton == MouseButtonState.Pressed && Base.getParerent(card_).Name.Equals("card_1_Deck"))
                 {
@@ -391,10 +391,10 @@ namespace iDuel_EvolutionX.Service
         {
             IDataObject data = e.Data;
 
-            if (data.GetDataPresent(typeof(BitmapImage)))
+            if (data.GetDataPresent(typeof(CardUI)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(CardUI)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -454,7 +454,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -659,7 +659,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -676,10 +676,10 @@ namespace iDuel_EvolutionX.Service
                 {
                     return;
                 }
-                if (cv.Name.Substring(5,1).Equals("2"))
-                {
-                    return;
-                }
+                //if (cv.Name.Substring(5,1).Equals("2"))
+                //{
+                //    return;
+                //}
                 if (cv.Equals(mainwindow.card_1_Extra))
                 {
                     return;
@@ -1032,7 +1032,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
 
                 //判断卡片原有位置的父容器类型
                 Canvas cv = card.Parent as Canvas;
@@ -1174,7 +1174,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -1207,7 +1207,7 @@ namespace iDuel_EvolutionX.Service
 
                 if (cv_aim.Children.Count > 0)
                 {
-                    CardControl card_last = cv_aim.Children[cv_aim.Children.Count - 1] as CardControl;
+                    CardUI card_last = cv_aim.Children[cv_aim.Children.Count - 1] as CardUI;
                     Canvas.SetLeft(card, Canvas.GetLeft(card_last));
                     Canvas.SetTop(card, Canvas.GetTop(card_last));
                 }
@@ -1260,7 +1260,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
 
                 //判断卡片原有位置的父容器类型
                 Canvas cv = card.Parent as Canvas;
@@ -1299,7 +1299,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -1364,7 +1364,7 @@ namespace iDuel_EvolutionX.Service
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
                 //获得卡片对象
-                CardControl card = data.GetData(typeof(BitmapImage)) as CardControl;
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
@@ -2958,11 +2958,11 @@ namespace iDuel_EvolutionX.Service
                 //当使用过查看卡组上方X张后的情况
                 if (mainwindow.card_1_Deck.Children.Count > 0 && cardview.card_1_Deck.Children.Count > 0)
                 {
-                    CardControl card;
+                    CardUI card;
                     int x = cardview.card_1_Deck.Children.Count;
                     for (int i = 0; i < x; i++)
                     {
-                        card = cardview.card_1_Deck.Children[x - i - 1] as CardControl;
+                        card = cardview.card_1_Deck.Children[x - i - 1] as CardUI;
                         cardview.card_1_Deck.Children.Remove(card);
                         mainwindow.card_1_Deck.Children.Add(card);
                         card_BackAtk(card);
@@ -3036,22 +3036,28 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void view_Main()
         {
-            cardview = CardView.getInstance(mainwindow);
-            Console.WriteLine(mainwindow.card_1_Deck.Children.Count);
-            view_or_set(mainwindow.card_1_Deck, cardview.card_1_Deck,mainwindow.card_1_Deck.Children.Count,"正面");
-            //foreach (Card  cd in cardview.card_1_Deck.Children)
-            //{
-            //    Console.WriteLine(cd.isBack);
-            //}
-            sort_CardView(cardview.card_1_Deck,10);
-            mainwindow.view_Deck.IsEnabled = false;
+            CardsView cv = new CardsView(mainwindow.card_1_Deck);
 
-            //原本是-1，改变会触发Tabchange事件
-            cardview.tb_View.SelectedIndex = 6;
-            cardview.Show();
-            mainwindow.card_1_Deck.AllowDrop = false;
-            //Console.WriteLine("查看卡组");
-            //mainwindow.report.Text += ("查看 <卡组>" + Environment.NewLine);
+            cv.tb_title.Text = "卡组";
+
+            cv.ShowDialog();
+
+            //cardview = CardView.getInstance(mainwindow);
+            //Console.WriteLine(mainwindow.card_1_Deck.Children.Count);
+            //view_or_set(mainwindow.card_1_Deck, cardview.card_1_Deck,mainwindow.card_1_Deck.Children.Count,"正面");
+            ////foreach (Card  cd in cardview.card_1_Deck.Children)
+            ////{
+            ////    Console.WriteLine(cd.isBack);
+            ////}
+            //sort_CardView(cardview.card_1_Deck,10);
+            //mainwindow.view_Deck.IsEnabled = false;
+
+            ////原本是-1，改变会触发Tabchange事件
+            //cardview.tb_View.SelectedIndex = 6;
+            //cardview.Show();
+            //mainwindow.card_1_Deck.AllowDrop = false;
+            ////Console.WriteLine("查看卡组");
+            ////mainwindow.report.Text += ("查看 <卡组>" + Environment.NewLine);
 
         }
 
@@ -3209,37 +3215,37 @@ namespace iDuel_EvolutionX.Service
         /// <param name="isback">是否背面转换？</param>
         public static void view_or_set(Canvas cv, Canvas cv2, int num, string isback)
         {
-            //Card temp;
-            //for (int i = 0; i < num; i++)
-            //{
-            //    temp = cv.Children[0] as Card;
-            //    cv.Children.Remove(temp);
-            //    cv2.Children.Insert(0, temp);
-            //    //cv2.Children.Insert(0, temp);
-            //    if (cv2.Equals(mainwindow.card_1_Deck) || cv2.Equals(mainwindow.card_1_Extra) || cv2.Equals(mainwindow.card_2_Extra))
-            //    {
-            //        card_BackAtk(temp);
-            //    }
-            //    else
-            //    {
-            //        card_FrontAtk(temp);
-            //    }
-            //    //if (isback.Equals("背面")) card_BackAtk(temp);
-            //    //if (isback.Equals("正面")) card_FrontAtk(temp);
-            //    //if (!(cv.Parent is System.Windows.Controls.Grid)) CardSortsingle(cv, temp, 56, 81);
-            //    if (cv_others_1.Contains(cv2) || cv_others_2.Contains(cv2))
-	           // {
-		          //  Canvas.SetTop(temp,(cv2.ActualHeight - temp.ActualHeight)/2.0);
-            //        Canvas.SetLeft(temp, (cv2.ActualWidth - temp.ActualWidth) / 2.0);
+            CardUI temp;
+            for (int i = 0; i < num; i++)
+            {
+                temp = cv.Children[0] as CardUI;
+                cv.Children.Remove(temp);
+                cv2.Children.Insert(0, temp);
+                //cv2.Children.Insert(0, temp);
+                if (cv2.Equals(mainwindow.card_1_Deck) || cv2.Equals(mainwindow.card_1_Extra) || cv2.Equals(mainwindow.card_2_Extra))
+                {
+                    card_BackAtk(temp);
+                }
+                else
+                {
+                    card_FrontAtk(temp);
+                }
+                //if (isback.Equals("背面")) card_BackAtk(temp);
+                //if (isback.Equals("正面")) card_FrontAtk(temp);
+                //if (!(cv.Parent is System.Windows.Controls.Grid)) CardSortsingle(cv, temp, 56, 81);
+                if (cv_others_1.Contains(cv2) || cv_others_2.Contains(cv2))
+                {
+                    Canvas.SetTop(temp, (cv2.ActualHeight - temp.ActualHeight) / 2.0);
+                    Canvas.SetLeft(temp, (cv2.ActualWidth - temp.ActualWidth) / 2.0);
 
-	           // }               
-            //    //sort_SingleCard(temp);
-            //    //if (cv2.Name.Contains("Deck")) temp.ContextMenu = CardMenu.cm_deck;
-            //    if (cv2.Name.Contains("hand")) temp.ContextMenu = AllMenu.cm_hand;
-            //    else if (cv2.Name.Contains("Graveyard")) temp.ContextMenu = AllMenu.cm_graveyard;
-            //    else if (cv2.Name.Contains("Outside")) temp.ContextMenu = AllMenu.cm_outside;
-            //    else { temp.ContextMenu = null; }
-            //}
+                }
+                //sort_SingleCard(temp);
+                //if (cv2.Name.Contains("Deck")) temp.ContextMenu = CardMenu.cm_deck;
+                //if (cv2.Name.Contains("hand")) temp.ContextMenu = AllMenu.cm_hand;
+                //else if (cv2.Name.Contains("Graveyard")) temp.ContextMenu = AllMenu.cm_graveyard;
+                //else if (cv2.Name.Contains("Outside")) temp.ContextMenu = AllMenu.cm_outside;
+                //else { temp.ContextMenu = null; }
+            }
         }
 
         #endregion
@@ -3251,7 +3257,7 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         /// <param name="num">抽取数量</param>
         /// <param name="time">起手动画时间（毫秒）</param>
-        public static List<CardControl> card_Draw(int num ,double time)
+        public static List<CardUI> card_Draw(int num ,double time)
         {
 
             //view_or_set(mainwindow.card_1_Deck, mainwindow.card_hand, num,"正面");
@@ -3270,7 +3276,7 @@ namespace iDuel_EvolutionX.Service
             MyCanvas cv = mainwindow.card_1_Deck;
             MyCanvas cv_aim = mainwindow.card_1_hand;
             cv_aim.WhenAddChildren -= CardAreaEvent.add2Hand;
-            List<CardControl> cards = new List<CardControl>();
+            List<CardUI> cards = new List<CardUI>();
 
             if (!(cv.Children.Count < num))
             {
@@ -3280,7 +3286,7 @@ namespace iDuel_EvolutionX.Service
                 //List<FrameworkElement> cards = new List<FrameworkElement>();
                 for (int i = 0; i < num; i++)
                 {
-                    CardControl card_draw = cv.Children[cv.Children.Count - 1] as CardControl;
+                    CardUI card_draw = cv.Children[cv.Children.Count - 1] as CardUI;
                     //card_main.getAwayFromParents();
                     //cv_aim.Children.Add(card_main);
                     //cards.Add(card_main);
@@ -3330,7 +3336,7 @@ namespace iDuel_EvolutionX.Service
                 animator.Animates[animator.Animates.Count - 1].Completed += (object c, EventArgs d) =>
                 {
                     CardOperate.sort_HandCard(cv_aim);
-                    foreach (CardControl card in cards)
+                    foreach (CardUI card in cards)
                     {
                         CardAnimation.turn2Front(card);
 
@@ -3365,11 +3371,11 @@ namespace iDuel_EvolutionX.Service
             cardview = CardView.getInstance(mainwindow);
             if (mainwindow.card_1_Deck.Children.Count > 0 && cardview.card_1_Deck.Children.Count > 0)
             {
-                CardControl card;
+                CardUI card;
                 int x = cardview.card_1_Deck.Children.Count;
                 for (int i = 0; i < x; i++)
                 {
-                    card = cardview.card_1_Deck.Children[x - i - 1] as CardControl;
+                    card = cardview.card_1_Deck.Children[x - i - 1] as CardUI;
                     cardview.card_1_Deck.Children.Remove(card);
                     mainwindow.card_1_Deck.Children.Add(card);
                     card.SetValue(Canvas.TopProperty, (mainwindow.card_1_Deck.ActualHeight - card.ActualHeight) / 2.0);
@@ -3405,7 +3411,7 @@ namespace iDuel_EvolutionX.Service
         /// 表侧攻击表示
         /// </summary>
         /// <param name="card">要修改的卡片</param>
-        public static void card_FrontAtk(CardControl card)
+        public static void card_FrontAtk(CardUI card)
         {
             //RotateTransform rotateTransform = new RotateTransform(0);
             //card.RenderTransform = rotateTransform;  
@@ -3422,7 +3428,7 @@ namespace iDuel_EvolutionX.Service
         /// 里侧攻击表示
         /// </summary>
         /// <param name="card">要修改的卡片</param>
-        public static void card_BackAtk(CardControl card)
+        public static void card_BackAtk(CardUI card)
         {
             //card.Visibility = Visibility.Visible;
             //RotateTransform rotateTransform = new RotateTransform(0);
@@ -3437,7 +3443,7 @@ namespace iDuel_EvolutionX.Service
         /// 里侧防守表示
         /// </summary>
         /// <param name="card"></param>
-        public static void card_BackDef(CardControl card)
+        public static void card_BackDef(CardUI card)
         {
             card.Visibility = Visibility.Visible;
             RotateTransform rotateTransform = new RotateTransform(-90);
@@ -3507,7 +3513,7 @@ namespace iDuel_EvolutionX.Service
         #endregion
 
         #region <-- 卡片位置自适应 -->
-        public static void sort(Canvas cv,CardControl card)
+        public static void sort(Canvas cv,CardUI card)
         {
             FrameworkElement cv_par = cv.Parent as FrameworkElement;
             if (cv_par.Parent is System.Windows.Controls.TabItem)
@@ -3559,7 +3565,7 @@ namespace iDuel_EvolutionX.Service
                 //for (int j = 0; j < ((i == Math.Ceiling(cv.Children.Count / 9.0) - 1) ? cv.Children.Count % 9 : 9); j++)
                 for (int j = 0; perrow * i + j < cv.Children.Count; j++)
                 {
-                    Card card = cv.Children[(int)perrow * i + j] as Card;
+                    CardUI card = cv.Children[(int)perrow * i + j] as CardUI;
                     Canvas.SetLeft(card, 5 * (j + 1) + 56 * j);
                     Canvas.SetTop(card, 5 * (i + 1) + 81 * i);
                 }
@@ -3578,7 +3584,7 @@ namespace iDuel_EvolutionX.Service
 
             if (hn >1)
             {
-                CardControl top = cv.Children[hn - 1] as CardControl;
+                CardUI top = cv.Children[hn - 1] as CardUI;
                 if (top.info.sCardType.Equals("XYZ怪兽") && (top.Status == Status.BACK_DEF || top.Status == Status.FRONT_DEF))
                 {
                     sort_XYZ_def(cv);
@@ -3624,7 +3630,7 @@ namespace iDuel_EvolutionX.Service
             {
 
 
-                foreach (CardControl card in cv.Children)
+                foreach (CardUI card in cv.Children)
                 {
                     //CardAnimation.setTransformGroup(card);
                     //1.获取卡片相对于目的地的距离
@@ -3651,7 +3657,7 @@ namespace iDuel_EvolutionX.Service
             }
             else
             {
-                CardControl card = cv.Children[0] as CardControl;
+                CardUI card = cv.Children[0] as CardUI;
                 Point start = card.TranslatePoint(new Point(), cv);
                 double endX = (cv.ActualHeight - card.Width)/2;
                 Point end = new Point(endX, average2);
@@ -3698,7 +3704,7 @@ namespace iDuel_EvolutionX.Service
 
             for (int i = 0; i < hn + 1; i++)
             {
-                CardControl card = cv.Children[i] as CardControl;
+                CardUI card = cv.Children[i] as CardUI;
                 Point start = card.TranslatePoint(new Point(), cv);
                 //2.获取卡片在卡框中的相对距离
                 //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
@@ -3777,7 +3783,7 @@ namespace iDuel_EvolutionX.Service
 
             for (int i = 0; i < hn ; i++)
             {
-                CardControl card = cv.Children[i] as CardControl;
+                CardUI card = cv.Children[i] as CardUI;
                 Point start = card.TranslatePoint(new Point(), cv);
                 //2.获取卡片在卡框中的相对距离
                 //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
@@ -3847,7 +3853,7 @@ namespace iDuel_EvolutionX.Service
                 range = (cv.ActualWidth - (card_width * hn + cards_range * (hn - 1))) / 2;
 
                 
-                foreach (CardControl card in cv.Children)
+                foreach (CardUI card in cv.Children)
                 {
                     //设置上下距离
                     Canvas.SetTop(card, average2);
@@ -3892,7 +3898,7 @@ namespace iDuel_EvolutionX.Service
             {
                 
 
-                foreach (CardControl card in cv.Children)
+                foreach (CardUI card in cv.Children)
                 {
                     Point start = new Point(Canvas.GetLeft(card), average2);
                     double end_ = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * (i - 1);
@@ -3963,7 +3969,7 @@ namespace iDuel_EvolutionX.Service
         /// 单卡居中
         /// </summary>
         /// <param name="card"></param>
-        public static void sort_SingleCard(CardControl card)
+        public static void sort_SingleCard(CardUI card)
         {
             Canvas cv = Base.getParerent(card);
             if (cv != null)
@@ -4015,7 +4021,7 @@ namespace iDuel_EvolutionX.Service
                 }
                 for (int j = 0; j < col_lastnum; j++)
                 {
-                    CardControl card = cv.Children[i * col_num + j] as CardControl;
+                    CardUI card = cv.Children[i * col_num + j] as CardUI;
                     card.set2FrontAtk();
                     card.showImg();
                     card.SetValue(Canvas.TopProperty, card.Height * i + range * (i + 1));
@@ -4037,7 +4043,7 @@ namespace iDuel_EvolutionX.Service
                 
                 for (int i = 0; i < num; i++)
                 {
-                    CardControl card = cv.Children[i] as CardControl;
+                    CardUI card = cv.Children[i] as CardUI;
                     card.set2FrontAtk();
                     card.showImg();
                     Canvas.SetTop(card, (cv.ActualHeight - 81) / 2);
@@ -4048,7 +4054,7 @@ namespace iDuel_EvolutionX.Service
             {
                 for (int i = 0; i < num; i++)
                 {
-                    CardControl card = cv.Children[i] as CardControl;
+                    CardUI card = cv.Children[i] as CardUI;
                     card.set2FrontAtk();
                     card.showImg();
                     Canvas.SetTop(card, (cv.ActualHeight - 81)/2);
@@ -4068,7 +4074,7 @@ namespace iDuel_EvolutionX.Service
                 {
                     return;
                 }
-                CardControl card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardControl;
+                CardUI card = tb.GetBindingExpression(TextBlock.TextProperty).ParentBinding.Source as CardUI;
                 ModifyAtkOrDefWin mad = new ModifyAtkOrDefWin(card);
                 mad.Owner = Application.Current.MainWindow;
                 Point p = tb.PointToScreen(new Point(0, 0));

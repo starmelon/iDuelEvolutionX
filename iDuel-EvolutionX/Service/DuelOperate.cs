@@ -198,7 +198,7 @@ namespace NBX3.Service
 
                 for (int i = 0; i < deckChoose.Main.Count; i++)
                 {
-                    CardControl card = deckChoose.Main[i] as CardControl;
+                    CardUI card = deckChoose.Main[i] as CardUI;
                     card.set2FrontAtk();
                     mainwindow.cv_main.Children.Add(card);
                     card.showImg();
@@ -217,7 +217,7 @@ namespace NBX3.Service
 
                 for (int i = 0; i < deckChoose.Extra.Count; i++)
                 {
-                    CardControl card = deckChoose.Extra[i] as CardControl;
+                    CardUI card = deckChoose.Extra[i] as CardUI;
                     card.set2FrontAtk();     
                     card.showImg();
                     mainwindow.cv_extra.Children.Add(card);
@@ -234,7 +234,7 @@ namespace NBX3.Service
                 }
                 for (int i = 0; i < deckChoose.Side.Count; i++)
                 {
-                    CardControl card = deckChoose.Side[i] as CardControl;
+                    CardUI card = deckChoose.Side[i] as CardUI;
                     card.set2FrontAtk();
                     card.showImg();
                     mainwindow.cv_side.Children.Add(card);
@@ -385,7 +385,7 @@ namespace NBX3.Service
             card_duelindex = 0;
            
             //放置
-            CardControl card;
+            CardUI card;
             string msg = "start=";
             for (int i = 0; i < myself.deck.Main.Count; i++)
             {
@@ -522,7 +522,7 @@ namespace NBX3.Service
 
 
             //int duelindex = 0;
-            //CardControl card;
+            //CardUI card;
             //for (int i = 0; i < opponent.deck.Main.Count; i++)
             //{
             //    card = opponent.deck.Main[i];
@@ -569,7 +569,7 @@ namespace NBX3.Service
         {
             mainwindow.btn_firstAtk.IsEnabled = false;
             mainwindow.btn_secondAtk.IsEnabled = false;
-            List<CardControl> cards = CardOperate.card_Draw(5, 200);
+            List<CardUI> cards = CardOperate.card_Draw(5, 200);
             //string command = "FirstAtk="+cards[0].duelindex;
             for (int i = 1; i < cards.Count; i++)
             {
@@ -598,7 +598,7 @@ namespace NBX3.Service
         {
             mainwindow.btn_firstAtk.IsEnabled = false;
             mainwindow.btn_secondAtk.IsEnabled = false;
-            List<CardControl> cards = CardOperate.card_Draw(5, 150);
+            List<CardUI> cards = CardOperate.card_Draw(5, 150);
             //string command = "Draw=5," + cards[0].duelindex;
             for (int i = 1; i < cards.Count; i++)
             {
@@ -1191,7 +1191,7 @@ namespace NBX3.Service
             {
                 for (int i = 0; i < temp_deck.Main.Count; i++)
                 {
-                    CardControl card = temp_deck.Main[i];
+                    CardUI card = temp_deck.Main[i];
                     Base.getawayParerent(card);
                     mainwindow.cv_main.Children.Add(card);
                 }
@@ -1202,7 +1202,7 @@ namespace NBX3.Service
             {
                 for (int i = 0; i < temp_deck.Extra.Count; i++)
                 {
-                    CardControl card = temp_deck.Extra[i];
+                    CardUI card = temp_deck.Extra[i];
                     Base.getawayParerent(card);
                     mainwindow.cv_extra.Children.Add(card);
                 }
@@ -1213,7 +1213,7 @@ namespace NBX3.Service
             {
                 for (int i = 0; i < temp_deck.Side.Count; i++)
                 {
-                    CardControl card = temp_deck.Side[i];
+                    CardUI card = temp_deck.Side[i];
                     Base.getawayParerent(card);
                     mainwindow.cv_side.Children.Add(card);
                 }
@@ -1285,7 +1285,7 @@ namespace NBX3.Service
 
             for (int i = 0; i < temp_deck.Main.Count; i++)
             {
-                CardControl card = temp_deck.Main[i];
+                CardUI card = temp_deck.Main[i];
                 Base.getawayParerent(card);
                 mainwindow.cv_main.Children.Add(card);
             }
@@ -1293,7 +1293,7 @@ namespace NBX3.Service
 
             for (int i = 0; i < temp_deck.Extra.Count; i++)
             {
-                CardControl card = temp_deck.Extra[i];
+                CardUI card = temp_deck.Extra[i];
                 Base.getawayParerent(card);
                 mainwindow.cv_extra.Children.Add(card);
             }
@@ -1302,7 +1302,7 @@ namespace NBX3.Service
 
             for (int i = 0; i < temp_deck.Side.Count; i++)
             {
-                CardControl card = temp_deck.Side[i];
+                CardUI card = temp_deck.Side[i];
                 Base.getawayParerent(card);
                 mainwindow.cv_side.Children.Add(card);
             }

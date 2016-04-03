@@ -140,7 +140,7 @@ namespace iDuel_EvolutionX.UI
         /// 攻→守
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate2FrontDef(CardControl card)
+        public static void Rotate2FrontDef(CardUI card)
         {
             //setAnimePrepare(card);
 
@@ -160,7 +160,7 @@ namespace iDuel_EvolutionX.UI
         /// 守→攻
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate2FrontAtk(CardControl card)
+        public static void Rotate2FrontAtk(CardUI card)
         {
             MyStoryboard msb = Rotate_D2A();
             msb.card = card;
@@ -178,7 +178,7 @@ namespace iDuel_EvolutionX.UI
         /// 旋转→背面防守
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate2BackDef(CardControl card)
+        public static void Rotate2BackDef(CardUI card)
         {
             MyStoryboard msb = Rotate_A2D();
             msb.card = card;
@@ -196,7 +196,7 @@ namespace iDuel_EvolutionX.UI
         /// 里守→表攻
         /// </summary>
         /// <param name="card"></param>
-        public static void Rotate2FrontAtk2(CardControl card)
+        public static void Rotate2FrontAtk2(CardUI card)
         {
             //setAnimePrepare(card);
 
@@ -218,7 +218,7 @@ namespace iDuel_EvolutionX.UI
         /// →背面防守
         /// </summary>
         /// <param name="card"></param>
-        public static void turn2BackDef(CardControl card)
+        public static void turn2BackDef(CardUI card)
         {
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
 
@@ -262,7 +262,7 @@ namespace iDuel_EvolutionX.UI
         /// 正面→背面
         /// </summary>
         /// <param name="card"></param>
-        public static void turn2Back(CardControl card)
+        public static void turn2Back(CardUI card)
         {
             //setAnimePrepare(card);
 
@@ -294,7 +294,7 @@ namespace iDuel_EvolutionX.UI
         /// 背面→正面
         /// </summary>
         /// <param name="card"></param>
-        public static void turn2Front(CardControl card)
+        public static void turn2Front(CardUI card)
         {
             //setAnimePrepare(card);
 
@@ -326,7 +326,7 @@ namespace iDuel_EvolutionX.UI
 
 
 
-        public static void move2Graveyard(CardControl card)
+        public static void move2Graveyard(CardUI card)
         {
 
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
@@ -404,7 +404,7 @@ namespace iDuel_EvolutionX.UI
 
         }
 
-        public static void move2MainDeck(CardControl card)
+        public static void move2MainDeck(CardUI card)
         {
 
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
@@ -482,7 +482,7 @@ namespace iDuel_EvolutionX.UI
 
         }
 
-        private static void frontAtk2Graveyard(CardControl card)
+        private static void frontAtk2Graveyard(CardUI card)
         {
             MainWindow main = Application.Current.MainWindow as MainWindow;
             Point start = card.TranslatePoint(new Point(), main.Battle);
@@ -507,7 +507,7 @@ namespace iDuel_EvolutionX.UI
         }
 
 
-        public static void fadeOut2FadeIn (CardControl card)
+        public static void fadeOut2FadeIn (CardUI card)
         {
             MyStoryboard msb0 = FadeOut(300);
             msb0.card = card;
@@ -845,6 +845,7 @@ namespace iDuel_EvolutionX.UI
         }
 
 
+
         #region 处理对手场和观战
 
         #region 其他操作
@@ -877,29 +878,32 @@ namespace iDuel_EvolutionX.UI
             return msb;
         }
 
+
+
         public static MyStoryboard EffectOrigin()
         {
             MyStoryboard msb = new MyStoryboard();
             ColorAnimationUsingKeyFrames keyFramesAnimation = new ColorAnimationUsingKeyFrames();
-            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(2000));
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(230));
 
             LinearColorKeyFrame keyFram = new LinearColorKeyFrame();
             keyFram.Value = Colors.Blue;
-            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(500));
+            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(50));
             keyFramesAnimation.KeyFrames.Add(keyFram);
 
             LinearColorKeyFrame keyFram2 = new LinearColorKeyFrame();
             keyFram2.Value = Colors.Blue;
-            keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1500));
+            keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(80));
             keyFramesAnimation.KeyFrames.Add(keyFram2);
 
             LinearColorKeyFrame keyFram3 = new LinearColorKeyFrame();
-            keyFram3.Value = Colors.Transparent;
-            keyFram3.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1900));
+            keyFram3.Value = Colors.LightBlue;
+            keyFram3.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(100));
             keyFramesAnimation.KeyFrames.Add(keyFram3);
 
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("BorderBrush.Color"));
 
+            System.Windows.Media.Animation.Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("BorderBrush.Color"));
+            msb.RepeatBehavior = new RepeatBehavior(2);
             msb.Children.Add(keyFramesAnimation);
 
             return msb;
@@ -917,7 +921,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="time"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static MyStoryboard Card_2Opponent(CardControl card, Canvas cv,double time,string field)
+        public static MyStoryboard Card_2Opponent(CardUI card, Canvas cv,double time,string field)
         {
             MyStoryboard msb = new MyStoryboard();
             //msb.card = card;
@@ -994,7 +998,7 @@ namespace iDuel_EvolutionX.UI
             return msb;
         }
 
-        public static MyStoryboard Card_2OpponentXYZmaterial(CardControl card, Canvas cv, double time, string field)
+        public static MyStoryboard Card_2OpponentXYZmaterial(CardUI card, Canvas cv, double time, string field)
         {
             MyStoryboard msb = new MyStoryboard();
             //msb.card = card;
@@ -1088,7 +1092,7 @@ namespace iDuel_EvolutionX.UI
         /// 设定操作对象的动画属性组
         /// </summary>
         /// <param name="card">设定的卡片</param>
-        public static void setTransformGroup(CardControl card)
+        public static void setTransformGroup(CardUI card)
         {
             TransformGroup group = new TransformGroup();
             if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF) group.Children.Add(new RotateTransform(-90));
@@ -1742,7 +1746,7 @@ namespace iDuel_EvolutionX.UI
             MyStoryboard msb = new MyStoryboard();
             //msb.cards = cards;
 
-            //foreach (CardControl card in cards)
+            //foreach (CardUI card in cards)
             //{
             //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
@@ -1841,12 +1845,12 @@ namespace iDuel_EvolutionX.UI
         /// <param name="cv"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static MyStoryboard Cards_move2(List<CardControl> cards, Point end, double time, string field)
+        public static MyStoryboard Cards_move2(List<CardUI> cards, Point end, double time, string field)
         {
             MyStoryboard msb = new MyStoryboard();
             //msb.cards = cards;
 
-            //foreach (CardControl card in cards)
+            //foreach (CardUI card in cards)
             //{
             //    //Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
             //    Point start = card.TranslatePoint(new Point(), mainwindow.MyBattle);
@@ -2207,7 +2211,7 @@ namespace iDuel_EvolutionX.UI
 
             Line line = new Line();
             line.Stroke = new SolidColorBrush();
-            line.StrokeThickness = 10;
+            line.StrokeThickness = 10; 
             //LinearGradientBrush lgb = new LinearGradientBrush(Colors.Blue, Colors.Transparent, new Point(1, 0.5), new Point(0, 0.5));
             LinearGradientBrush lgb = new LinearGradientBrush(Colors.Red, Colors.Blue, new Point(p1x, p1y), new Point(p2x, p2y));
             line.Stroke = lgb;

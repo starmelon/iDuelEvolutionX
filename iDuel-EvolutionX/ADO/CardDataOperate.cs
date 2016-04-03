@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using iDuel_EvolutionX.Model;
+using iDuel_EvolutionX.UI;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -40,7 +41,7 @@ namespace iDuel_EvolutionX.ADO
         /// </summary>
         /// <param name="cheatcode">八位密码</param>
         /// <returns>卡片</returns>
-        public static CardControl getCardWithInfoByCheatcode(string cheatcode)
+        public static CardUI getCardWithInfoByCheatcode(string cheatcode)
         {
             CardInfo info = getCardInfoByCheatcode(cheatcode);
             if (info == null)
@@ -48,7 +49,7 @@ namespace iDuel_EvolutionX.ADO
                 MessageBox.Show("初始化获取卡片信息失败");
                 return null;
             }
-            CardControl card = new CardControl(DuelOperate.getInstance().myself.cardback);
+            CardUI card = new CardUI(DuelOperate.getInstance().myself.cardback);
             card.initCardInfo(info);
             //card.info = info;
             return card;
@@ -59,12 +60,12 @@ namespace iDuel_EvolutionX.ADO
         /// </summary>
         /// <param name="card_codes">八位密码</param>
         /// <returns>卡堆</returns>
-        public static List<CardControl> getCardsWithInfoByCheatcode(List<string> card_codes)
+        public static List<CardUI> getCardsWithInfoByCheatcode(List<string> card_codes)
         {
-            List<CardControl> cards = new List<CardControl>();
+            List<CardUI> cards = new List<CardUI>();
             for (int i = 0; i < card_codes.Count; i++)
             {
-                CardControl card = getCardWithInfoByCheatcode(card_codes[i]);
+                CardUI card = getCardWithInfoByCheatcode(card_codes[i]);
                 if (card != null)
                 {
                     

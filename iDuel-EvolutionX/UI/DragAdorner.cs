@@ -48,7 +48,7 @@ public class DragAdorner : Adorner
             img.Source = DuelOperate.getInstance().myself.cardback;
             _brush = new VisualBrush(img);
 
-            CardControl card = adornElement as CardControl;
+            CardUI card = adornElement as CardUI;
             if (status == Status.BACK_ATK || status == Status.BACK_DEF)
             {
                 //Image img = new Image();

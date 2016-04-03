@@ -64,15 +64,13 @@ namespace iDuel_EvolutionX.UI
             MenuItem set2FrontOrBack  = new MenuItem { Header = "里 ↔ 表 形式转换" }; //OK
             MenuItem set2BackDef  = new MenuItem { Header = " → 里侧守备" };  //OK
             MenuItem mi_4  = new MenuItem { Header = "攻击宣言" };
-            MenuItem mi_5  = new MenuItem { Header = "效果发动" };
+            MenuItem activeCard  = new MenuItem { Header = "效果发动" };
+            MenuItem aim2Card = new MenuItem { Header = "选择为对象" };
             MenuItem mi_6  = new MenuItem { Header = "转移控制权" };
         
             MenuItem release = new MenuItem { Header = "解放" };
             MenuItem release2Graveyard = new MenuItem { Header = "解放 → 墓地" };
             MenuItem release2Banish = new MenuItem { Header = "解放 → 除外" };
-
-
-            
 
             MenuItem setCardRemark = new MenuItem { Header = "修改备注" };
 
@@ -98,7 +96,15 @@ namespace iDuel_EvolutionX.UI
 
                 this.AddChild(new Separator());
 
+                this.AddChild(activeCard);
+                AllMenu.setMenuItemBind(activeCard);
+                activeCard.Command = CardCommands.ActiveCard;
 
+                this.AddChild(aim2Card);
+                AllMenu.setMenuItemBind(aim2Card);
+                aim2Card.Command = CardCommands.Aim2Card;
+
+                this.AddChild(new Separator());
 
                 mi_4.IsEnabled = false;
                 //this.AddChild(mi_4);

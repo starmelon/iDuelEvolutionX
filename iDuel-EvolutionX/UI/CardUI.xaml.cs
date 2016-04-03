@@ -1,21 +1,26 @@
-﻿using iDuel_EvolutionX.Service;
-using iDuel_EvolutionX.UI;
+﻿using iDuel_EvolutionX.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace iDuel_EvolutionX.Model
+namespace iDuel_EvolutionX.UI
 {
-    public class CardControl : Image , INotifyPropertyChanged
+    /// <summary>
+    /// CardUI.xaml 的交互逻辑
+    /// </summary>
+    public partial class CardUI : INotifyPropertyChanged
     {
         public int id;
         public CardInfo info;               //卡片信息
@@ -48,7 +53,7 @@ namespace iDuel_EvolutionX.Model
             get
             {
                 return curAtk == null || curAtk.Trim().Equals("") ? null : curAtk + "/" + curDef;
-                
+
             }
 
             set
@@ -79,10 +84,10 @@ namespace iDuel_EvolutionX.Model
             }
         }
 
-
-        public CardControl(BitmapImage backImg)
+        public CardUI(BitmapImage backImg)
         {
-            
+            InitializeComponent();
+
             this.backImage = backImg;
             this.Status = Status.BACK_ATK;
 
@@ -99,8 +104,8 @@ namespace iDuel_EvolutionX.Model
             this.RenderTransform = group;
 
             signs = new List<SignTextBlock>();
-            
-            
+
+
 
             this.ContextMenuOpening += CardUI_ContextMenuOpening;
             this.MouseWheel += CardUI_MouseWheel;
@@ -125,7 +130,7 @@ namespace iDuel_EvolutionX.Model
             if (e.Delta > 0)
             {
 
-                
+
                 this.ContextMenu.PlacementTarget = this;
                 this.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Top;
                 this.ContextMenu.IsOpen = true;
@@ -144,10 +149,10 @@ namespace iDuel_EvolutionX.Model
                     default:
                         break;
                 }
-                
-                
+
+
             }
-           
+
             ///关闭事件则在菜单初始化所注册
 
         }
@@ -162,7 +167,7 @@ namespace iDuel_EvolutionX.Model
             this.CurAtk = info.atk;
             this.CurDef = info.def;
             setImg(info.id);
-            
+
         }
 
         #endregion
@@ -195,20 +200,20 @@ namespace iDuel_EvolutionX.Model
         /// </summary>
         public void showImg()
         {
-            
+
             switch (Status)
             {
                 case Status.FRONT_ATK:
-                    Source = originalImage;
+                    cardPic.Source = originalImage;
                     break;
                 case Status.FRONT_DEF:
-                    Source = originalImage;
+                    cardPic.Source = originalImage;
                     break;
                 case Status.BACK_ATK:
-                    Source = backImage;
+                    cardPic.Source = backImage;
                     break;
                 case Status.BACK_DEF:
-                    Source = backImage;
+                    cardPic.Source = backImage;
                     break;
                 default:
                     break;
@@ -237,7 +242,7 @@ namespace iDuel_EvolutionX.Model
         {
             Status = Status.FRONT_DEF;
             showImg();
-            
+
         }
 
         /// <summary>
@@ -285,7 +290,7 @@ namespace iDuel_EvolutionX.Model
                 {
                     parent.Children.Remove(item);
                 }
-                
+
             }
             signs.Clear();
         }
@@ -312,10 +317,10 @@ namespace iDuel_EvolutionX.Model
                 {
                     parent.Children.Remove(item);
                 }
-                
+
             }
             return false;
-            
+
         }
 
         /// <summary>
@@ -337,7 +342,7 @@ namespace iDuel_EvolutionX.Model
 
         }
 
-        
+
 
         /// <summary>
         /// 横向居中于父控件
@@ -369,7 +374,21 @@ namespace iDuel_EvolutionX.Model
         }
 
         #endregion
+
+        #region 处理卡片动画
+
+        private void Executed_activeCard(object sender, ExecutedRoutedEventArgs e)
+        {
+            (FindResource("ActiveCard") as Storyboard).Begin();
+            e.Handled = true;
+        }
+
+        private void Executed_aim2Card(object sender, ExecutedRoutedEventArgs e)
+        {
+            (FindResource("beAim2") as Storyboard).Begin();
+            e.Handled = true;
+        }
+
+        #endregion 
     }
-
-
 }

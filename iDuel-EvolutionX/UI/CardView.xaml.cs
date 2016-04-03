@@ -105,11 +105,11 @@ namespace iDuel_EvolutionX
             this.Hide();
             if (mainwindow.card_1_Deck.Children.Count > 0 && card_1_Deck.Children.Count > 0)
             {
-                CardControl card;
+                CardUI card;
                 int x = card_1_Deck.Children.Count;
                 for (int i = 0; i < x; i++)
                 {
-                    card = card_1_Deck.Children[x - i - 1] as CardControl;
+                    card = card_1_Deck.Children[x - i - 1] as CardUI;
                     card_1_Deck.Children.Remove(card);
                     mainwindow.card_1_Deck.Children.Add(card);
                     CardOperate.sort_SingleCard(card);
