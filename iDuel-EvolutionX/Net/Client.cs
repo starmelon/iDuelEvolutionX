@@ -11,9 +11,8 @@ using NBX3.Service;
 using System.IO;
 using System.Windows.Media.Imaging;
 using iDuel_EvolutionX.Tools;
-
-
-
+using iDuel_EvolutionX.EventJson;
+using Newtonsoft.Json;
 
 namespace iDuel_EvolutionX.Net
 {
@@ -240,29 +239,31 @@ namespace iDuel_EvolutionX.Net
                     #endregion
 
                     string msg = br.ReadString();
-                    if (msg.Contains("getcardback="))
-                    {
-                        int piclen;
-                        string[] msgs = msg.Split('=');
-                        if (msgs != null && msgs.Length == 2)
-                        {
-                            if (int.TryParse(msgs[1], out piclen))
-                            {
-                                while (true)
-                                {
-                                    byte[] cardback = br.ReadBytes(piclen);
-                                    if (cardback != null)
-                                    {
-                                        mainwindow.Dispatcher.Invoke(handleCardbackCallBack, cardback);
-                                        break;
-                                    }
-                                }
-                                continue;
-                            }
+                    
+                    
+                    //if (msg.Contains("getcardback="))
+                    //{
+                    //    int piclen;
+                    //    string[] msgs = msg.Split('=');
+                    //    if (msgs != null && msgs.Length == 2)
+                    //    {
+                    //        if (int.TryParse(msgs[1], out piclen))
+                    //        {
+                    //            while (true)
+                    //            {
+                    //                byte[] cardback = br.ReadBytes(piclen);
+                    //                if (cardback != null)
+                    //                {
+                    //                    mainwindow.Dispatcher.Invoke(handleCardbackCallBack, cardback);
+                    //                    break;
+                    //                }
+                    //            }
+                    //            continue;
+                    //        }
 
-                        }
+                    //    }
 
-                    }
+                    //}
                     mainwindow.Dispatcher.Invoke(handleMsgCallBack, msg);
 
                 }
@@ -369,27 +370,41 @@ namespace iDuel_EvolutionX.Net
         //添加处理连接成功时调用的被委托的方法
         private void handleConnected(string text)
         {
+            DuelistInfo duelistInfo = new DuelistInfo();
+            duelistInfo.name = "星瓜";
+            //duelistInfo.cardBack = BitmapImagehandle.BitmapImageToByteArray(DuelOperate.getInstance().myself.cardback);
+            String contentJson = JsonConvert.SerializeObject(duelistInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = Guid.NewGuid();
+            bj.cid = "";
+            bj.action = ActionCommand.GAME_SET_DUELST_INFO;
+            bj.json = contentJson;
+
+            String json = JsonConvert.SerializeObject(bj);
+            sendMsg(json);
+
             //[userindex][Connect=DuelistName,]
 
-            sendMsg(DuelOperate.getInstance().sendmyself());
-            string path = AppConfigOperate.getInstance().Custom_path + "\\cardback0.jpg";
-            if (System.IO.File.Exists(path))
-            {
-                
-                try
-                {
-                    BitmapImage cardback = BitmapImagehandle.GetBitmapImage(path);
-                    sendMsg( BitmapImagehandle.BitmapImageToByteArray(cardback));
-                }
-                catch (ArgumentNullException ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
-                    
-                }
-            }
+            //sendMsg(DuelOperate.getInstance().sendmyself());
+            //string path = AppConfigOperate.getInstance().Custom_path + "\\cardback0.jpg";
+            //if (System.IO.File.Exists(path))
+            //{
+
+            //    try
+            //    {
+            //        BitmapImage cardback = BitmapImagehandle.GetBitmapImage(path);
+            //        sendMsg( BitmapImagehandle.BitmapImageToByteArray(cardback));
+            //    }
+            //    catch (ArgumentNullException ex)
+            //    {
+            //        throw ex;
+            //    }
+            //    finally
+            //    {
+
+            //    }
+            //}
 
             #region 废弃的代码
 

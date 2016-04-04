@@ -128,7 +128,7 @@ namespace iDuel_EvolutionX.UI
         /// <param name="e"></param>
         public static void CardDragStart(object sender, MouseEventArgs e)
         {
-            Console.WriteLine("拖拽："+e.Source.GetType().Name);
+            //Console.WriteLine("拖拽："+e.Source.GetType().Name);
             if (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed)
             {
                 CardOperate.CardDragStart(sender, e);

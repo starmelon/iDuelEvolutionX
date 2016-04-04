@@ -29,6 +29,7 @@ namespace iDuel_EvolutionX.UI
         public BitmapImage backImage;       //卡背
         public BitmapImage originalImage;   //卡图
         private Status status;               //攻守正背
+        private Location lastLocation;
         private Location curLocation;        //当前位置（具体位置+所在层次）
         public List<SignTextBlock> signs;
 
@@ -84,6 +85,45 @@ namespace iDuel_EvolutionX.UI
             }
         }
 
+        public Location LastLocation
+        {
+            get
+            {
+                return lastLocation;
+            }
+
+            set
+            {
+                lastLocation = value;
+            }
+        }
+
+        public Location CurLocation
+        {
+            get
+            {
+                return curLocation;
+            }
+
+            set
+            {
+                lastLocation.X = curLocation.X;
+                lastLocation.Z = curLocation.Z;
+                
+                curLocation.X = value.X;
+                curLocation.Z = value.Z;
+
+            }
+        }
+
+        public void outputChange()
+        {
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine("|From:[" + LastLocation.X.ToString() + "] - [" + LastLocation.Z + "]");
+            //Console.WriteLine("|  To:[" + CurLocation.X.ToString() +  "] - [" + CurLocation.Z + "]");
+            //Console.WriteLine("------------------------------------");
+        }
+
         public CardUI(BitmapImage backImg)
         {
             InitializeComponent();
@@ -109,6 +149,9 @@ namespace iDuel_EvolutionX.UI
 
             this.ContextMenuOpening += CardUI_ContextMenuOpening;
             this.MouseWheel += CardUI_MouseWheel;
+
+            curLocation = new Location();
+            lastLocation = new Location();
         }
 
         #region 弹出菜单操作

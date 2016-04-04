@@ -10,6 +10,50 @@ using System.Windows.Controls;
 
 namespace iDuel_EvolutionX.UI
 {
+    public enum Area
+    {
+        NON_VALUE,
+
+        GRAVEYARD,
+        MAINDECK,
+        BANISH,
+        SPACE,
+        EXTRA,
+        HAND,
+        MONSTER_1,
+        MONSTER_2,
+        MONSTER_3,
+        MONSTER_4,
+        MONSTER_5,
+        MAGICTRAP_1,
+        MAGICTRAP_2,
+        MAGICTRAP_3,
+        MAGICTRAP_4,
+        MAGICTRAP_5,
+        PENDULUM_LEFT,
+        PENDULUM_RIGHT,
+
+        GRAVEYARD_OP,
+        MAINDECK_OP,
+        BANISH_OP,
+        SPACE_OP,
+        EXTRA_OP,
+        HAND_OP,
+        MONSTER_1_OP,
+        MONSTER_2_OP,
+        MONSTER_3_OP,
+        MONSTER_4_OP,
+        MONSTER_5_OP,
+        MAGICTRAP_1_OP,
+        MAGICTRAP_2_OP,
+        MAGICTRAP_3_OP,
+        MAGICTRAP_4_OP,
+        MAGICTRAP_5_OP,
+        PENDULUM_LEFT_OP,
+        PENDULUM_RIGHT_OP
+
+    }
+
     class Base
     {
         public static MainWindow mainwindow;

@@ -252,42 +252,42 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void Sign_DoubleClick(TextBlock tb, string ChangedButton)
         {
-            FrameworkElement fe = tb.Parent as FrameworkElement;
-            FrameworkElement fe_par = fe.Parent as FrameworkElement;
-            Canvas cv = mainwindow.FindName(fe_par.Name.Replace("sp_sign", "card")) as Canvas;
-            Card card = cv.Children[0] as Card;
-            if (card != null)
-            {
-                if (ChangedButton.Equals("Left"))
-                {
-                    tb.Text = (Convert.ToInt32(tb.Text) + 1).ToString();
-                    string report = "[" + card.name + "] -> ";
-                    if (fe.Name.Equals("Black")) report += "[黑色指示物]+1";
-                    if (fe.Name.Equals("Blue")) report += "[蓝色指示物]+1";
-                    if (fe.Name.Equals("Red")) report += "[蓝色指示物]+1";
-                    report += " -> 现为 [" + tb.Text + "]";
-                    DuelOperate.getInstance().sendMsg("ChangeSign=" + fe_par.Name + "," + fe.Name + ",+", report);
+            //FrameworkElement fe = tb.Parent as FrameworkElement;
+            //FrameworkElement fe_par = fe.Parent as FrameworkElement;
+            //Canvas cv = mainwindow.FindName(fe_par.Name.Replace("sp_sign", "card")) as Canvas;
+            //Card card = cv.Children[0] as Card;
+            //if (card != null)
+            //{
+            //    if (ChangedButton.Equals("Left"))
+            //    {
+            //        tb.Text = (Convert.ToInt32(tb.Text) + 1).ToString();
+            //        string report = "[" + card.name + "] -> ";
+            //        if (fe.Name.Equals("Black")) report += "[黑色指示物]+1";
+            //        if (fe.Name.Equals("Blue")) report += "[蓝色指示物]+1";
+            //        if (fe.Name.Equals("Red")) report += "[蓝色指示物]+1";
+            //        report += " -> 现为 [" + tb.Text + "]";
+            //        DuelOperate.getInstance().sendMsg("ChangeSign=" + fe_par.Name + "," + fe.Name + ",+", report);
                     
 
-                }
-                if (ChangedButton.Equals("Right"))
-                {
+            //    }
+            //    if (ChangedButton.Equals("Right"))
+            //    {
                     
-                    tb.Text = (Convert.ToInt32(tb.Text) - 1).ToString();
-                    string report = "[" + card.name + "] -> ";
-                    if (fe.Name.Equals("Black")) report += "[黑色指示物]-1";
-                    if (fe.Name.Equals("Blue")) report += "[蓝色指示物]-1";
-                    if (fe.Name.Equals("Red")) report += "[蓝色指示物]-1";
-                    report += " -> 现为 [" + tb.Text + "]";
-                    DuelOperate.getInstance().sendMsg("ChangeSign=" + fe_par.Name + "," + fe.Name + ",-", report);
-                    if (Convert.ToInt32(tb.Text) == 0)
-                    {
-                        Grid gd = tb.Parent as Grid;
-                        StackPanel sp = gd.Parent as StackPanel;
-                        sp.Children.Remove(gd);
-                    }
-                }
-            }
+            //        tb.Text = (Convert.ToInt32(tb.Text) - 1).ToString();
+            //        string report = "[" + card.name + "] -> ";
+            //        if (fe.Name.Equals("Black")) report += "[黑色指示物]-1";
+            //        if (fe.Name.Equals("Blue")) report += "[蓝色指示物]-1";
+            //        if (fe.Name.Equals("Red")) report += "[蓝色指示物]-1";
+            //        report += " -> 现为 [" + tb.Text + "]";
+            //        DuelOperate.getInstance().sendMsg("ChangeSign=" + fe_par.Name + "," + fe.Name + ",-", report);
+            //        if (Convert.ToInt32(tb.Text) == 0)
+            //        {
+            //            Grid gd = tb.Parent as Grid;
+            //            StackPanel sp = gd.Parent as StackPanel;
+            //            sp.Children.Remove(gd);
+            //        }
+            //    }
+            //}
             
             
         }
@@ -1711,7 +1711,7 @@ namespace iDuel_EvolutionX.Service
 
                                 if (e.KeyStates == DragDropKeyStates.AltKey && !mb_right.Equals("Pressed"))
                                 {
-                                    DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
+                                    //DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
 
                                     MyStoryboard msb = CardAnimation.EffectOrigin();
                                     msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
@@ -1818,7 +1818,7 @@ namespace iDuel_EvolutionX.Service
 
                     #endregion
 
-                    DuelOperate.getInstance().sendMsg("Atk=" + card.duelindex + "," + cv_aim.Name, "攻击宣言");
+                    //DuelOperate.getInstance().sendMsg("Atk=" + card.duelindex + "," + cv_aim.Name, "攻击宣言");
                     return;
                 }
 
@@ -2820,12 +2820,12 @@ namespace iDuel_EvolutionX.Service
                     break;
                 case 2: 
                     //对方额外
-                    DuelOperate.getInstance().sendMsg("None=", "查看<对手额外>");
+                    //DuelOperate.getInstance().sendMsg("None=", "查看<对手额外>");
                     view_Extra2();
                     break;
                 case 3: 
                     //额外                   
-                    DuelOperate.getInstance().sendMsg("None=", "查看<额外>");
+                    //DuelOperate.getInstance().sendMsg("None=", "查看<额外>");
                     //Console.WriteLine("查看额外");
                     mainwindow.card_1_Extra.AllowDrop = false;
                     //cardview.Show();
@@ -2838,7 +2838,7 @@ namespace iDuel_EvolutionX.Service
                     
                 case 4:
                     //除外
-                    DuelOperate.getInstance().sendMsg("None=", "查看<除外>");
+                    //DuelOperate.getInstance().sendMsg("None=", "查看<除外>");
                     //Console.WriteLine("查看除外");
                     mainwindow.card_1_Outside.AllowDrop = false;
                     if (mainwindow.card_1_Outside.Children.Count == 0) return;
@@ -2847,7 +2847,7 @@ namespace iDuel_EvolutionX.Service
                     break;
                 case 5:
                     //墓地
-                    DuelOperate.getInstance().sendMsg("None=", "查看<墓地>");
+                    //DuelOperate.getInstance().sendMsg("None=", "查看<墓地>");
                     //Console.WriteLine("查看墓地");
                     mainwindow.card_1_Graveyard.AllowDrop = false;
                     if (mainwindow.card_1_Graveyard.Children.Count == 0) return;
@@ -3014,20 +3014,53 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         public static void view_Graveyard()
         {
-            cardview = CardView.getInstance(mainwindow);
-            view_or_set(mainwindow.card_1_Graveyard, cardview.card_1_Graveyard, mainwindow.card_1_Graveyard.Children.Count, "正面");
-            sort_CardView(cardview.card_1_Graveyard, 10);
-            mainwindow.view_Graveyard.IsEnabled = false;
+            CardsViewWin csv = new CardsViewWin(mainwindow.card_1_Graveyard);
+            csv.tb_title.Text = "己方墓地";
+            Point p = mainwindow.card_1_8.PointToScreen(new Point(0, 0));
+            csv.Top = p.Y - csv.Height;
+            csv.Left = p.X - ((csv.Width - mainwindow.card_1_8.ActualWidth) / 2);
+            csv.ShowDialog();
 
-            //原本是-1，改变会触发Tabchange事件
-            cardview.tb_View.SelectedIndex = 5;
-            cardview.Show();
-            mainwindow.card_1_Graveyard.AllowDrop = false;
+            //cardview = CardView.getInstance(mainwindow);
+            //view_or_set(mainwindow.card_1_Graveyard, cardview.card_1_Graveyard, mainwindow.card_1_Graveyard.Children.Count, "正面");
+            //sort_CardView(cardview.card_1_Graveyard, 10);
+            //mainwindow.view_Graveyard.IsEnabled = false;
+
+            ////原本是-1，改变会触发Tabchange事件
+            //cardview.tb_View.SelectedIndex = 5;
+            //cardview.Show();
+            //mainwindow.card_1_Graveyard.AllowDrop = false;
         }
 
         #endregion
 
         #region <-- 查看卡组 -->
+
+        
+
+        public static void excuete_viewCards(object sender, ExecutedRoutedEventArgs e)
+        {
+            //CardUI card = e.OriginalSource as CardUI;
+            //ModifyAtkOrDefWin mad = new ModifyAtkOrDefWin(card);
+            //mad.Owner = Application.Current.MainWindow;
+            //Point p = card.PointToScreen(new Point(0, 0));
+            //mad.Top = p.Y - mad.Height;
+            //mad.Left = p.X - ((mad.Width - card.ActualWidth) / 2);
+            //mad.ShowDialog();
+            MyCanvas mcv = sender as MyCanvas;
+            if (mcv.Children.Count == 0)
+            {
+                return;
+            }
+            CardsViewWin csv = new CardsViewWin(mcv);
+            
+            Point p = mainwindow.card_1_8.PointToScreen(new Point(0, 0));
+            csv.Top = p.Y - csv.Height;
+            csv.Left = p.X - ((csv.Width - mainwindow.card_1_8.ActualWidth) / 2);
+            mcv.AllowDrop = false;
+            csv.ShowDialog();
+            
+        }
 
         /// <summary>
         /// 查看卡组
@@ -3036,11 +3069,12 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void view_Main()
         {
-            CardsView cv = new CardsView(mainwindow.card_1_Deck);
-
-            cv.tb_title.Text = "卡组";
-
-            cv.ShowDialog();
+            CardsViewWin csv = new CardsViewWin(mainwindow.card_1_Deck);
+            csv.tb_title.Text = "己方卡组";
+            Point p = mainwindow.card_1_8.PointToScreen(new Point(0, 0));
+            csv.Top = p.Y - csv.Height;
+            csv.Left = p.X - ((csv.Width - mainwindow.card_1_8.ActualWidth) / 2);
+            csv.ShowDialog();
 
             //cardview = CardView.getInstance(mainwindow);
             //Console.WriteLine(mainwindow.card_1_Deck.Children.Count);
@@ -3070,17 +3104,24 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         public static void view_Extra_Click()
         {
-            cardview = CardView.getInstance(mainwindow);
-            view_or_set(mainwindow.card_1_Extra, cardview.card_1_Extra, mainwindow.card_1_Extra.Children.Count, "正面");
-            sort_CardView(cardview.card_1_Extra,10);
-            cardview.tb_View.SelectedIndex = 3;
-            //cardview.tb_View.UpdateLayout();
+            CardsViewWin csv = new CardsViewWin(mainwindow.card_1_Deck);
+            csv.tb_title.Text = "己方额外";
+            Point p = mainwindow.card_1_8.PointToScreen(new Point(0, 0));
+            csv.Top = p.Y - csv.Height;
+            csv.Left = p.X - ((csv.Width - mainwindow.card_1_8.ActualWidth) / 2);
+            csv.ShowDialog();
 
-            cardview.Show();
-            mainwindow.card_1_Extra.AllowDrop = false;
+            //cardview = CardView.getInstance(mainwindow);
+            //view_or_set(mainwindow.card_1_Extra, cardview.card_1_Extra, mainwindow.card_1_Extra.Children.Count, "正面");
+            //sort_CardView(cardview.card_1_Extra,10);
+            //cardview.tb_View.SelectedIndex = 3;
+            ////cardview.tb_View.UpdateLayout();
 
-            //Console.WriteLine("查看卡组");
-            //mainwindow.report.Text += ("查看 <额外>" + Environment.NewLine);
+            //cardview.Show();
+            //mainwindow.card_1_Extra.AllowDrop = false;
+
+            ////Console.WriteLine("查看卡组");
+            ////mainwindow.report.Text += ("查看 <额外>" + Environment.NewLine);
 
         }
 
@@ -3316,6 +3357,9 @@ namespace iDuel_EvolutionX.Service
                     //加入目的地控件
                     cv_aim.Children.Add(card_draw);
 
+                    card_draw.CurLocation = new Location(cv_aim.area, cv_aim.Children.IndexOf(card_draw));
+                    card_draw.outputChange();
+
                     MyStoryboard msb = CardAnimation.CanvasXY(start, end, time);
                     msb.card = card_draw;
                     msb.Completed += (object c, EventArgs d) =>
@@ -3396,7 +3440,7 @@ namespace iDuel_EvolutionX.Service
             //Thread.Sleep(100);
             //cardview.Hide();
             cardview.Close();
-            DuelOperate.getInstance().sendMsg("None=", "关闭<卡片预览区>");
+            //DuelOperate.getInstance().sendMsg("None=", "关闭<卡片预览区>");
 
             //mainwindow.report.Text += ("查看结束" + Environment.NewLine);
             //Console.WriteLine(this.tb_View.SelectedIndex);
@@ -3702,7 +3746,22 @@ namespace iDuel_EvolutionX.Service
 
             //重置卡片距离
 
-            for (int i = 0; i < hn + 1; i++)
+            CardUI card = cv.Children[hn] as CardUI;
+            Point end_top = new Point((cv.ActualWidth - card_width) / 2.0, average2);
+            MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+            msb.card = card;
+            msb.Completed += (object c, EventArgs d) =>
+            {
+                msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                Canvas.SetTop(msb.card, end.Y);
+                Canvas.SetLeft(msb.card, end.X);
+            };
+            msb.Begin(card);
+
+
+            for (int i = 0; i < hn; i++)
             {
                 CardUI card = cv.Children[i] as CardUI;
                 Point start = card.TranslatePoint(new Point(), cv);
@@ -3710,11 +3769,7 @@ namespace iDuel_EvolutionX.Service
                 //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
                 double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
                 Point end = new Point(endX, average2);
-                if (i == hn)
-                {
-                    end.X = (cv.ActualWidth - card_width) / 2.0;
-                    end.Y = average2;
-                }
+                
                 //Canvas.SetTop(card, average2);
                 //Canvas.SetLeft(card, endX);
                 MyStoryboard msb = CardAnimation.CanvasXY(end, 150);

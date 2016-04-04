@@ -404,6 +404,8 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        
+
         public static void move2MainDeck(CardUI card)
         {
 
@@ -523,9 +525,91 @@ namespace iDuel_EvolutionX.UI
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.addAnime(msb0).addAnime(msb1).Begin(card);
         }
-        
 
-        
+        #region 多重卡片操作 2016.04.04
+
+        public static MyStoryboard scalXY_021(UIElementCollection uic)
+        {
+            return scalXY(uic, 0, 1);
+        }
+
+        public static MyStoryboard scalXY_120(UIElementCollection uic)
+        {
+            return scalXY(uic, 1, 0);
+        }
+
+        public static MyStoryboard scalXY(UIElementCollection uic,double start,double end)
+        {
+            //新建动画故事版
+            MyStoryboard msb = new MyStoryboard();
+
+            foreach (CardUI card in uic)
+            {
+                //设定X和Y坐标的方向动画
+                DoubleAnimation xA = new DoubleAnimation(start, end, TimeSpan.FromMilliseconds(150));
+                DoubleAnimation yA = new DoubleAnimation(start, end, TimeSpan.FromMilliseconds(150));
+
+                //关联具体要执行动画的依赖属性
+                Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
+                Storyboard.SetTargetProperty(yA, new PropertyPath("RenderTransform.Children[0].ScaleY"));
+
+                Storyboard.SetTarget(xA, card);
+                Storyboard.SetTarget(yA, card);
+
+                msb.Children.Add(xA);
+                msb.Children.Add(yA);
+            }
+
+            return msb;
+        }
+
+
+
+        //public static MyStoryboard scalXY_021(UIElementCollection uic)
+        //{
+        //    //新建动画故事版
+        //    MyStoryboard msb = new MyStoryboard();
+
+        //    foreach (CardUI card in uic)
+        //    {
+        //        //设定X和Y坐标的方向动画
+        //        DoubleAnimation xA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(150));
+        //        DoubleAnimation yA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(150));
+
+        //        //关联具体要执行动画的依赖属性
+        //        Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
+        //        Storyboard.SetTargetProperty(yA, new PropertyPath("RenderTransform.Children[0].ScaleY"));
+
+        //        Storyboard.SetTarget(xA, card);
+        //        Storyboard.SetTarget(yA, card);
+
+        //        msb.Children.Add(xA);
+        //        msb.Children.Add(yA);
+        //    }
+
+        //    return msb;
+        //}
+
+        #endregion
+
+        public static MyStoryboard scalXY_120()
+        {
+            //新建动画故事版
+            MyStoryboard sb = new MyStoryboard();
+
+            //设定X和Y坐标的方向动画
+            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
+            DoubleAnimation yA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
+
+            //关联具体要执行动画的依赖属性
+            Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
+            Storyboard.SetTargetProperty(yA, new PropertyPath("RenderTransform.Children[0].ScaleY"));
+
+            sb.Children.Add(xA);
+            sb.Children.Add(yA);
+
+            return sb;
+        }
 
         /// <summary>
         /// 卡片顺时针翻旋-P1
@@ -1332,6 +1416,21 @@ namespace iDuel_EvolutionX.UI
             msb.Children.Add(CanvasX(end.X, time));
             msb.Children.Add(CanvasY(end.Y, time));
 
+            return msb;
+        }
+
+        public static MyStoryboard CanvasXY(UIElementCollection uic, Point end, double time)
+        {
+            MyStoryboard msb = new MyStoryboard();
+            foreach (CardUI card in uic)
+            {
+                DoubleAnimation xa = CanvasX(end.X, time);
+                Storyboard.SetTarget(xa,card);
+                DoubleAnimation ya = CanvasY(end.Y, time);
+                Storyboard.SetTarget(ya,card);
+                msb.Children.Add(xa);
+                msb.Children.Add(ya);
+            }
             return msb;
         }
 

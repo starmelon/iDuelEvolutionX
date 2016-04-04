@@ -25,7 +25,7 @@ namespace iDuel_EvolutionX.Service
         {
             if (send)
             {
-                DuelOperate.getInstance().sendMsg(action, "开发中");
+                //DuelOperate.getInstance().sendMsg(action, "开发中");
             }
             else
             {

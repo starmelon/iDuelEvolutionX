@@ -252,6 +252,8 @@ namespace iDuel_EvolutionX
 
             #region 初始化控件的卡片处理事件
 
+            #region 己方
+
             #region 怪物区
 
             card_1_6.WhenAddChildren += CardAreaEvent.add2Monster;
@@ -289,12 +291,15 @@ namespace iDuel_EvolutionX
 
             #region 墓地
 
+            card_1_Graveyard.area = Area.GRAVEYARD;
             card_1_Graveyard.WhenRemoveChildren = CardAreaEvent.romoveFromGraveyard;
             card_1_Graveyard.WhenAddChildren = CardAreaEvent.add2Graveyrad;
 
             #endregion
 
             #region 手牌
+
+            card_1_hand.area = Area.HAND;
             card_1_hand.WhenAddChildren += CardAreaEvent.add2Hand;
             card_1_hand.WhenRemoveChildren += CardAreaEvent.removeFromHand;
 
@@ -302,6 +307,7 @@ namespace iDuel_EvolutionX
 
             #region 卡组
 
+            card_1_Deck.area = Area.MAINDECK;
             card_1_Deck.WhenAddChildren += CardAreaEvent.add2Deck;
             card_1_Deck.WhenInsertChildren += CardAreaEvent.insert2Deck;
 
@@ -309,6 +315,7 @@ namespace iDuel_EvolutionX
 
             #region 额外
 
+            card_1_Extra.area = Area.EXTRA;
             card_1_Extra.WhenAddChildren += CardAreaEvent.add2Extra;
             card_1_Extra.WhenInsertChildren += CardAreaEvent.insert2Extra;
 
@@ -316,13 +323,39 @@ namespace iDuel_EvolutionX
 
             #region P卡区
 
-
+            card_1_Left.area = Area.PENDULUM_LEFT;
+            card_1_Right.area = Area.PENDULUM_LEFT;
 
             #endregion
 
             #region 除外
 
+            card_1_Outside.area = Area.BANISH;
             card_1_Outside.WhenAddChildren += CardAreaEvent.add2Banish;
+
+            #endregion
+
+            #endregion
+
+            #region 敌方
+
+            #region 卡组 
+
+            card_2_Deck.area = Area.MAINDECK_OP;
+            card_2_Deck.WhenAddChildren += CardAreaEvent.add2DeckOP;
+            card_2_Deck.WhenInsertChildren += CardAreaEvent.insert2DeckOP;
+
+            #endregion
+
+
+            #region 额外
+
+            card_2_Extra.area = Area.EXTRA_OP;
+            card_2_Extra.WhenAddChildren += CardAreaEvent.add2ExtraOP;
+            card_2_Extra.WhenInsertChildren += CardAreaEvent.insert2ExtraOP;
+
+            #endregion
+
 
             #endregion
 
@@ -396,12 +429,47 @@ namespace iDuel_EvolutionX
 
             #endregion
 
+            #region 绑定控件命令
+
+            #region 查看卡片按钮
+
+            view_Deck.Command = UICommands.ViewAreaCards;
+            view_Deck.CommandTarget = card_1_Deck;
+            card_1_Deck.CommandBindings.Add(
+                new CommandBinding(
+                    UICommands.ViewAreaCards,
+                    CardOperate.excuete_viewCards));
+
+            view_Graveyard.Command = UICommands.ViewAreaCards;
+            view_Graveyard.CommandTarget = card_1_Graveyard;
+            card_1_Graveyard.CommandBindings.Add(
+                new CommandBinding(
+                    UICommands.ViewAreaCards,
+                    CardOperate.excuete_viewCards));
+
+            view_Extra.Command = UICommands.ViewAreaCards;
+            view_Extra.CommandTarget = card_1_Extra;
+            card_1_Extra.CommandBindings.Add(
+                new CommandBinding(
+                    UICommands.ViewAreaCards,
+                    CardOperate.excuete_viewCards));
+
+            view_Outside.Command = UICommands.ViewAreaCards;
+            view_Outside.CommandTarget = card_1_Outside;
+            card_1_Outside.CommandBindings.Add(
+                new CommandBinding(
+                    UICommands.ViewAreaCards,
+                    CardOperate.excuete_viewCards));
+
+            #endregion
+
+            #endregion
+
             #region <-- 注册其他控件事件 -->
 
-            view_Deck.Click += new RoutedEventHandler(DuelEvent.view_Deck_Click);             //查看卡组
-            view_Extra.Click += new RoutedEventHandler(DuelEvent.view_Extra_Click);           //查看额外
-            view_Graveyard.Click += new RoutedEventHandler(DuelEvent.view_Graveyard_Click);   //查看墓地
-            view_Outside.Click += new RoutedEventHandler(DuelEvent.view_Outside_Click);       //查看除外
+
+
+
             view_Extra2.Click += new RoutedEventHandler(DuelEvent.view_Extra2_Click);         //查看额外（对手）
             view_Outside2.Click += new RoutedEventHandler(DuelEvent.view_Outside2_Click);     //查看除外（对手）
             view_Graveyard2.Click += new RoutedEventHandler(DuelEvent.view_Graveyard2_Click); //查看墓地（对手）
@@ -544,7 +612,7 @@ namespace iDuel_EvolutionX
             mi_listen.IsEnabled = false;
             mi_connect.IsEnabled = false;
             mi_stopconnect.IsEnabled = false;
-            DuelOperate.getInstance().myself.userindex = "1";
+            //DuelOperate.getInstance().myself.userindex = "1";
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
@@ -553,7 +621,7 @@ namespace iDuel_EvolutionX
             iduel_Client.startConnect(tb_ip.Text, tb_socket.Text);
             mi_connect.IsEnabled = false;
             mi_listen.IsEnabled = false;
-            DuelOperate.getInstance().myself.userindex = "2";
+            //DuelOperate.getInstance().myself.userindex = "2";
         }
    
 

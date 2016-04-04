@@ -8,7 +8,7 @@ namespace iDuel_EvolutionX.Model
 {
     class Duelist
     {
-        public string userindex;
+        public Guid userindex;
         public string name;
         public BitmapImage cardback;
 

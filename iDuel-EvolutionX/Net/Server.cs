@@ -14,6 +14,8 @@ using iDuel_EvolutionX.Tools;
 using iDuel_EvolutionX.UI;
 using System.Windows.Controls;
 using System.Windows.Media.Effects;
+using iDuel_EvolutionX.EventJson;
+using Newtonsoft.Json;
 
 namespace iDuel_EvolutionX.Net
 {
@@ -176,31 +178,32 @@ namespace iDuel_EvolutionX.Net
                         #endregion
 
                         string msg = br.ReadString();
-                        if (msg.Contains("getcardback="))
-                        {
-                            int piclen;
-                            string[] msgs = msg.Split('=');
-                            if (msgs != null && msgs.Length == 2)
-	                        {
-                                if(int.TryParse(msgs[1],out piclen))
-                                {
-                                    while (true)
-                                    {
-                                        byte[] cardback = br.ReadBytes(piclen);
-                                        if (cardback != null)
-                                        {
-                                            mainwindow.Dispatcher.Invoke(handleCardbackCallBack, cardback);
-                                            break; 
-                                        }
-                                    }
-                                    continue;
-                                }
-		                        
-	                        }
-                            
-                        }
-                        mainwindow.Dispatcher.Invoke(handleMsgCallBack, msg);
 
+                        //if (msg.Contains("getcardback="))
+                        //{
+                        //    int piclen;
+                        //    string[] msgs = msg.Split('=');
+                        //    if (msgs != null && msgs.Length == 2)
+                        // {
+                        //        if(int.TryParse(msgs[1],out piclen))
+                        //        {
+                        //            while (true)
+                        //            {
+                        //                byte[] cardback = br.ReadBytes(piclen);
+                        //                if (cardback != null)
+                        //                {
+                        //                    mainwindow.Dispatcher.Invoke(handleCardbackCallBack, cardback);
+                        //                    break; 
+                        //                }
+                        //            }
+                        //            continue;
+                        //        }
+
+                        // }
+
+                        //}
+                        //mainwindow.Dispatcher.Invoke(handleMsgCallBack, msg);
+                        Application.Current.Dispatcher.Invoke(handleMsgCallBack, msg);
                         //OpponentOperate.ActionAnalyze(getMsg, false);
                         //返回收到的确认信息给客户端
                         //string sendback = "服务器已经接收到[" + getMsg.TrimEnd() + "]这条消息";
@@ -305,29 +308,46 @@ namespace iDuel_EvolutionX.Net
         //添加处理
         private void handleConnected(string text)
         {
-            //传送己方设定的玩家名字
-            sendMsg(DuelOperate.getInstance().sendmyself());
-            //sendMsg("2," + mainwindow.tb_Duelist.Text + "," + "-1");
+            DuelistInfo duelistInfo = new DuelistInfo();
+            duelistInfo.name = "星瓜";
+            //duelistInfo.cardBack = BitmapImagehandle.BitmapImageToByteArray(DuelOperate.getInstance().myself.cardback);
+            String contentJson = JsonConvert.SerializeObject(duelistInfo);
 
-            //如果存在卡背则传送卡背
-            string path = AppConfigOperate.getInstance().Custom_path+"\\cardback0.jpg";
-            //BitmapImage cardback = DuelOperate.getInstance().myself.cardback.CloneCurrentValue();
-            if (System.IO.File.Exists(path))
-            {
-                try
-                {
-                    BitmapImage cardback = BitmapImagehandle.GetBitmapImage(path);
-                    sendMsg(BitmapImagehandle.BitmapImageToByteArray(cardback));
-                }
-                catch (ArgumentNullException ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
+            BaseJson bj = new BaseJson();
+            bj.guid = Guid.NewGuid();
+            bj.cid = "";
+            bj.action = ActionCommand.GAME_SET_DUELST_INFO;
+            bj.json = contentJson;
 
-                }
-            }
+            String json = JsonConvert.SerializeObject(bj);
+            sendMsg(json);
+            //conteneJson
+
+
+
+            ////传送己方设定的玩家名字
+            //sendMsg(DuelOperate.getInstance().sendmyself());
+            ////sendMsg("2," + mainwindow.tb_Duelist.Text + "," + "-1");
+
+            ////如果存在卡背则传送卡背
+            //string path = AppConfigOperate.getInstance().Custom_path+"\\cardback0.jpg";
+            ////BitmapImage cardback = DuelOperate.getInstance().myself.cardback.CloneCurrentValue();
+            //if (System.IO.File.Exists(path))
+            //{
+            //    try
+            //    {
+            //        BitmapImage cardback = BitmapImagehandle.GetBitmapImage(path);
+            //        sendMsg(BitmapImagehandle.BitmapImageToByteArray(cardback));
+            //    }
+            //    catch (ArgumentNullException ex)
+            //    {
+            //        throw ex;
+            //    }
+            //    finally
+            //    {
+
+            //    }
+            //}
         }
 
         #endregion

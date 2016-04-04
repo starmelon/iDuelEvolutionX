@@ -46,12 +46,15 @@ namespace iDuel_EvolutionX.Service
         /// <param name="e"></param>
         public static void excuete_set2AtkOrDef(object sender, ExecutedRoutedEventArgs e)
         {
+
             CardUI card = e.OriginalSource as CardUI;
+            MyCanvas mcv = card.Parent as MyCanvas;
 
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
                     CardAnimation.Rotate2FrontDef(card);
+                    CardOperate.sort_XYZ_def(mcv);
                     break;
                 case Status.FRONT_DEF:
                     CardAnimation.Rotate2FrontAtk(card);

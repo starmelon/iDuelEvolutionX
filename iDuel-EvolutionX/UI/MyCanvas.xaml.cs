@@ -26,6 +26,7 @@ namespace iDuel_EvolutionX.UI
     /// </summary>
     public partial class MyCanvas : Canvas
     {
+        public Area area = Area.NON_VALUE;
         public Position x;
         public TextBlock tb_atkDef;
         public StackPanel signs;

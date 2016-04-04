@@ -6,7 +6,7 @@ using System.Text;
 
 namespace iDuel_EvolutionX.Model
 {
-    class Deck
+    public class Deck
     {
         string path;
 

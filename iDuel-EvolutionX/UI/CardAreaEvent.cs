@@ -13,6 +13,8 @@ namespace iDuel_EvolutionX.UI
 {
     class CardAreaEvent
     {
+        #region 己方区域
+
         #region 墓地区控件事件
 
         /// <summary>
@@ -386,6 +388,10 @@ namespace iDuel_EvolutionX.UI
             card.clearSigns();
             card.reSetAtk();
             card.set2FrontAtk();
+
+            card.CurLocation = new Location(cv.area, cv.Children.IndexOf(card));
+            card.outputChange();
+
             int count = cv.Children.Count;
 
             Service.CardOperate.sort_HandCard(cv);
@@ -409,6 +415,81 @@ namespace iDuel_EvolutionX.UI
 
         #endregion
 
+
+        #endregion
+
+        #region 敌方区域
+
+        #region 卡组区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2DeckOP(MyCanvas cv, CardUI card)
+        {
+            card.reSetAtk();
+            card.centerAtVerticalInParent();
+            card.clearSigns();
+            if (card.Status == Status.FRONT_ATK)
+            {
+                CardAnimation.turn2Back(card);
+            }
+            else
+            {
+                card.set2BackAtk();
+            }
+            card.ContextMenu = AllMenu.Instance.cm_deck;
+        }
+
+        /// <summary>
+        /// 卡片以插入方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void insert2DeckOP(MyCanvas cv, CardUI card)
+        {
+            add2Deck(cv, card);
+
+        }
+
+        #endregion
+
+        #region 额外区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2ExtraOP(MyCanvas cv, CardUI card)
+        {
+            card.reSetAtk();
+            card.set2BackAtk();
+            card.centerAtVerticalInParent();
+            card.clearSigns();
+
+        }
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void insert2ExtraOP(MyCanvas cv, CardUI card)
+        {
+            add2Extra(cv, card);
+
+        }
+
+        #endregion
+
+
+
+        #endregion
+
+        #region 公用函数
 
         /// <summary>
         /// 更新攻击防守显示控件的绑定源
@@ -455,5 +536,7 @@ namespace iDuel_EvolutionX.UI
                 cv.signs.Children.Add(item);
             }
         }
+
+        #endregion
     }
 }

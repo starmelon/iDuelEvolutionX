@@ -1,9 +1,11 @@
 ﻿using iDuel_EvolutionX;
+using iDuel_EvolutionX.EventJson;
 using iDuel_EvolutionX.Model;
 using iDuel_EvolutionX.Net;
 using iDuel_EvolutionX.Service;
 using iDuel_EvolutionX.Tools;
 using iDuel_EvolutionX.UI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,8 @@ namespace NBX3.Service
         private static DuelOperate duelOperate;
         private static MainWindow mainwindow;
         private static int card_duelindex = 0;
-        private List<string> sendstack = new List<string>();
+        private Dictionary<int, string> sendstack = new Dictionary<int, string>();
+        //private List<string> sendstack = new List<string>();
         private static int msgNum = 0;
         //private NetworkStream ns;
 
@@ -79,7 +82,7 @@ namespace NBX3.Service
 
         private void setMyinformation()
         {
-            myself.userindex = "0";
+            myself.userindex = Guid.NewGuid() ;
             myself.name = AppConfigOperate.getInstance().Duelist;
             myself.cardback = BitmapImagehandle.GetBitmapImage(AppConfigOperate.getInstance().Custom_path + "\\cardback0.jpg");
             mainwindow.tbk_myname.Text = myself.name;
@@ -129,7 +132,7 @@ namespace NBX3.Service
         {
 
 
-            sendMsg("MSG=", "更换卡组");
+            //sendMsg("MSG=", "更换卡组");
             mainwindow.btn_start.IsEnabled = false;
             mainwindow.btn_deck.Content = "确认选择";
             mainwindow.bsb_menu_hide.Actions.RemoveAt(0);
@@ -266,7 +269,7 @@ namespace NBX3.Service
 
         internal void DecksetCancel()
         {
-            sendMsg("MSG=", "更换卡组结束");
+            //sendMsg("MSG=", "更换卡组结束");
 
             temp_deck = null;
 
@@ -383,8 +386,10 @@ namespace NBX3.Service
 
             sendstack.Clear();
             card_duelindex = 0;
-           
-            //放置
+
+            
+
+            //放置卡组
             CardUI card;
             string msg = "start=";
             for (int i = 0; i < myself.deck.Main.Count; i++)
@@ -409,12 +414,15 @@ namespace NBX3.Service
                 card.set2BackAtk();
                 mainwindow.card_1_Deck.Children.Insert(0, card);
                 card.centerAtVerticalInParent();
+                card.CurLocation = new Location(mainwindow.card_1_Deck.area, mainwindow.card_1_Deck.Children.IndexOf(card));
+                card.outputChange();
 
                 //msg += card.cheatcode;
             }
 
-            msg += ",";
+            
 
+            //放置额外
             for (int i = 0; i < myself.deck.Extra.Count; i++)
             {
                 card = myself.deck.Extra[i];
@@ -437,11 +445,31 @@ namespace NBX3.Service
                 card.set2BackAtk();
                 mainwindow.card_1_Extra.Children.Insert(0, card);
                 card.centerAtVerticalInParent();
-
+                card.CurLocation = new Location(mainwindow.card_1_Extra.area, mainwindow.card_1_Extra.Children.IndexOf(card));
+                card.outputChange();
+                
                 //msg += card.cheatcode;
             }
 
-            //sendMsg(msg, "duel!!");
+
+            DeckInfo deckInfo = new DeckInfo();
+            foreach (CardUI c in myself.deck.Main)
+            {
+                deckInfo.main.Add(c.info.cheatcode);
+            }
+            foreach (CardUI c2 in myself.deck.Extra)
+            {
+                deckInfo.extra.Add(c2.info.cheatcode);
+            }
+            String contentJson = JsonConvert.SerializeObject(deckInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.GAME_START;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            sendMsg(json);
 
             #region 血条恢复
 
@@ -623,7 +651,7 @@ namespace NBX3.Service
             Color bs2 = (Color)mainwindow.bd_step2.Effect.GetValue(DropShadowEffect.ColorProperty);
             if (bs == Colors.Blue && bs2 == Colors.Blue)
             {
-                DuelOperate.getInstance().sendMsg("ChangePhase=" + rta.Name, rta.Name.Replace("rta_", "").ToUpper() + " 阶段");
+                //DuelOperate.getInstance().sendMsg("ChangePhase=" + rta.Name, rta.Name.Replace("rta_", "").ToUpper() + " 阶段");
 
                 int press = Grid.GetColumn(rta);
 
@@ -714,7 +742,7 @@ namespace NBX3.Service
                                     MyStoryboard msb = CardAnimation.LifeChange(mainwindow.rt_life_P1, rt_remaining_life, 1000);
                                     msb.Begin();
                                     string report = "生命值减少" + lose_life + " -> 剩余" + remaining_life;
-                                    DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
+                                    //DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
 
                                     mainwindow.tb_chat_send.Clear();
                                 }
@@ -739,7 +767,7 @@ namespace NBX3.Service
                                     MyStoryboard msb = CardAnimation.LifeChange(mainwindow.rt_life_P1, rt_remaining_life, 1000);
                                     msb.Begin();
                                     string report = "生命值增加" + add_life + " -> 剩余" + remaining_life;
-                                    DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
+                                    //DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
                                     mainwindow.tb_chat_send.Clear();
                                 }
 
@@ -763,7 +791,7 @@ namespace NBX3.Service
                                     MyStoryboard msb = CardAnimation.LifeChange(mainwindow.rt_life_P1, rt_remaining_life, 1000);
                                     msb.Begin();
                                     string report = "生命值减少" + (lose_life - 1) + "倍" + " -> 剩余" + remaining_life;
-                                    DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
+                                    //DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
                                     mainwindow.tb_chat_send.Clear();
                                 }
 
@@ -788,7 +816,7 @@ namespace NBX3.Service
                                     msb.Begin();
                                     //add_life = Convert.ToInt32(life_P1.Text) * add_life - Convert.ToInt32(life_P1.Text); ;
                                     string report = "生命值增加" + (add_life - 1) + "倍" + " -> 剩余" + remaining_life;
-                                    DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
+                                    //DuelOperate.getInstance().sendMsg("LifeChange=" + remaining_life, report);
 
                                     mainwindow.tb_chat_send.Clear();
                                 }
@@ -811,7 +839,7 @@ namespace NBX3.Service
                                     msb.Begin();
                                     //add_life = Convert.ToInt32(life_P1.Text) * add_life - Convert.ToInt32(life_P1.Text); ;
                                     string report = "生命值重置为" + reset_life;
-                                    DuelOperate.getInstance().sendMsg("LifeChange=" + reset_life, report);
+                                    //DuelOperate.getInstance().sendMsg("LifeChange=" + reset_life, report);
 
                                     mainwindow.tb_chat_send.Clear();
                                 }
@@ -820,7 +848,7 @@ namespace NBX3.Service
                             }
                             break;
                         default:
-                            DuelOperate.getInstance().sendMsg("Chat=" + mainwindow.tb_chat_send.Text, "");
+                            //DuelOperate.getInstance().sendMsg("Chat=" + mainwindow.tb_chat_send.Text, "");
                             var p = new Paragraph(); // Paragraph 类似于 html 的 P 标签  
                             var r = new Run(mainwindow.tb_chat_send.Text); // Run 是一个 Inline 的标签  
                             p.Inlines.Add(r);  
@@ -908,7 +936,7 @@ namespace NBX3.Service
 
             if (cb.Visibility == Visibility.Hidden)
             {
-                DuelOperate.getInstance().sendMsg("ClearChooseZone=", "");
+                //DuelOperate.getInstance().sendMsg("ClearChooseZone=", "");
             }
 
             for (int i = 1; i < 11; i++)
@@ -929,8 +957,8 @@ namespace NBX3.Service
             CheckBox cb = sender as CheckBox;
             if (cb != null)
             {
-                if ((bool)cb.IsChecked) DuelOperate.getInstance().sendMsg("ChooseZone=" + cb.Name + "," + 1, "");
-                else DuelOperate.getInstance().sendMsg("ChooseZone=" + cb.Name + "," + 0, "");
+                //if ((bool)cb.IsChecked) DuelOperate.getInstance().sendMsg("ChooseZone=" + cb.Name + "," + 1, "");
+                //else DuelOperate.getInstance().sendMsg("ChooseZone=" + cb.Name + "," + 0, "");
                 
                 
             }
@@ -946,75 +974,94 @@ namespace NBX3.Service
         /// </summary>
         /// <param name="command"></param>
         /// <param name="report"></param>
-        public void sendMsg(string command, string report)
+        public void sendMsg(string msg)
         {
-            string sendmsg = "未接收";
+            sendstack.Add(sendstack.Count, msg);
 
-            try
+            receiveMsg(msg);
+
+            if (Server.check())
             {
-                if (command.Length < 5 || command.Length > 6 || !command.Substring(0, 5).Equals("Chat="))
-                {
-                    mainwindow.report.AppendText(myself.name + "：" + Environment.NewLine);
-                    mainwindow.report.AppendText("[" + (duelOperate.sendstack.Count + 1) + "] " + report + Environment.NewLine);
-
-                    string send_ = myself.userindex + "," + duelOperate.myself.name + "," + (duelOperate.sendstack.Count + 1) + "," + report + "," + command;
-                    duelOperate.sendstack.Add(send_);
-
-
-                    string msg = duelOperate.sendstack[duelOperate.sendstack.Count - 1];
-
-
-                    if (Server.check())
-                    {
-                        Server sr = Server.getInstance(mainwindow);
-                        sr.sendMsg(msg);
-                    }
-                    else if (Client.check())
-                    {
-                        Client cl = Client.getInstance(mainwindow);
-                        cl.sendMsg(msg);
-                    }
-                    else
-                    {
-                        mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
-                    }
-                }
-                else
-                {
-                    //mainwindow.tb_chat_view.AppendText(myself.name + "：" + command.Remove(0, 5) + Environment.NewLine);
-
-                    string msg = "2" + "," + duelOperate.myself.name + ",," + report + "," + command;
-
-                    if (Server.check())
-                    {
-
-                        Server sr = Server.getInstance(mainwindow);
-                        sr.sendMsg(msg);
-                        Console.WriteLine("sr:" + msg);
-                    }
-                    else if (Client.check())
-                    {
-                        Client cl = Client.getInstance(mainwindow);
-                        cl.sendMsg(msg);
-                        Console.WriteLine("sr:" + msg);
-                    }
-                    else
-                    {
-                        mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
-                    }
-                }
-
-
-                //执行序号+己方昵称+消息序列号+战报+命令
-
-
-
+                Server sr = Server.getInstance(mainwindow);
+                sr.sendMsg(msg);
             }
-            catch (Exception ex)
+            else if (Client.check())
             {
-
-                MessageBox.Show("send:[" + sendmsg + "]" + ex);
+                Client cl = Client.getInstance(mainwindow);
+                cl.sendMsg(msg);
             }
+            else
+            {
+                mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
+            }
+
+            //string sendmsg = "未接收";
+
+            //try
+            //{
+            //    if (command.Length < 5 || command.Length > 6 || !command.Substring(0, 5).Equals("Chat="))
+            //    {
+            //        mainwindow.report.AppendText(myself.name + "：" + Environment.NewLine);
+            //        mainwindow.report.AppendText("[" + (duelOperate.sendstack.Count + 1) + "] " + report + Environment.NewLine);
+
+            //        string send_ = myself.userindex + "," + duelOperate.myself.name + "," + (duelOperate.sendstack.Count + 1) + "," + report + "," + command;
+            //        duelOperate.sendstack.Add(send_);
+
+
+            //        string msg = duelOperate.sendstack[duelOperate.sendstack.Count - 1];
+
+
+            //        if (Server.check())
+            //        {
+            //            Server sr = Server.getInstance(mainwindow);
+            //            sr.sendMsg(msg);
+            //        }
+            //        else if (Client.check())
+            //        {
+            //            Client cl = Client.getInstance(mainwindow);
+            //            cl.sendMsg(msg);
+            //        }
+            //        else
+            //        {
+            //            mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //mainwindow.tb_chat_view.AppendText(myself.name + "：" + command.Remove(0, 5) + Environment.NewLine);
+
+            //        string msg = "2" + "," + duelOperate.myself.name + ",," + report + "," + command;
+
+            //        if (Server.check())
+            //        {
+
+            //            Server sr = Server.getInstance(mainwindow);
+            //            sr.sendMsg(msg);
+            //            Console.WriteLine("sr:" + msg);
+            //        }
+            //        else if (Client.check())
+            //        {
+            //            Client cl = Client.getInstance(mainwindow);
+            //            cl.sendMsg(msg);
+            //            Console.WriteLine("sr:" + msg);
+            //        }
+            //        else
+            //        {
+            //            mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
+            //        }
+            //    }
+
+
+            //    //执行序号+己方昵称+消息序列号+战报+命令
+
+
+
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    MessageBox.Show("send:[" + sendmsg + "]" + ex);
+            //}
 
 
         }
@@ -1029,101 +1076,169 @@ namespace NBX3.Service
         /// <param name="msg"></param>
         public void receiveMsg(string msg)
         {
-            try
+            Console.WriteLine(msg);
+            
+            BaseJson bj = JsonConvert.DeserializeObject<BaseJson>(msg);
+            switch (bj.action)
             {
-                if ( msg.StartsWith("[") && msg.EndsWith("]"))
-                {
-                    msg = msg.TrimStart('[').TrimEnd(']');
-                    string[] msgs = msg.Split(new string[] { "]^[" }, System.StringSplitOptions.None);
-                    if (msgs.Length == 1)
+                case ActionCommand.GAME_SET_DUELST_INFO:
+                    DuelistInfo dinfo = JsonConvert.DeserializeObject<DuelistInfo>(bj.json);
+
+                    //mainwindow.Dispatcher.Invoke(handleCardbackCallBack, dinfo.cardBack);
+                    break;
+                case ActionCommand.GAME_START:
+                    DeckInfo deck = JsonConvert.DeserializeObject<DeckInfo>(bj.json);
+                    foreach (CardUI card in opponent.deck.Main)
                     {
-                        msgs = msgs[0].Split(new char[] { '=', ',' }, StringSplitOptions.None);
-                        switch (msgs[0])
+                        card.getAwayFromParents();
+                        card.signs.Clear();
+                    }
+                    foreach (CardUI card in opponent.deck.Extra)
+                    {
+                        card.getAwayFromParents();
+                        card.signs.Clear();
+                    }
+                    opponent.deck.Main.Clear();
+                    opponent.deck.Extra.Clear();
+                    bool isReadSuccessed = CardOperate.readDeckBynet(deck.main, deck.extra, opponent.deck);
+                    if (isReadSuccessed)
+                    {
+                        foreach (CardUI card in opponent.deck.Main)
                         {
-                            case "SetP1":
-                                {
-                                    DuelOperate.getInstance().myself.userindex = msgs[1];
-                                    DuelOperate.getInstance().myself.name = msgs[2];
-                                    mainwindow.tbk_opname.Text = DuelOperate.getInstance().myself.name;
-                                }
-                                break;
-                            case "SetP2":
-                                {
-                                    DuelOperate.getInstance().opponent.userindex = msgs[1];
-                                    DuelOperate.getInstance().opponent.name = msgs[2];
-                                    mainwindow.tbk_opname.Text = DuelOperate.getInstance().opponent.name;
-                                    UIAnimation.getInstance().rotateAnimation.Stop();
-                                    UIAnimation.getInstance().opactiy20.Begin(mainwindow.img_serchP2);
-                                    mainwindow.img_head_op.Source = new BitmapImage(new Uri("Image\\head3.jpg", UriKind.RelativeOrAbsolute));
-                                    UIAnimation.getInstance().opacity21.Begin(mainwindow.img_head_op);
+                            mainwindow.card_2_Deck.Children.Add(card);
+                        }
+
+                        foreach (CardUI card in opponent.deck.Extra)
+                        {
+                            mainwindow.card_2_Extra.Children.Add(card);
+                        }
+                    }
+                    break;
+                case ActionCommand.GAME_RPS:
+                    break;
+                case ActionCommand.GAME_ORDER:
+                    break;
+                case ActionCommand.GAME_SET_PHASE:
+                    break;
+                case ActionCommand.GAME_DRAW:
+                    break;
+                case ActionCommand.GAME_LIFE_CHANGE:
+                    break;
+                case ActionCommand.CARD_ACTIVE:
+                    break;
+                case ActionCommand.CARR_SELECT_AIM:
+                    break;
+                case ActionCommand.CARD_MOVE:
+                    break;
+                case ActionCommand.CARD_DISAPPEAR:
+                    break;
+                case ActionCommand.CARD_SIGN_ACTION:
+                    break;
+                case ActionCommand.CARD_ATK:
+                    break;
+                case ActionCommand.CARD_STATUS_CHANGE:
+                    break;
+                case ActionCommand.CARD_REMARK:
+                    break;
+                default:
+                    break;
+            }
+
+            //try
+            //{
+            //    if ( msg.StartsWith("[") && msg.EndsWith("]"))
+            //    {
+            //        msg = msg.TrimStart('[').TrimEnd(']');
+            //        string[] msgs = msg.Split(new string[] { "]^[" }, System.StringSplitOptions.None);
+            //        if (msgs.Length == 1)
+            //        {
+            //            msgs = msgs[0].Split(new char[] { '=', ',' }, StringSplitOptions.None);
+            //            switch (msgs[0])
+            //            {
+            //                case "SetP1":
+            //                    {
+            //                        DuelOperate.getInstance().myself.userindex = msgs[1];
+            //                        DuelOperate.getInstance().myself.name = msgs[2];
+            //                        mainwindow.tbk_opname.Text = DuelOperate.getInstance().myself.name;
+            //                    }
+            //                    break;
+            //                case "SetP2":
+            //                    {
+            //                        DuelOperate.getInstance().opponent.userindex = msgs[1];
+            //                        DuelOperate.getInstance().opponent.name = msgs[2];
+            //                        mainwindow.tbk_opname.Text = DuelOperate.getInstance().opponent.name;
+            //                        UIAnimation.getInstance().rotateAnimation.Stop();
+            //                        UIAnimation.getInstance().opactiy20.Begin(mainwindow.img_serchP2);
+            //                        mainwindow.img_head_op.Source = new BitmapImage(new Uri("Image\\head3.jpg", UriKind.RelativeOrAbsolute));
+            //                        UIAnimation.getInstance().opacity21.Begin(mainwindow.img_head_op);
                                     
 
-                                    //UIAnimation.opacityChange(0).Begin();
-                                }
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    string[] msgs = msg.Split(new char[] { '=', ',' }, StringSplitOptions.None);
+            //                        //UIAnimation.opacityChange(0).Begin();
+            //                    }
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        string[] msgs = msg.Split(new char[] { '=', ',' }, StringSplitOptions.None);
 
-                    foreach (string msg_ in msgs)
-                    {
-                        Console.WriteLine(msg);
-                    }
+            //        foreach (string msg_ in msgs)
+            //        {
+            //            Console.WriteLine(msg);
+            //        }
 
-                    if (msgs[2].Equals("-1"))
-                    {
-                        mainwindow.report.AppendText("System：" + Environment.NewLine + "与玩家 - " + msgs[1] + " - 成功建立连接" + Environment.NewLine);
-                        //DuelOperate.getInstance().Opponent
-                        DuelOperate.getInstance().opponent.userindex = msgs[0];
-                        DuelOperate.getInstance().opponent.name = msgs[1];
-                        mainwindow.tbk_opname.Text = DuelOperate.getInstance().opponent.name;
+            //        if (msgs[2].Equals("-1"))
+            //        {
+            //            mainwindow.report.AppendText("System：" + Environment.NewLine + "与玩家 - " + msgs[1] + " - 成功建立连接" + Environment.NewLine);
+            //            //DuelOperate.getInstance().Opponent
+            //            DuelOperate.getInstance().opponent.userindex = msgs[0];
+            //            DuelOperate.getInstance().opponent.name = msgs[1];
+            //            mainwindow.tbk_opname.Text = DuelOperate.getInstance().opponent.name;
 
-                    }
-                    else if (msgs[4].Equals("MSG"))
-                    {
-                        mainwindow.report.AppendText(opponent.name + "：" + Environment.NewLine);
-                        mainwindow.report.AppendText("[" + msgs[2] + "] " + msgs[3] + Environment.NewLine);
-                    }
-                    else if (msgs[4].Equals("Chat"))
-                    {
-                        var p = new Paragraph(); // Paragraph 类似于 html 的 P 标签                  
-                        string opsay = "";
-                        for (int i = 5; i < msgs.Length; i++)
-                        {
-                            opsay += msgs[i];
-                        }
-                        var r = new Run(opsay); // Run 是一个 Inline 的标签  
-                        p.Inlines.Add(r);
-                        p.Foreground = Brushes.Red;//设置字体颜色  
-                        mainwindow.tb_chat_view.Document.Blocks.Add(p);
-                        mainwindow.tb_chat_view.ScrollToEnd();
-                        if (!mainwindow.btn_viewreport.Content.Equals("R"))
-                        {
-                            mainwindow.btn_viewreport.Content = Convert.ToInt32(mainwindow.btn_viewreport.Content) + 1;
-                        }
+            //        }
+            //        else if (msgs[4].Equals("MSG"))
+            //        {
+            //            mainwindow.report.AppendText(opponent.name + "：" + Environment.NewLine);
+            //            mainwindow.report.AppendText("[" + msgs[2] + "] " + msgs[3] + Environment.NewLine);
+            //        }
+            //        else if (msgs[4].Equals("Chat"))
+            //        {
+            //            var p = new Paragraph(); // Paragraph 类似于 html 的 P 标签                  
+            //            string opsay = "";
+            //            for (int i = 5; i < msgs.Length; i++)
+            //            {
+            //                opsay += msgs[i];
+            //            }
+            //            var r = new Run(opsay); // Run 是一个 Inline 的标签  
+            //            p.Inlines.Add(r);
+            //            p.Foreground = Brushes.Red;//设置字体颜色  
+            //            mainwindow.tb_chat_view.Document.Blocks.Add(p);
+            //            mainwindow.tb_chat_view.ScrollToEnd();
+            //            if (!mainwindow.btn_viewreport.Content.Equals("R"))
+            //            {
+            //                mainwindow.btn_viewreport.Content = Convert.ToInt32(mainwindow.btn_viewreport.Content) + 1;
+            //            }
 
-                    }
-                    else
-                    {
-                        mainwindow.report.AppendText(opponent.name + "：" + Environment.NewLine);
-                        mainwindow.report.AppendText("[" + msgs[2] + "] " + msgs[3] + Environment.NewLine);
+            //        }
+            //        else
+            //        {
+            //            mainwindow.report.AppendText(opponent.name + "：" + Environment.NewLine);
+            //            mainwindow.report.AppendText("[" + msgs[2] + "] " + msgs[3] + Environment.NewLine);
 
 
-                        OpponentOperate.ActionAnalyze(msg, false);
-                    }
-                }
+            //            OpponentOperate.ActionAnalyze(msg, false);
+            //        }
+            //    }
 
 
                 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Receive:[" + msg + "]" + ex);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Receive:[" + msg + "]" + ex);
 
-            }
+            //}
 
         }
 
@@ -1157,7 +1272,7 @@ namespace NBX3.Service
         internal void sideMode()
         {
             
-            sendMsg("MSG=", "更换SIDE");
+            //sendMsg("MSG=", "更换SIDE");
             temp_deck = new Deck();
             temp_deck.Main.AddRange(myself.deck.Main);
             temp_deck.Extra.AddRange(myself.deck.Extra);
@@ -1266,7 +1381,7 @@ namespace NBX3.Service
 
 
 
-            sendMsg("MSG=", "SIDE更换结束");
+            //sendMsg("MSG=", "SIDE更换结束");
         }
 
         #endregion
@@ -1355,7 +1470,7 @@ namespace NBX3.Service
             mainwindow.tb_chat_view.Document.Blocks.Add(p);
             //mainwindow.tb_chat_view.AppendText("我：" + mainwindow.tb_chat_send.Text);
             mainwindow.tb_chat_view.ScrollToEnd();
-            DuelOperate.getInstance().sendMsg("Chat=" + "Roll -> " + result, "");
+            //DuelOperate.getInstance().sendMsg("Chat=" + "Roll -> " + result, "");
             Thread.Sleep(10);
             //mainwindow.tb_chat_view.AppendText("[己方掷骰子 -> "+ result + " ]" );
         }
@@ -1376,7 +1491,7 @@ namespace NBX3.Service
             mainwindow.tb_chat_view.Document.Blocks.Add(p);
             //mainwindow.tb_chat_view.AppendText("我：" + mainwindow.tb_chat_send.Text);
             mainwindow.tb_chat_view.ScrollToEnd();
-            DuelOperate.getInstance().sendMsg("Chat=" + result_, "");
+            //DuelOperate.getInstance().sendMsg("Chat=" + result_, "");
             Thread.Sleep(10);
         }
 
