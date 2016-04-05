@@ -148,6 +148,8 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed +=(sender, e) => {
                 msb.card.Status = Status.FRONT_DEF;
+                MyCanvas mcv = card.Parent as MyCanvas;
+                CardOperate.sort_XYZ_def(mcv);
             };
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
@@ -166,6 +168,8 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed += (sender, e) => {
                 msb.card.Status = Status.FRONT_ATK;
+                MyCanvas mcv = card.Parent as MyCanvas;
+                CardOperate.sort_XYZ_def(mcv);
             };
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
@@ -184,6 +188,8 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed += (sender, e) => {
                 msb.card.Status = Status.BACK_DEF;
+                MyCanvas mcv = card.Parent as MyCanvas;
+                CardOperate.sort_XYZ_def(mcv);
             };
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
@@ -207,6 +213,11 @@ namespace iDuel_EvolutionX.UI
                 msb0.card.Status = Status.FRONT_ATK;
             };
             MyStoryboard msb1 = scalX_021();
+            msb1.Completed += (object c, EventArgs d) =>
+            {
+                MyCanvas mcv = card.Parent as MyCanvas;
+                CardOperate.sort_XYZ_def(mcv);
+            };
 
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.addAnime(msb0).addAnime(msb1).Begin(card);

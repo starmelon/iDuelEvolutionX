@@ -53,8 +53,7 @@ namespace iDuel_EvolutionX.Service
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
-                    CardAnimation.Rotate2FrontDef(card);
-                    CardOperate.sort_XYZ_def(mcv);
+                    CardAnimation.Rotate2FrontDef(card); 
                     break;
                 case Status.FRONT_DEF:
                     CardAnimation.Rotate2FrontAtk(card);

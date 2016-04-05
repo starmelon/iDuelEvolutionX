@@ -3722,69 +3722,182 @@ namespace iDuel_EvolutionX.Service
 
         }
      
+
         /// <summary>
         /// 卡区整理-2
         /// </summary>
-        /// <param name="cv"></param>
+        /// <param name="cv">要整理的Canvas</param>
         public static void sort_XYZ_def(Canvas cv)
         {
             double card_height = 81;
             double card_width = 56;
 
             //获得控件中的卡片数量
-            double hn = cv.Children.Count - 1;
+            int card_num = cv.Children.Count;
 
-            if (hn < 1) return;
+            if (card_num < 1) return;
 
-            //计算卡片数于控件中的平均距离
-            double average = cv.ActualWidth / hn;
+            //获取上侧距离
+            double canvas_top = (cv.ActualHeight - card_height) / 2.0;
 
-            //计算卡片的上下距离
-            double average2 = (cv.ActualHeight - card_height) / 2.0;
+            //单卡时左侧距离
+            double canvas_left_single = (cv.ActualWidth - card_width) / 2.0;
+            
 
-            //int i = 1;
+            CardUI card_top = cv.Children[card_num - 1] as CardUI;
 
-            //重置卡片距离
-
-            CardUI card = cv.Children[hn] as CardUI;
-            Point end_top = new Point((cv.ActualWidth - card_width) / 2.0, average2);
-            MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
-            msb.card = card;
-            msb.Completed += (object c, EventArgs d) =>
+            
+            if (card_num == 1 )
             {
-                msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                msb.card.BeginAnimation(Canvas.TopProperty, null);
-
-                Canvas.SetTop(msb.card, end.Y);
-                Canvas.SetLeft(msb.card, end.X);
-            };
-            msb.Begin(card);
-
-
-            for (int i = 0; i < hn; i++)
-            {
-                CardUI card = cv.Children[i] as CardUI;
-                Point start = card.TranslatePoint(new Point(), cv);
-                //2.获取卡片在卡框中的相对距离
-                //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-                double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
-                Point end = new Point(endX, average2);
-                
-                //Canvas.SetTop(card, average2);
-                //Canvas.SetLeft(card, endX);
-                MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
-                msb.card = card;
-                msb.Completed += (object c, EventArgs d) =>
+                /* 1.当卡片数量为1时，也就是从两张取出剩下一张的情况
+                 * 2.当且仅当剩余的一张为攻击形式时才需要移动
+                 */
+                if (card_top.Status == Status.BACK_ATK || card_top.Status == Status.FRONT_ATK)
                 {
-                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    Point end = new Point(canvas_left_single, canvas_left_single);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                    msb.card = card_top;
+                    msb.Completed += (object c, EventArgs d) =>
+                    {
+                        msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                        msb.card.BeginAnimation(Canvas.TopProperty, null);
 
-                    Canvas.SetTop(msb.card, end.Y);
-                    Canvas.SetLeft(msb.card, end.X);
-                };
-                msb.Begin(card);
+                        Canvas.SetTop(msb.card, canvas_top);
+                        Canvas.SetLeft(msb.card, canvas_left_single);
+                    };
+                    msb.Begin(card_top);
+                }          
+                
+            }
+            else if (card_num > 1)
+            {
+                /* 
+                 * 1.卡片数量两张以上
+                 * 2.当第一张为防守时，不处理第一张卡片
+                 * 3.但应考虑第一张由攻转防的情况，这种情况要单独处理第一张
+                 * 4.并把要处理的卡片数量 - 1
+                 */
+                if (card_top.Status == Status.BACK_DEF || card_top.Status == Status.FRONT_DEF)
+                {
+                    if (Canvas.GetLeft(card_top) != canvas_left_single || Canvas.GetTop(card_top) != canvas_top)
+                    {
+                        Point end = new Point(canvas_left_single, canvas_top);
+                        MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                        msb.card = card_top;
+                        msb.Completed += (object c, EventArgs d) =>
+                        {
+                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                            Canvas.SetTop(msb.card, canvas_top);
+                            Canvas.SetLeft(msb.card, canvas_left_single);
+                        };
+                        msb.Begin(card_top);
+                    }    
+
+                    card_num -= 1;
+                }
+
+                /* 
+                 * 1.当需要批量处理的卡片仅为一张时，单独进行处理 
+                 */
+                if (card_num == 1)
+                {
+                    CardUI card_top2 = cv.Children[card_num - 1] as CardUI;
+                    Point end = new Point(canvas_left_single, canvas_top);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                    msb.card = card_top2;
+                    msb.Completed += (object c, EventArgs d) =>
+                    {
+                        msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                        msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                        Canvas.SetTop(msb.card, canvas_top);
+                        Canvas.SetLeft(msb.card, canvas_left_single);
+                    };
+                    msb.Begin(card_top2);
+                }
+                else
+                {
+                    for (int i = 0; i < card_num; i++)
+                    {
+                        CardUI card = cv.Children[i] as CardUI;
+                        Point start = card.TranslatePoint(new Point(), cv);
+                        //2.获取卡片在卡框中的相对距离
+                        //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+                        double endX = (cv.ActualWidth - card_width) / (card_num - 1) * i;
+                        Point end = new Point(endX, canvas_top);
+
+                        //Canvas.SetTop(card, average2);
+                        //Canvas.SetLeft(card, endX);
+                        MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                        msb.card = card;
+                        msb.Completed += (object c, EventArgs d) =>
+                        {
+                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                            Canvas.SetTop(msb.card, end.Y);
+                            Canvas.SetLeft(msb.card, end.X);
+                        };
+                        msb.Begin(card);
+
+                    }
+                }
+
+                
 
             }
+
+            ////计算卡片数于控件中的平均距离
+            //double average = cv.ActualWidth / hn;
+
+            ////计算卡片的上下距离
+            //double average2 = (cv.ActualHeight - card_height) / 2.0;
+
+            ////int i = 1;
+
+            ////重置卡片距离
+
+            //CardUI card_top = cv.Children[hn] as CardUI;
+            //Point end_top = new Point((cv.ActualWidth - card_width) / 2.0, average2);
+            //MyStoryboard msb = CardAnimation.CanvasXY(end_top, 150);
+            //msb.card = card;
+            //msb.Completed += (object c, EventArgs d) =>
+            //{
+            //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+            //    msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+            //    Canvas.SetTop(msb.card, end.Y);
+            //    Canvas.SetLeft(msb.card, end.X);
+            //};
+            //msb.Begin(card);
+
+
+            //for (int i = 0; i < hn; i++)
+            //{
+            //    CardUI card = cv.Children[i] as CardUI;
+            //    Point start = card.TranslatePoint(new Point(), cv);
+            //    //2.获取卡片在卡框中的相对距离
+            //    //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+            //    double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
+            //    Point end = new Point(endX, average2);
+                
+            //    //Canvas.SetTop(card, average2);
+            //    //Canvas.SetLeft(card, endX);
+            //    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+            //    msb.card = card;
+            //    msb.Completed += (object c, EventArgs d) =>
+            //    {
+            //        msb.card.BeginAnimation(Canvas.LeftProperty, null);
+            //        msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+            //        Canvas.SetTop(msb.card, end.Y);
+            //        Canvas.SetLeft(msb.card, end.X);
+            //    };
+            //    msb.Begin(card);
+
+            //}
 
             //foreach (Card card in cv.Children)
             //{
