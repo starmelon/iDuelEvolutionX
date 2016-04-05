@@ -978,7 +978,7 @@ namespace NBX3.Service
         {
             sendstack.Add(sendstack.Count, msg);
 
-            receiveMsg(msg);
+            //receiveMsg(msg);
 
             if (Server.check())
             {

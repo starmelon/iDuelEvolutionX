@@ -52,7 +52,8 @@ namespace iDuel_EvolutionX.UI
         private void closeWin()
         {
             mcv.WhenRemoveChildren -= removeFormMcv;
-            mcv_from.WhenAddChildren -= CardAreaEvent.add2Deck;
+            removeTheDelegateOfMCV();
+
             MyStoryboard msb = CardAnimation.scalXY_120();
             msb.Completed += (object c, EventArgs d) =>
             {
@@ -95,7 +96,8 @@ namespace iDuel_EvolutionX.UI
                     card.BeginAnimation(Canvas.TopProperty, null);
                     card.centerAtVerticalInParent();
                 }
-                mcv_from.WhenAddChildren += CardAreaEvent.add2Deck;
+                addTheDelegateOfMCV();
+
                 mcv_from.AllowDrop = true;
                 MyStoryboard msb0 = CardAnimation.scalXY_021(mcv_from.Children);
                 //msb0.FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop;
@@ -108,6 +110,124 @@ namespace iDuel_EvolutionX.UI
             };
             msb.Begin(this);
         }
+
+        #region 对来源控件的委托处理
+
+        private void addTheDelegateOfMCV()
+        {
+            switch (mcv_from.area)
+            {
+                case Area.NON_VALUE:
+                    break;
+                case Area.GRAVEYARD:
+                    mcv_from.WhenAddChildren += CardAreaEvent.add2Graveyrad;
+                    break;
+                case Area.MAINDECK:
+                    mcv_from.WhenAddChildren += CardAreaEvent.add2Deck;
+                    break;
+                case Area.BANISH:
+                    break;
+                case Area.SPACE:
+                    break;
+                case Area.EXTRA:
+                    break;
+                case Area.HAND:
+                    break;
+                case Area.MONSTER_1:
+                    break;
+                case Area.MONSTER_2:
+                    break;
+                case Area.MONSTER_3:
+                    break;
+                case Area.MONSTER_4:
+                    break;
+                case Area.MONSTER_5:
+                    break;
+                case Area.GRAVEYARD_OP:
+                    break;
+                case Area.MAINDECK_OP:
+                    break;
+                case Area.BANISH_OP:
+                    break;
+                case Area.SPACE_OP:
+                    break;
+                case Area.EXTRA_OP:
+                    break;
+                case Area.HAND_OP:
+                    break;
+                case Area.MONSTER_1_OP:
+                    break;
+                case Area.MONSTER_2_OP:
+                    break;
+                case Area.MONSTER_3_OP:
+                    break;
+                case Area.MONSTER_4_OP:
+                    break;
+                case Area.MONSTER_5_OP:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void removeTheDelegateOfMCV()
+        {
+            switch (mcv_from.area)
+            {
+                case Area.NON_VALUE:
+                    break;
+                case Area.GRAVEYARD:
+                    mcv_from.WhenAddChildren -= CardAreaEvent.add2Graveyrad;
+                    break;
+                case Area.MAINDECK:
+                    mcv_from.WhenAddChildren -= CardAreaEvent.add2Deck;
+                    break;
+                case Area.BANISH:
+                    break;
+                case Area.SPACE:
+                    break;
+                case Area.EXTRA:
+                    break;
+                case Area.HAND:
+                    break;
+                case Area.MONSTER_1:
+                    break;
+                case Area.MONSTER_2:
+                    break;
+                case Area.MONSTER_3:
+                    break;
+                case Area.MONSTER_4:
+                    break;
+                case Area.MONSTER_5:
+                    break;
+                case Area.GRAVEYARD_OP:
+                    break;
+                case Area.MAINDECK_OP:
+                    break;
+                case Area.BANISH_OP:
+                    break;
+                case Area.SPACE_OP:
+                    break;
+                case Area.EXTRA_OP:
+                    break;
+                case Area.HAND_OP:
+                    break;
+                case Area.MONSTER_1_OP:
+                    break;
+                case Area.MONSTER_2_OP:
+                    break;
+                case Area.MONSTER_3_OP:
+                    break;
+                case Area.MONSTER_4_OP:
+                    break;
+                case Area.MONSTER_5_OP:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// 初始化加载要预览的卡

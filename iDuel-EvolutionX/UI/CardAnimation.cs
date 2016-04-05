@@ -245,6 +245,11 @@ namespace iDuel_EvolutionX.UI
                     break;
                 case Status.BACK_ATK:
                     msb0 = Rotate_A2D();
+                    msb0.Completed += (object c, EventArgs d) =>
+                    {
+                        MyCanvas mcv = card.Parent as MyCanvas;
+                        CardOperate.sort_XYZ_def(mcv);
+                    };
                     break;
             }
 
@@ -252,13 +257,20 @@ namespace iDuel_EvolutionX.UI
             msb0.Completed += (object c, EventArgs d) =>
             {
                 msb0.card.set2BackDef();
+                
             };
             animator.addAnime(msb0);
 
             if (card.Status != Status.BACK_ATK)
             {
                 MyStoryboard msb1 = scalX_021();
+                msb1.Completed += (object c, EventArgs d) =>
+                {
+                    MyCanvas mcv = card.Parent as MyCanvas;
+                    CardOperate.sort_XYZ_def(mcv);
+                };
                 animator.addAnime(msb1);
+
             }
 
 

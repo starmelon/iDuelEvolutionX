@@ -232,6 +232,71 @@ namespace iDuel_EvolutionX.UI
                 originalImage = new BitmapImage(new Uri(str, UriKind.Absolute));
 
             }
+            else
+            {
+                //不存在则从使用程序自带默认
+
+                if (info.sCardType.Contains("怪兽"))
+                {
+                    if (info.CardDType.Contains("灵摆"))
+                    {
+                        if (info.sCardType.Contains("通常"))
+                        {
+                            originalImage = new BitmapImage(new Uri("/Image/Cardpic/GLTT.jpg", UriKind.Relative));
+                            return;
+                        }
+                        if (info.sCardType.Contains("效果"))
+                        {
+                            originalImage = new BitmapImage(new Uri("/Image/Cardpic/GLXG.jpg", UriKind.Relative));
+                            return;
+                        }
+                    }
+                    if (info.CardDType.Contains("同调"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GTT.jpg", UriKind.Relative));
+                        return;
+                    }
+                    if (info.sCardType.Contains("XYZ"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GXYZ.jpg", UriKind.Relative));
+                        return;
+                    }
+                    if (info.sCardType.Contains("仪式"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GRH.jpg", UriKind.Relative));
+                        return;
+                    }
+
+                    if (info.sCardType.Contains("融合"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GY.jpg", UriKind.Relative));
+                        return;
+                    }
+
+                    if (info.sCardType.Contains("通常"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GTC.jpg", UriKind.Relative));
+                        return;
+                    }
+                    if (info.sCardType.Contains("效果"))
+                    {
+                        originalImage = new BitmapImage(new Uri("/Image/Cardpic/GXG.jpg", UriKind.Relative));
+                        return;
+                    }
+
+                }
+                if (info.sCardType.Contains("魔法"))
+                {
+                    originalImage = new BitmapImage(new Uri("/Image/Cardpic/MF.jpg", UriKind.Relative));
+                    return;
+                }
+                if (info.sCardType.Contains("陷阱"))
+                {
+                    originalImage = new BitmapImage(new Uri("/Image/Cardpic/XJ.jpg", UriKind.Relative));
+                    return;
+                }
+
+            }
             //2.加载默认种类卡图
 
             //3.从网络读
