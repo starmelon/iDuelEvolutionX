@@ -43,8 +43,8 @@ namespace iDuel_EvolutionX.EventJson
     {
         public int did;              //决斗者ID
         public string name;          //决斗者名称
-        public Byte[] head;     //头像
-        public Byte[] cardBack; //卡背
+        public bool hasHead;     //头像
+        public bool hasCardBack; //卡背
 
         
     }
@@ -58,6 +58,8 @@ namespace iDuel_EvolutionX.EventJson
     public class OrderInfo
     {
         public bool isFirst;
+        public List<String> cardsID;
+
     }
 
     public class PHASE

@@ -445,8 +445,8 @@ namespace NBX3.Service
                 card.set2BackAtk();
                 mainwindow.card_1_Extra.Children.Insert(0, card);
                 card.centerAtVerticalInParent();
-                card.CurLocation = new Location(mainwindow.card_1_Extra.area, mainwindow.card_1_Extra.Children.IndexOf(card));
-                card.outputChange();
+                //card.CurLocation = new Location(mainwindow.card_1_Extra.area, mainwindow.card_1_Extra.Children.IndexOf(card));
+                //card.outputChange();
                 
                 //msg += card.cheatcode;
             }
@@ -1117,6 +1117,8 @@ namespace NBX3.Service
                 case ActionCommand.GAME_RPS:
                     break;
                 case ActionCommand.GAME_ORDER:
+                    OrderInfo starOrder = JsonConvert.DeserializeObject<OrderInfo>(bj.json);
+
                     break;
                 case ActionCommand.GAME_SET_PHASE:
                     break;
