@@ -3296,9 +3296,9 @@ namespace iDuel_EvolutionX.Service
         /// <summary>
         /// 抽X张卡片
         /// </summary>
-        /// <param name="num">抽取数量</param>
+        /// <param name="draw_num">抽取数量</param>
         /// <param name="time">起手动画时间（毫秒）</param>
-        public static List<CardUI> card_Draw(int num ,double time)
+        public static List<CardUI> card_Draw(int draw_num ,double time)
         {
 
             //view_or_set(mainwindow.card_1_Deck, mainwindow.card_hand, num,"正面");
@@ -3319,19 +3319,16 @@ namespace iDuel_EvolutionX.Service
             cv_aim.WhenAddChildren -= CardAreaEvent.add2Hand;
             List<CardUI> cards = new List<CardUI>();
 
-            if (!(cv.Children.Count < num))
+            if (!(cv.Children.Count < draw_num))
             {
                 
 
                 TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
                 //List<FrameworkElement> cards = new List<FrameworkElement>();
-                for (int i = 0; i < num; i++)
+                for (int i = 0; i < draw_num; i++)
                 {
                     CardUI card_draw = cv.Children[cv.Children.Count - 1] as CardUI;
-                    //card_main.getAwayFromParents();
-                    //cv_aim.Children.Add(card_main);
-                    //cards.Add(card_main);
-                    //card_FrontAtk(card_main);
+
                     card_draw.ContextMenu = AllMenu.Instance.cm_hand;
                     //CardAnimation.setTransformGroup(card_draw);
                     //1.获取卡片相对于目的地的距离
@@ -3339,7 +3336,7 @@ namespace iDuel_EvolutionX.Service
                     //2.获取卡片在卡框中的相对距离
                     //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
                     Point end;
-                    if (cv_aim.Children.Count == 0 || num > 1)
+                    if (cv_aim.Children.Count == 0 || draw_num > 1)
                     {
                         end = new Point(((cv_aim.ActualWidth - card_draw.ActualWidth) / 2), ((cv_aim.ActualHeight - card_draw.ActualHeight) / 2));
                     }
@@ -3357,9 +3354,6 @@ namespace iDuel_EvolutionX.Service
                     //加入目的地控件
                     cv_aim.Children.Add(card_draw);
 
-                    card_draw.CurLocation = new Location(cv_aim.area, cv_aim.Children.IndexOf(card_draw));
-                    card_draw.outputChange();
-
                     MyStoryboard msb = CardAnimation.CanvasXY(start, end, time);
                     msb.card = card_draw;
                     msb.Completed += (object c, EventArgs d) =>
@@ -3368,8 +3362,8 @@ namespace iDuel_EvolutionX.Service
                         msb.card.BeginAnimation(Canvas.LeftProperty, null);
                         msb.card.BeginAnimation(Canvas.TopProperty, null);
 
-                        Canvas.SetTop(card_draw, end.Y);
-                        Canvas.SetLeft(card_draw, end.X);
+                        Canvas.SetTop(msb.card, end.Y);
+                        Canvas.SetLeft(msb.card, end.X);
 
                     };
                     //CardOperate.sort_HandCard("2");
@@ -3398,7 +3392,6 @@ namespace iDuel_EvolutionX.Service
             return null;
 
 
-            //战报
             
 
         }
@@ -3754,7 +3747,7 @@ namespace iDuel_EvolutionX.Service
                  */
                 if (card_top.Status == Status.BACK_ATK || card_top.Status == Status.FRONT_ATK)
                 {
-                    Point end = new Point(canvas_left_single, canvas_left_single);
+                    Point end = new Point(canvas_left_single, canvas_top);
                     MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
                     msb.card = card_top;
                     msb.Completed += (object c, EventArgs d) =>
@@ -4024,10 +4017,10 @@ namespace iDuel_EvolutionX.Service
                 foreach (CardUI card in cv.Children)
                 {
                     //设置上下距离
-                    Canvas.SetTop(card, average2);
+                    //Canvas.SetTop(card, average2);
 
-                    
-                    Point start = new Point(Canvas.GetLeft(card),average2);
+                   // Point start = new Point(Canvas.GetLeft(card), Canvas.GetTop(card));
+                    //Point start = new Point(Canvas.GetLeft(card),average2);
                     Point end = new Point();
                     
                     if (i == 1)
@@ -4041,15 +4034,16 @@ namespace iDuel_EvolutionX.Service
                         end = new Point(end_, average2);
                         //Canvas.SetLeft(card, end);
                     }
-                    MyStoryboard msb = CardAnimation.CanvasXY(start, end, 200);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end, 200);
+                    msb.card = card;
                     msb.Completed += (object c, EventArgs d) =>
                     {
 
                         card.BeginAnimation(Canvas.LeftProperty, null);
                         card.BeginAnimation(Canvas.TopProperty, null);
 
-                        Canvas.SetTop(card, end.Y);
-                        Canvas.SetLeft(card, end.X);
+                        Canvas.SetTop(msb.card, end.Y);
+                        Canvas.SetLeft(msb.card, end.X);
 
                     };
                     msb.Begin(card);

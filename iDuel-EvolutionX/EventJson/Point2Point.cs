@@ -58,7 +58,7 @@ namespace iDuel_EvolutionX.EventJson
     public class OrderInfo
     {
         public bool isFirst;
-        public List<String> cardsID;
+        public List<int> cardsIDs = new List<int>();
 
     }
 

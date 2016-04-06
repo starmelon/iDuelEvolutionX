@@ -612,7 +612,23 @@ namespace NBX3.Service
             mainwindow.bd_step1.Effect.SetValue(DropShadowEffect.ColorProperty, Colors.Blue);
             mainwindow.bd_step2.Effect.SetValue(DropShadowEffect.ColorProperty, Colors.Blue);
             UIAnimation.ChangePhase(1).Begin(mainwindow.bd_step1);
-            
+
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.isFirst = true;
+            foreach (CardUI card in cards)
+            {
+                orderInfo.cardsIDs.Add(myself.deck.Main.IndexOf(card));
+            }
+            String contentJson = JsonConvert.SerializeObject(orderInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.GAME_ORDER;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            sendMsg(json);
+
         }
 
         #endregion
@@ -978,7 +994,7 @@ namespace NBX3.Service
         {
             sendstack.Add(sendstack.Count, msg);
 
-            //receiveMsg(msg);
+            receiveMsg(msg);
 
             if (Server.check())
             {
@@ -1118,7 +1134,12 @@ namespace NBX3.Service
                     break;
                 case ActionCommand.GAME_ORDER:
                     OrderInfo starOrder = JsonConvert.DeserializeObject<OrderInfo>(bj.json);
-
+                    List<CardUI> cards = new List<CardUI>();
+                    foreach (var card in starOrder.cardsIDs)
+                    {
+                        cards.Add(opponent.deck.Main[card]);
+                    }
+                    OpponentOperate.FirstAtk(5, cards, mainwindow.card_2_Deck, mainwindow.card_2_hand);
                     break;
                 case ActionCommand.GAME_SET_PHASE:
                     break;
