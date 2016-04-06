@@ -946,8 +946,6 @@ namespace iDuel_EvolutionX.UI
             //关联具体要执行动画的依赖属性
             Storyboard.SetTargetProperty(xA, new PropertyPath("(Rectangle.Width)"));
 
-
-
             return sb;
         }
 

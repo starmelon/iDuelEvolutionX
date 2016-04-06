@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using iDuel_EvolutionX.Tools;
 using iDuel_EvolutionX.EventJson;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace iDuel_EvolutionX.Net
 {
@@ -30,7 +31,9 @@ namespace iDuel_EvolutionX.Net
 
         private TcpClient myTcpClient;                       //Tcp客户端
         private NetworkStream ns;                            //网络数据流
-        
+        private BinaryReader br;
+        private BinaryWriter bw;
+
         private Thread receiveMsgThread;                     //接收消息的线程 
         private static Client cl = null;
 
@@ -154,13 +157,20 @@ namespace iDuel_EvolutionX.Net
                     
                     //获取绑定的网络数据流
                     ns = myTcpClient.GetStream();
-                    
+                    //将网络流作为二进制读写对象
+                    br = new BinaryReader(ns);
+                    bw = new BinaryWriter(ns);
+
                     //启动消息接收线程
-                    receiveMsgThread = new Thread(ReceiveMsg);
-                    receiveMsgThread.IsBackground = true;
-                    receiveMsgThread.Start();
+                    //receiveMsgThread = new Thread(ReceiveMsg);
+                    //receiveMsgThread.IsBackground = true;
+                    //receiveMsgThread.Start();
+
                     //mainwindow.report.AppendText("system：成功建立连接" + Environment.NewLine);
                     
+                    //使用Task来接收消息
+                    Task.Run(() => ReceiveMsg());
+
                 }             
                 
                 //DuelOperate.sendMsg("Connect=" + );
@@ -208,9 +218,9 @@ namespace iDuel_EvolutionX.Net
             //byte[] sendData = Encoding.UTF8.GetBytes(msg);
             ////写入网络数据流        
             //ns.Write(sendData, 0, sendData.Length);
-            BinaryReader br = new BinaryReader(ns);
+            //BinaryReader br = new BinaryReader(ns);
             mainwindow.Dispatcher.BeginInvoke(handleConnectedCallBack, "连接成功");
-
+            string msg = null;
             while (true)
             {
 
@@ -238,7 +248,7 @@ namespace iDuel_EvolutionX.Net
 
                     #endregion
 
-                    string msg = br.ReadString();
+                    msg = br.ReadString();
                     
                     
                     //if (msg.Contains("getcardback="))
@@ -290,33 +300,49 @@ namespace iDuel_EvolutionX.Net
 
         #region <-- 信息发送 -->
 
-        public void sendMsg(string msg)
+        public void sendMsg(string message)
         {
-            
-            if (ns!=null)
+            try
             {
-                BinaryWriter bw = new BinaryWriter(ns); 
-                try
-                {
-                    ////新建字节数组并赋值
-                    //byte[] sendData = Encoding.UTF8.GetBytes(msg);
-                    ////写入网络数据流        
-                    //ns.Write(sendData, 0, sendData.Length);
-
-                    bw.Flush();
-                    bw.Write(msg);
-                }
-                catch (System.IO.IOException)
-                {
-                    MessageBox.Show("与对手失去连接！");
-                    mainwindow.mi_connect.IsEnabled = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                //将字符串写入网络流，此方法会自动附加字符串长度前缀
+                bw.Flush();
+                bw.Write(message);
                 
             }
+            catch (System.IO.IOException)
+            {
+                MessageBox.Show("与对手失去连接！");
+                mainwindow.mi_connect.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            //if (ns!=null)
+            //{
+            //    BinaryWriter bw = new BinaryWriter(ns); 
+            //    try
+            //    {
+            //        ////新建字节数组并赋值
+            //        //byte[] sendData = Encoding.UTF8.GetBytes(msg);
+            //        ////写入网络数据流        
+            //        //ns.Write(sendData, 0, sendData.Length);
+
+            //        bw.Flush();
+            //        bw.Write(msg);
+            //    }
+            //    catch (System.IO.IOException)
+            //    {
+            //        MessageBox.Show("与对手失去连接！");
+            //        mainwindow.mi_connect.IsEnabled = true;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show(ex.ToString());
+            //    }
+                
+            //}
             
         }
 
