@@ -1144,6 +1144,12 @@ namespace NBX3.Service
                 case ActionCommand.GAME_SET_PHASE:
                     break;
                 case ActionCommand.GAME_DRAW:
+                    DrawInfo drawInfo = JsonConvert.DeserializeObject<DrawInfo>(bj.json);
+                    if (drawInfo.isBack)
+                    {
+                        CardUI card = opponent.deck.Main[drawInfo.cardID];
+                        OpponentOperate.DrawCard(card, mainwindow.card_2_Deck, mainwindow.card_2_hand);
+                    }
                     break;
                 case ActionCommand.GAME_LIFE_CHANGE:
                     break;
@@ -1152,6 +1158,8 @@ namespace NBX3.Service
                 case ActionCommand.CARR_SELECT_AIM:
                     break;
                 case ActionCommand.CARD_MOVE:
+                    MoveInfo moveInfo = new MoveInfo();
+                    
                     break;
                 case ActionCommand.CARD_DISAPPEAR:
                     break;
@@ -1264,6 +1272,93 @@ namespace NBX3.Service
             //}
 
         }
+
+        #region 根据Area获取Canvas
+
+        private MyCanvas getCanvasByArea (Area area)
+        {
+            switch (area)
+            {
+                case Area.NON_VALUE:
+                    break;
+                case Area.GRAVEYARD:
+                    break;
+                case Area.MAINDECK:
+                    break;
+                case Area.BANISH:
+                    break;
+                case Area.SPACE:
+                    break;
+                case Area.EXTRA:
+                    break;
+                case Area.HAND:
+                    break;
+                case Area.MONSTER_1:
+                    break;
+                case Area.MONSTER_2:
+                    break;
+                case Area.MONSTER_3:
+                    break;
+                case Area.MONSTER_4:
+                    break;
+                case Area.MONSTER_5:
+                    break;
+                case Area.MAGICTRAP_1:
+                    break;
+                case Area.MAGICTRAP_2:
+                    break;
+                case Area.MAGICTRAP_3:
+                    break;
+                case Area.MAGICTRAP_4:
+                    break;
+                case Area.MAGICTRAP_5:
+                    break;
+                case Area.PENDULUM_LEFT:
+                    break;
+                case Area.PENDULUM_RIGHT:
+                    break;
+                case Area.GRAVEYARD_OP:
+                    break;
+                case Area.MAINDECK_OP:
+                    break;
+                case Area.BANISH_OP:
+                    break;
+                case Area.SPACE_OP:
+                    break;
+                case Area.EXTRA_OP:
+                    break;
+                case Area.HAND_OP:
+                    break;
+                case Area.MONSTER_1_OP:
+                    return (Application.Current.MainWindow as MainWindow).card_2_6;
+                case Area.MONSTER_2_OP:
+                    return (Application.Current.MainWindow as MainWindow).card_2_7;
+                case Area.MONSTER_3_OP:
+                    return (Application.Current.MainWindow as MainWindow).card_2_8;
+                case Area.MONSTER_4_OP:
+                    return (Application.Current.MainWindow as MainWindow).card_2_9;
+                case Area.MONSTER_5_OP:
+                    return (Application.Current.MainWindow as MainWindow).card_2_10;
+                case Area.MAGICTRAP_1_OP:
+                    break;
+                case Area.MAGICTRAP_2_OP:
+                    break;
+                case Area.MAGICTRAP_3_OP:
+                    break;
+                case Area.MAGICTRAP_4_OP:
+                    break;
+                case Area.MAGICTRAP_5_OP:
+                    break;
+                case Area.PENDULUM_LEFT_OP:
+                    break;
+                case Area.PENDULUM_RIGHT_OP:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
 
         #endregion
 

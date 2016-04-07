@@ -1,7 +1,9 @@
 ﻿using iDuel_EvolutionX.ADO;
+using iDuel_EvolutionX.EventJson;
 using iDuel_EvolutionX.Model;
 using iDuel_EvolutionX.UI;
 using NBX3.Service;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -663,10 +665,10 @@ namespace iDuel_EvolutionX.Service
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 if (cv.Equals(cv_aim)) return;
@@ -856,6 +858,26 @@ namespace iDuel_EvolutionX.Service
                         {
                             case Drop2MonsterWinResult.INSERT:
                                 cv_aim.Children.Insert(0, card);
+
+                                #region 指令发送
+
+                                MoveInfo moveInfo = new MoveInfo();
+                                int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                                moveInfo.cardID = cardid;
+                                moveInfo.isAdd = false;
+                                moveInfo.aimArea = cv_aim.area;
+                                moveInfo.aimStatus = Status.FRONT_ATK;
+                                String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                                BaseJson bj = new BaseJson();
+                                bj.guid = DuelOperate.getInstance().myself.userindex;
+                                bj.cid = "";
+                                bj.action = ActionCommand.CARD_MOVE;
+                                bj.json = contentJson;
+                                String json = JsonConvert.SerializeObject(bj);
+                                DuelOperate.getInstance().sendMsg(json);
+
+                                #endregion
                                 //card.set2FrontAtk();
                                 //Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
                                 //Canvas.SetLeft(card, cv_aim.ActualWidth - card.ActualWidth);
@@ -1178,10 +1200,10 @@ namespace iDuel_EvolutionX.Service
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
@@ -1201,6 +1223,23 @@ namespace iDuel_EvolutionX.Service
                 if( sp != null ) sp.Children.Clear();
 
                 #endregion
+                if (cv.area == Area.MAINDECK)
+                {
+                    DrawInfo orderInfo = new DrawInfo();
+
+                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    orderInfo.cardID = cardid;
+                    String contentJson = JsonConvert.SerializeObject(orderInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.GAME_DRAW;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+                }
+
 
                 card.getAwayFromParents();
                 card.set2FrontAtk();

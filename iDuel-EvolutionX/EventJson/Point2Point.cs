@@ -62,6 +62,12 @@ namespace iDuel_EvolutionX.EventJson
 
     }
 
+    public class DrawInfo
+    {
+        public bool isBack = true;
+        public int cardID;
+    }
+
     public class PHASE
     {
 
@@ -69,8 +75,10 @@ namespace iDuel_EvolutionX.EventJson
 
     public class MoveInfo
     {
-        Area aimArea;
-        Status aimStatus;
+        public int cardID;
+        public bool isAdd;
+        public Area aimArea;
+        public Status aimStatus;
     }
 
 

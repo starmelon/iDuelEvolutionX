@@ -792,7 +792,7 @@ namespace iDuel_EvolutionX.Service
             mainwindow.bd_step2.SetValue(Border.BorderBrushProperty, Brushes.Red);
             mainwindow.bd_step2.Effect.SetValue(DropShadowEffect.ColorProperty, Colors.Red);
             UIAnimation.ChangePhase(1).Begin(mainwindow.bd_step1);
-            Draw(cards, cv, cv_aim);
+            DrawCards(cards, cv, cv_aim);
         }
 
         #endregion
@@ -2316,67 +2316,100 @@ namespace iDuel_EvolutionX.Service
         /// <param name="cv"></param>
         /// <param name="cv_aim"></param>
         /// <returns></returns>
-        public static bool Draw(List<CardUI> cards,Canvas cv,Canvas cv_aim)
+        public static bool DrawCards(List<CardUI> cards,Canvas cv,Canvas cv_aim)
         {
-                TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
 
-                for (int i = 0; i < cards.Count; i++)
+            for (int i = 0; i < cards.Count; i++)
+            {
+
+                //1.获取卡片相对于目的地的距离
+                Point start = cards[i].TranslatePoint(new Point(), cv_aim);
+                //2.获取卡片在卡框中的相对距离
+                //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+                Point end = new Point(((cv_aim.ActualWidth - cards[i].ActualWidth) / 2), ((cv_aim.ActualHeight - cards[i].ActualHeight) / 2)); ;
+                //if (cv_aim.Children.Count > 1)
+                //{
+                //}
+                //else
+                //{
+                //    Card card_hand_R1 = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+                //    end = card_hand_R1.TranslatePoint(new Point(), cv_aim);
+                //}
+
+                //脱离原控件
+                (cards[i] as CardUI).getAwayFromParents();
+                cv_aim.Children.Add(cards[i]);
+                //利用1设置初始位置
+                Canvas.SetTop(cards[i], start.Y);
+                Canvas.SetLeft(cards[i], start.X);
+                //加入目的地控件
+
+
+                MyStoryboard msb = CardAnimation.CanvasXY(start, end, 200);
+                msb.card = cards[i];
+                msb.Completed += (object c, EventArgs d) =>
                 {
 
-                    //1.获取卡片相对于目的地的距离
-                    Point start = cards[i].TranslatePoint(new Point(), cv_aim);
-                    //2.获取卡片在卡框中的相对距离
-                    //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-                    //Point end;
-                    //if (cv_aim.Children.Count > 1)
-                    //{
-                    //    end = new Point(((cv_aim.ActualWidth - cards[i].ActualWidth) / 2), ((cv_aim.ActualHeight - cards[i].ActualHeight) / 2));
-                    //}
-                    //else
-                    //{
-                    //    Card card_hand_R1 = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-                    //    end = card_hand_R1.TranslatePoint(new Point(), cv_aim);
-                    //}
+                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                    msb.card.BeginAnimation(Canvas.TopProperty, null);
 
-                    //脱离原控件
-                    (cards[i] as CardUI).getAwayFromParents();
-                    cv_aim.Children.Add(cards[i]);
-                    //利用1设置初始位置
-                    Canvas.SetTop(cards[i], start.Y);
-                    Canvas.SetLeft(cards[i], start.X);
-                    //加入目的地控件
-                    
+                    Canvas.SetTop(msb.card, end.Y);
+                    Canvas.SetLeft(msb.card, end.X);
 
-                    //MyStoryboard msb = CardAnimation.CanvasXY(start, end, 200);
-                    //msb.card = cards[i];
-                    //msb.Completed += (object c, EventArgs d) =>
-                    //{
+                };
+                animator.Animates.Add(msb);
 
-                    //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                    //    msb.card.BeginAnimation(Canvas.TopProperty, null);
-
-                    //    Canvas.SetTop(msb.card, end.Y);
-                    //    Canvas.SetLeft(msb.card, end.X);
-
-                    //};
-                    ////CardOperate.sort_HandCard("2");
-                    //animator.Animates.Add(msb);
-                    ////cards.Add(cards[i]);
-                    ////msb.Begin(card_main);
-                }
+            }
+            //CardOperate.sort_HandCard(cv_aim);
+            animator.Animates[animator.Animates.Count - 1].Completed += (object c, EventArgs d) =>
+            {
                 CardOperate.sort_HandCard(cv_aim);
-                //animator.Animates[animator.Animates.Count - 1].Completed += (object c, EventArgs d) =>
-                //{
-                //    CardOperate.sort_HandCard(cv_aim);
-                //};
+            };
 
-                //animator.Begin(cards.ToList<FrameworkElement>());
+            animator.Begin(cards.ToList<FrameworkElement>());
 
-                return true;
+            return true;
+                        
+        }
+
+        public static void DrawCard(CardUI card, Canvas cv, Canvas cv_aim)
+        {
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
+            Point start = card.TranslatePoint(new Point(), cv_aim);
+            Point end = new Point(((cv_aim.ActualWidth - card.ActualWidth) / 2), ((cv_aim.ActualHeight - card.ActualHeight) / 2)); ;
+            if (cv_aim.Children.Count > 1)
+            {
+                CardUI card_hand_R1 = cv_aim.Children[cv_aim.Children.Count - 1] as CardUI;
+                end = card_hand_R1.TranslatePoint(new Point(), cv_aim);
+            }
+
+            //脱离原控件
+            card.getAwayFromParents();
+            cv_aim.Children.Add(card);
+            //利用1设置初始位置
+            Canvas.SetTop(card, start.Y);
+            Canvas.SetLeft(card, start.X);
+            //加入目的地控件
+
+
+            MyStoryboard msb = CardAnimation.CanvasXY(start, end, 200);
+            msb.card = card;
+            msb.Completed += (object c, EventArgs d) =>
+            {
+
+                msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                Canvas.SetTop(msb.card, end.Y);
+                Canvas.SetLeft(msb.card, end.X);
+                CardOperate.sort_HandCard(cv_aim);
+            };
+            msb.Begin(card);
+
             
 
-            
-                      
         }
 
         #endregion
