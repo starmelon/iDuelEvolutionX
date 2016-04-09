@@ -77,9 +77,10 @@ namespace TransLibrary
             {
                 Storyboard refBoard = Animates[i];
                 int h = (i + 1 == Animates.Count) ? -1 : i + 1;
+
                 ElementIndexer.SetPos(refBoard, h);
                 refBoard.Completed -= OnCurrentFinished2;
-                refBoard.Completed += new EventHandler(OnCurrentFinished2);
+                refBoard.Completed += new EventHandler(OnCurrentFinished2); 
             }
             Animates[0].Begin(containingObject);
         }
@@ -88,6 +89,7 @@ namespace TransLibrary
         {
             ClockGroup sender_cg = (ClockGroup)sender;
             Storyboard sender_sb = (Storyboard)sender_cg.Timeline;
+            
             if (sender_sb == null)
             {
                 return;
@@ -139,6 +141,16 @@ namespace TransLibrary
         public StoryboardChain addAnime(Storyboard sb)
         {
             this.Animates.Add(sb);
+            return this;
+        }
+
+        public StoryboardChain addComplete(EventHandler complete)
+        {
+            int animeCount = _Animates.Count;
+            if (animeCount > 0)
+            {
+                _Animates[animeCount - 1].Completed += complete;
+            }
             return this;
         }
     }

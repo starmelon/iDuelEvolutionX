@@ -22,4 +22,5 @@ namespace TransLibrary
             return (int)(o.GetValue(PosProperty));
         }
     }
+
 }
