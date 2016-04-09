@@ -272,6 +272,12 @@ namespace iDuel_EvolutionX
             card_1_9.WhenRemoveChildren += CardAreaEvent.removeFromMonster;
             card_1_10.WhenRemoveChildren += CardAreaEvent.removeFromMonster;
 
+            card_1_6.area = Area.MONSTER_1;
+            card_1_7.area = Area.MONSTER_2;
+            card_1_8.area = Area.MONSTER_3;
+            card_1_9.area = Area.MONSTER_4;
+            card_1_10.area = Area.MONSTER_5;
+
             #endregion
 
             #region 魔陷区
@@ -286,6 +292,12 @@ namespace iDuel_EvolutionX
             card_1_3.WhenRemoveChildren += CardAreaEvent.removeFromMagicTrap;
             card_1_4.WhenRemoveChildren += CardAreaEvent.removeFromMagicTrap;
             card_1_5.WhenRemoveChildren += CardAreaEvent.removeFromMagicTrap;
+
+            card_1_1.area = Area.MAGICTRAP_1;
+            card_1_2.area = Area.MAGICTRAP_2;
+            card_1_3.area = Area.MAGICTRAP_3;
+            card_1_4.area = Area.MAGICTRAP_4;
+            card_1_5.area = Area.MAGICTRAP_5;
 
             #endregion
 
@@ -337,7 +349,47 @@ namespace iDuel_EvolutionX
 
             #endregion
 
-            #region 敌方
+            #region 敌方 
+
+            #region 手卡
+
+            card_2_hand.area = Area.HAND_OP;
+            //card_2_hand.WhenAddChildren += CardAreaEvent.add2Hand;
+            card_2_hand.WhenRemoveChildren += CardAreaEvent.removeFromHand;
+
+            #endregion
+
+            #region 怪物区
+
+            card_2_6.area = Area.MONSTER_1_OP;
+            card_2_7.area = Area.MONSTER_2_OP;
+            card_2_8.area = Area.MONSTER_3_OP;
+            card_2_9.area = Area.MONSTER_4_OP;
+            card_2_10.area = Area.MONSTER_5_OP;
+
+            card_2_6.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+            card_2_7.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+            card_2_8.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+            card_2_9.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+            card_2_10.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+
+            card_2_6.tb_atkDef = atk_2_6;
+            card_2_7.tb_atkDef = atk_2_7;
+            card_2_8.tb_atkDef = atk_2_8;
+            card_2_9.tb_atkDef = atk_2_9;
+            card_2_10.tb_atkDef = atk_2_10;
+
+            #endregion
+
+            #region
+
+            card_2_1.area = Area.MAGICTRAP_1_OP;
+            card_2_2.area = Area.MAGICTRAP_2_OP;
+            card_2_3.area = Area.MAGICTRAP_3_OP;
+            card_2_4.area = Area.MAGICTRAP_4_OP;
+            card_2_5.area = Area.MAGICTRAP_5_OP;
+
+            #endregion
 
             #region 卡组 
 

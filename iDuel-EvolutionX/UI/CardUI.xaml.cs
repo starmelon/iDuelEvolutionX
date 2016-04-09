@@ -341,6 +341,7 @@ namespace iDuel_EvolutionX.UI
             Status = Status.FRONT_ATK;
             showImg();
             setAngle2zero();
+            
         }
 
         /// <summary>
@@ -350,7 +351,7 @@ namespace iDuel_EvolutionX.UI
         {
             Status = Status.FRONT_DEF;
             showImg();
-
+            setAngle290();
         }
 
         /// <summary>
@@ -478,7 +479,16 @@ namespace iDuel_EvolutionX.UI
         {
             TransformGroup tfg = this.RenderTransform as TransformGroup;
             RotateTransform rt = tfg.Children[1] as RotateTransform;
+            //this.BeginAnimation(TransformGroup.ChildrenProperty., null);
             rt.Angle = 0;
+        }
+
+        private void setAngle290()
+        {
+            TransformGroup tfg = this.RenderTransform as TransformGroup;
+            RotateTransform rt = tfg.Children[1] as RotateTransform;
+            //this.BeginAnimation(TransformGroup.ChildrenProperty., null);
+            rt.Angle = -90;
         }
 
         #endregion

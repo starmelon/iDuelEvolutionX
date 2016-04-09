@@ -72,7 +72,7 @@ namespace iDuel_EvolutionX.Service
         }
 
         /// <summary>
-        /// 卡片菜单：攻守处理
+        /// 卡片菜单：正背处理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

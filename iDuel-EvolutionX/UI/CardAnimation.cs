@@ -148,9 +148,11 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed +=(sender, e) => {
                 msb.card.Status = Status.FRONT_DEF;
+                msb.card.set2FrontDef();
                 MyCanvas mcv = card.Parent as MyCanvas;
                 CardOperate.sort_XYZ_def(mcv);
             };
+            msb.FillBehavior = FillBehavior.Stop;
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
             animator.Begin(card);
@@ -168,9 +170,11 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed += (sender, e) => {
                 msb.card.Status = Status.FRONT_ATK;
+                msb.card.set2FrontAtk();
                 MyCanvas mcv = card.Parent as MyCanvas;
                 CardOperate.sort_XYZ_def(mcv);
             };
+            msb.FillBehavior = FillBehavior.Stop;
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
             animator.Begin(card);
@@ -188,9 +192,11 @@ namespace iDuel_EvolutionX.UI
             msb.card = card;
             msb.Completed += (sender, e) => {
                 msb.card.Status = Status.BACK_DEF;
+                msb.card.set2BackDef();
                 MyCanvas mcv = card.Parent as MyCanvas;
                 CardOperate.sort_XYZ_def(mcv);
             };
+            msb.FillBehavior = FillBehavior.Stop;
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             animator.Animates.Add(msb);
             animator.Begin(card);
@@ -279,6 +285,9 @@ namespace iDuel_EvolutionX.UI
             animator.Begin(card);
 
         }
+
+
+
 
         /// <summary>
         /// 表示形式改变
@@ -743,7 +752,7 @@ namespace iDuel_EvolutionX.UI
             MyStoryboard sb = new MyStoryboard();
 
             //设定X和Y坐标的方向动画
-            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300));
+            DoubleAnimation xA = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
 
             EasingFunctionBase easing = new CubicEase()
             {
@@ -767,24 +776,10 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard scalX_021()
         {
             //新建动画故事版
-            MyStoryboard sb = new MyStoryboard();
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(scaleX(0, 1, 150));
 
-            //设定X和Y坐标的方向动画
-            DoubleAnimation xA = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300));
-
-            //使用缓动函数
-            EasingFunctionBase easing = new CubicEase()
-            {
-                EasingMode = EasingMode.EaseOut
-            };
-            xA.EasingFunction = easing;
-
-            //关联具体要执行动画的依赖属性
-            Storyboard.SetTargetProperty(xA, new PropertyPath("RenderTransform.Children[0].ScaleX"));
-
-            sb.Children.Add(xA);
-
-            return sb;
+            return msb;
         }
 
         /// <summary>
@@ -1246,15 +1241,15 @@ namespace iDuel_EvolutionX.UI
         /// <param name="endAngle">结束位置（0到1）</param>
         /// <param name="time">耗时（毫秒）</param>
         /// <returns></returns>
-        public static DoubleAnimation ScaleX(Double startAngle, Double endAngle, double time)
+        public static DoubleAnimation scaleX(Double scalestart, Double scaleend, double time)
         {
-            DoubleAnimation xA = new DoubleAnimation(startAngle, endAngle, TimeSpan.FromMilliseconds(time));
+            DoubleAnimation xA = new DoubleAnimation(scalestart, scaleend, TimeSpan.FromMilliseconds(time));
             EasingFunctionBase easing = new CubicEase()
             {
                 EasingMode = EasingMode.EaseOut
             };
             xA.EasingFunction = easing;
-            Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"));
+            Storyboard.SetTargetProperty(xA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
             return xA;
         }
 
@@ -1440,6 +1435,53 @@ namespace iDuel_EvolutionX.UI
             return msb;
         }
 
+        public static MyStoryboard CanvasXY_Scale120(Point end) {
+
+            
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(CanvasX(end.X, 200));
+            msb.Children.Add(CanvasY(end.Y, 200));
+            msb.Children.Add(scaleX(1, 0, 200));
+           
+            return msb;
+        }
+
+        public static void setStoryboardChainTarget(CardUI card,TransLibrary.StoryboardChain animator)
+        {
+            foreach (MyStoryboard msb in animator.Animates)
+            {
+                msb.card = card;
+            }
+        }
+
+
+        public static MyStoryboard CanvasXY_Rotate_0290(Point end)
+        {
+            return CanvasXY_Rotate(end, 200, 0, -90, 200);
+        }
+
+        public static MyStoryboard CanvasXY_Rotate_9020(Point end, double movetime, double startAngle, double endAngle, double rotatetime)
+        {
+            return CanvasXY_Rotate(end, 200, -90, 0, 200);
+        }
+
+        /// <summary>
+        /// 移动动画
+        /// </summary>
+        /// <param name="end">移动结束点</param>
+        /// <param name="time">移动耗时（毫秒）</param>
+        /// <returns></returns>
+        public static MyStoryboard CanvasXY_Rotate(Point end, double movetime,double startAngle,double endAngle,double rotatetime)
+        {
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(CanvasX(end.X, movetime));
+            msb.Children.Add(CanvasY(end.Y, movetime));
+            msb.Children.Add(Rotate(startAngle, endAngle, rotatetime));
+            return msb;
+        }
+
+        
+
         public static MyStoryboard CanvasXY(UIElementCollection uic, Point end, double time)
         {
             MyStoryboard msb = new MyStoryboard();
@@ -1503,7 +1545,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_120(double time)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(-1, 0, time));
+            msb.Children.Add(scaleX(-1, 0, time));
             return msb;
         }
 
@@ -1519,7 +1561,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021(double time)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time));
+            msb.Children.Add(scaleX(0, 1, time));
             return msb;
         }
 
@@ -1570,7 +1612,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021_CanvasXY(Point start,Point end,double time1,double time2)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time1));
+            msb.Children.Add(scaleX(0, 1, time1));
             msb.Children.Add(CanvasX(start.X, end.X, time2));
             msb.Children.Add(CanvasY(start.Y, end.Y, time2));          
             return msb;
@@ -1591,7 +1633,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021_CanvasXY(Point end, double time1, double time2)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time1));
+            msb.Children.Add(scaleX(0, 1, time1));
             msb.Children.Add(CanvasX(end.X, time2));
             msb.Children.Add(CanvasY(end.Y, time2));
             return msb;
@@ -1613,7 +1655,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_120_Rotate(double startAngle, double endAngle, double time1, double time2)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(1, 0, time1));
+            msb.Children.Add(scaleX(1, 0, time1));
             msb.Children.Add(Rotate(startAngle, endAngle, time2));
             return msb;
         }
@@ -1653,7 +1695,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021_Rotate(double startAngle,double endAngle,double time1,double time2)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time1));
+            msb.Children.Add(scaleX(0, 1, time1));
             msb.Children.Add(Rotate(startAngle,endAngle,time2));
             return msb;
         }
@@ -1722,7 +1764,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021_Rotate_CanvasXY(double startAngle, double endAngle, Point start, Point end, double time1, double time2, double time3)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time1));
+            msb.Children.Add(scaleX(0, 1, time1));
             msb.Children.Add(Rotate(startAngle, endAngle, time2));
             msb.Children.Add(CanvasX(start.X, end.X, time3));
             msb.Children.Add(CanvasY(start.Y, end.Y, time3));
@@ -1746,7 +1788,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021_Rotate_CanvasXY(double startAngle, double endAngle,Point end, double time1, double time2, double time3)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(ScaleX(0, 1, time1));
+            msb.Children.Add(scaleX(0, 1, time1));
             msb.Children.Add(Rotate(startAngle, endAngle, time2));
             msb.Children.Add(CanvasX(end.X, time3));
             msb.Children.Add(CanvasY(end.Y, time3));

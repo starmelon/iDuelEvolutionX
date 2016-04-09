@@ -460,10 +460,10 @@ namespace iDuel_EvolutionX.Service
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //如果源目标是怪物区，则应去除指示物
                 switch (cv.Name)
@@ -491,12 +491,57 @@ namespace iDuel_EvolutionX.Service
                 if (mb_right.Equals("Pressed"))
                 {
                     card.Status = Status.BACK_ATK;
+                    cv_aim.Children.Add(card);
+
+                    #region 指令发送
+
+                    MoveInfo moveInfo = new MoveInfo();
+                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    moveInfo.cardID = cardid;
+                    moveInfo.isAdd = false;
+                    moveInfo.aimArea = cv_aim.area;
+                    moveInfo.aimStatus = Status.BACK_ATK;
+                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.CARD_MOVE;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+
+                    #endregion
+                }
+                else
+                {
+                    cv_aim.Children.Add(card);
+
+                    #region 指令发送
+
+                    MoveInfo moveInfo = new MoveInfo();
+                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    moveInfo.cardID = cardid;
+                    moveInfo.isAdd = false;
+                    moveInfo.aimArea = cv_aim.area;
+                    moveInfo.aimStatus = Status.FRONT_ATK;
+                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.CARD_MOVE;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+
+                    #endregion
                 }
 
                 //加入当前区域
-                cv_aim.Children.Add(card);
 
-                
+
+
 
                 //对出发地的处理
                 //if (cv.Name.Equals("card_1_Extra"))
@@ -639,7 +684,7 @@ namespace iDuel_EvolutionX.Service
 
                 //#endregion
 
-            
+
             }
         }
 
@@ -857,34 +902,56 @@ namespace iDuel_EvolutionX.Service
                         switch (result)
                         {
                             case Drop2MonsterWinResult.INSERT:
-                                cv_aim.Children.Insert(0, card);
+                                {
+                                    cv_aim.Children.Insert(0, card);
 
-                                #region 指令发送
+                                    #region 指令发送
 
-                                MoveInfo moveInfo = new MoveInfo();
-                                int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
-                                moveInfo.cardID = cardid;
-                                moveInfo.isAdd = false;
-                                moveInfo.aimArea = cv_aim.area;
-                                moveInfo.aimStatus = Status.FRONT_ATK;
-                                String contentJson = JsonConvert.SerializeObject(moveInfo);
+                                    MoveInfo moveInfo = new MoveInfo();
+                                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                                    moveInfo.cardID = cardid;
+                                    moveInfo.isAdd = false;
+                                    moveInfo.aimArea = cv_aim.area;
+                                    moveInfo.aimStatus = Status.FRONT_ATK;
+                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
 
-                                BaseJson bj = new BaseJson();
-                                bj.guid = DuelOperate.getInstance().myself.userindex;
-                                bj.cid = "";
-                                bj.action = ActionCommand.CARD_MOVE;
-                                bj.json = contentJson;
-                                String json = JsonConvert.SerializeObject(bj);
-                                DuelOperate.getInstance().sendMsg(json);
+                                    BaseJson bj = new BaseJson();
+                                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                                    bj.cid = "";
+                                    bj.action = ActionCommand.CARD_MOVE;
+                                    bj.json = contentJson;
+                                    String json = JsonConvert.SerializeObject(bj);
+                                    DuelOperate.getInstance().sendMsg(json);
 
-                                #endregion
-                                //card.set2FrontAtk();
-                                //Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                                //Canvas.SetLeft(card, cv_aim.ActualWidth - card.ActualWidth);
-                                //sort(cv_aim, null);
+                                    #endregion
+                                }
+
+
                                 break;
                             case Drop2MonsterWinResult.OVERLAY:
-                                cv_aim.Children.Add(card);
+                                {
+                                    cv_aim.Children.Add(card);
+
+                                    #region 指令发送
+
+                                    MoveInfo moveInfo = new MoveInfo();
+                                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                                    moveInfo.cardID = cardid;
+                                    moveInfo.isAdd = true;
+                                    moveInfo.aimArea = cv_aim.area;
+                                    moveInfo.aimStatus = Status.FRONT_ATK;
+                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                                    BaseJson bj = new BaseJson();
+                                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                                    bj.cid = "";
+                                    bj.action = ActionCommand.CARD_MOVE;
+                                    bj.json = contentJson;
+                                    String json = JsonConvert.SerializeObject(bj);
+                                    DuelOperate.getInstance().sendMsg(json);
+
+                                    #endregion
+                                }
                                 break;
                             default:
                                 break;
@@ -1014,6 +1081,26 @@ namespace iDuel_EvolutionX.Service
                         {
                             card.set2BackDef();
                             cv_aim.Children.Add(card);
+
+                            #region 指令发送
+                            {
+                                MoveInfo moveInfo1 = new MoveInfo();
+                                moveInfo1.cardID = getCardID(card);
+                                moveInfo1.isAdd = true;
+                                moveInfo1.aimArea = cv_aim.area;
+                                moveInfo1.aimStatus = Status.BACK_DEF;
+                                String contentJson1 = JsonConvert.SerializeObject(moveInfo1);
+
+                                BaseJson bj1 = new BaseJson();
+                                bj1.guid = DuelOperate.getInstance().myself.userindex;
+                                bj1.cid = "";
+                                bj1.action = ActionCommand.CARD_MOVE;
+                                bj1.json = contentJson1;
+                                String json1 = JsonConvert.SerializeObject(bj1);
+                                DuelOperate.getInstance().sendMsg(json1);
+                            }    
+                            #endregion
+
                             return;
                         }
 
@@ -1023,18 +1110,48 @@ namespace iDuel_EvolutionX.Service
 
                     //card.set2FrontAtk();
                     cv_aim.Children.Add(card);
-                       
+
+                    #region 指令发送
+
+                    MoveInfo moveInfo = new MoveInfo();
+                    int cardid = getCardID(card);
+                    moveInfo.cardID = cardid;
+                    moveInfo.isAdd = true;
+                    moveInfo.aimArea = cv_aim.area;
+                    moveInfo.aimStatus = Status.FRONT_ATK;
+                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.CARD_MOVE;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+
+                    #endregion
 
                     return;
                 }
 
                 #endregion
 
-                
-             }
+
+            }
         }
 
-       
+        private static int getCardID(CardUI card)
+        {
+            int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+            if (cardid == -1)
+            {
+                cardid = DuelOperate.getInstance().myself.deck.Extra.IndexOf(card);
+            }
+
+            return cardid;
+        }
+
+
 
         #endregion
 

@@ -485,7 +485,101 @@ namespace iDuel_EvolutionX.UI
 
         #endregion
 
+        #region 怪物区控件事件
 
+        /// <summary>
+        /// 卡片以覆盖方式进入怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2MonsterOP(MyCanvas cv, CardUI card)
+        {
+
+
+            int count = cv.Children.Count;
+            if (count == 1)
+            {
+
+                if (card.Status == Status.BACK_ATK || card.Status == Status.FRONT_ATK)
+                {
+                    card.centerAtVerticalInParent();
+                }
+                else
+                {
+                    card.centerAtHorizontalInParent();
+                }
+                card.ContextMenu = AllMenu.Instance.cm_monster;
+
+            }
+            else
+            {
+                card.ContextMenuOpening += (sender, e) =>
+                {
+
+                    card.ContextMenu.DataContext = card;
+                };
+                CardUI second = cv.Children[count - 2] as CardUI;
+
+                second.reSetAtk();//当被叠放时要重置攻击力
+                second.clearSigns();//当被叠放时要清除卡片指示物
+
+                /*
+                判断加入前最顶层的卡的状态，若是只要是存在背面或防守，则应先启动相关动画
+                */
+
+                //CardAnimation.setTransformGroup(second);
+                TransLibrary.StoryboardChain animator0 = new TransLibrary.StoryboardChain();
+
+                if (second.Status == Status.BACK_DEF)
+                {
+
+                    //MyStoryboard msb1 = CardAnimation.ScaleX_120_Rotate(-90, 0, 150, 200);
+                    MyStoryboard msb1 = CardAnimation.scalX_120_rotate_9020();
+                    msb1.card = second;
+                    msb1.Completed += (object sender_, EventArgs e_) =>
+                    {
+                        //卡片切换为背面
+                        msb1.card.set2FrontAtk();
+                        //msb1.card.showImg();
+                    };
+                    animator0.Animates.Add(msb1);
+                    MyStoryboard msb2 = CardAnimation.scalX_021();
+                    animator0.Animates.Add(msb2);
+                }
+                if (second.Status == Status.FRONT_DEF)
+                {
+                    MyStoryboard msb = CardAnimation.Rotate_D2A();
+                    msb.card = second;
+                    msb.Completed += (object sender_, EventArgs e_) =>
+                    {
+                        msb.card.set2FrontAtk();
+                    };
+                    animator0.Animates.Add(msb);
+                }
+
+                animator0.Begin(second);
+                Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
+                Canvas.SetLeft(card, cv.ActualWidth - card.ActualWidth);
+                Service.CardOperate.sort_XYZ_atk(cv);
+            }
+
+            //MainWindow mainwin = Application.Current.MainWindow as MainWindow;
+
+            #region 攻守显示绑定卡片
+
+            if (card.Status != Status.BACK_ATK && card.Status != Status.BACK_DEF)
+            {
+                bindingAtk(cv, card);
+            }
+            
+
+            #endregion
+
+            //添加指示物
+            showSigns(cv, card);
+        }
+
+        #endregion
 
         #endregion
 
