@@ -81,5 +81,9 @@ namespace iDuel_EvolutionX.EventJson
         public Status aimStatus;
     }
 
-
+    public class DisappearInfo
+    {
+        public int cardID;
+        public Status aimStatus;
+    }
 }

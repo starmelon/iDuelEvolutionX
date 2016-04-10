@@ -336,7 +336,7 @@ namespace iDuel_EvolutionX
             #region P卡区
 
             card_1_Left.area = Area.PENDULUM_LEFT;
-            card_1_Right.area = Area.PENDULUM_LEFT;
+            card_1_Right.area = Area.PENDULUM_RIGHT;
 
             #endregion
 
@@ -354,8 +354,8 @@ namespace iDuel_EvolutionX
             #region 手卡
 
             card_2_hand.area = Area.HAND_OP;
-            //card_2_hand.WhenAddChildren += CardAreaEvent.add2Hand;
-            card_2_hand.WhenRemoveChildren += CardAreaEvent.removeFromHand;
+            card_2_hand.WhenAddChildren += CardAreaEvent.add2HandOP;
+            card_2_hand.WhenRemoveChildren += CardAreaEvent.removeFromHandOP;
 
             #endregion
 
@@ -373,6 +373,18 @@ namespace iDuel_EvolutionX
             card_2_9.WhenAddChildren += CardAreaEvent.add2MonsterOP;
             card_2_10.WhenAddChildren += CardAreaEvent.add2MonsterOP;
 
+            card_2_6.WhenInsertChildren += CardAreaEvent.insert2MonsterOP;
+            card_2_7.WhenInsertChildren += CardAreaEvent.insert2MonsterOP;
+            card_2_8.WhenInsertChildren += CardAreaEvent.insert2MonsterOP;
+            card_2_9.WhenInsertChildren += CardAreaEvent.insert2MonsterOP;
+            card_2_10.WhenInsertChildren += CardAreaEvent.insert2MonsterOP;
+
+            card_2_6.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+            card_2_7.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+            card_2_8.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+            card_2_9.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+            card_2_10.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+
             card_2_6.tb_atkDef = atk_2_6;
             card_2_7.tb_atkDef = atk_2_7;
             card_2_8.tb_atkDef = atk_2_8;
@@ -381,13 +393,30 @@ namespace iDuel_EvolutionX
 
             #endregion
 
-            #region
+            #region 魔陷区
 
             card_2_1.area = Area.MAGICTRAP_1_OP;
             card_2_2.area = Area.MAGICTRAP_2_OP;
             card_2_3.area = Area.MAGICTRAP_3_OP;
             card_2_4.area = Area.MAGICTRAP_4_OP;
             card_2_5.area = Area.MAGICTRAP_5_OP;
+
+            card_2_1.WhenAddChildren += CardAreaEvent.add2MagicTrapOP;
+            card_2_2.WhenAddChildren += CardAreaEvent.add2MagicTrapOP;
+            card_2_3.WhenAddChildren += CardAreaEvent.add2MagicTrapOP;
+            card_2_4.WhenAddChildren += CardAreaEvent.add2MagicTrapOP;
+            card_2_5.WhenAddChildren += CardAreaEvent.add2MagicTrapOP;
+
+
+            #endregion
+
+            #region P卡区
+
+            card_2_Left.area = Area.PENDULUM_LEFT_OP;
+            card_2_Right.area = Area.PENDULUM_RIGHT_OP;
+
+            card_2_Left.WhenAddChildren += CardAreaEvent.add2PendulumOP;
+            card_2_Right.WhenAddChildren += CardAreaEvent.add2PendulumOP;
 
             #endregion
 
@@ -399,6 +428,20 @@ namespace iDuel_EvolutionX
 
             #endregion
 
+            #region 墓地
+
+            card_2_Graveyard.area = Area.GRAVEYARD_OP;
+            card_2_Graveyard.WhenRemoveChildren = CardAreaEvent.romoveFromGraveyardOP;
+            card_2_Graveyard.WhenAddChildren = CardAreaEvent.add2GraveyradOP;
+
+            #endregion
+
+            #region 除外
+
+            card_2_Outside.area = Area.BANISH_OP;
+            card_2_Outside.WhenAddChildren += CardAreaEvent.add2BanishOP;
+
+            #endregion
 
             #region 额外
 

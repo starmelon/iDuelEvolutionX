@@ -995,7 +995,7 @@ namespace NBX3.Service
         {
             sendstack.Add(sendstack.Count, msg);
 
-            //receiveMsg(msg);
+            receiveMsg(msg);
 
             if (Server.check())
             {
@@ -1137,23 +1137,35 @@ namespace NBX3.Service
                 case ActionCommand.GAME_RPS:
                     break;
                 case ActionCommand.GAME_ORDER:
-                    OrderInfo starOrder = JsonConvert.DeserializeObject<OrderInfo>(bj.json);
-                    List<CardUI> cards = new List<CardUI>();
-                    foreach (var card in starOrder.cardsIDs)
                     {
-                        cards.Add(opponent.deck.Main[card]);
+                        OrderInfo starOrder = JsonConvert.DeserializeObject<OrderInfo>(bj.json);
+                        List<CardUI> cards = new List<CardUI>();
+                        foreach (var card in starOrder.cardsIDs)
+                        {
+                            cards.Add(opponent.deck.Main[card]);
+                        }
+                        MyCanvas hand = (Application.Current.MainWindow as MainWindow).card_2_hand;
+                        hand.WhenAddChildren -= CardAreaEvent.add2HandOP;
+                        OpponentOperate.FirstAtk(5, cards, mainwindow.card_2_Deck, mainwindow.card_2_hand);
+                        hand.WhenAddChildren += CardAreaEvent.add2HandOP;
                     }
-                    OpponentOperate.FirstAtk(5, cards, mainwindow.card_2_Deck, mainwindow.card_2_hand);
+
                     break;
                 case ActionCommand.GAME_SET_PHASE:
                     break;
                 case ActionCommand.GAME_DRAW:
-                    DrawInfo drawInfo = JsonConvert.DeserializeObject<DrawInfo>(bj.json);
-                    if (drawInfo.isBack)
                     {
-                        CardUI card = opponent.deck.Main[drawInfo.cardID];
-                        OpponentOperate.DrawCard(card, mainwindow.card_2_Deck, mainwindow.card_2_hand);
+                        DrawInfo drawInfo = JsonConvert.DeserializeObject<DrawInfo>(bj.json);
+                        if (drawInfo.isBack)
+                        {
+                            CardUI card = opponent.deck.Main[drawInfo.cardID];
+                            MyCanvas hand = (Application.Current.MainWindow as MainWindow).card_2_hand;
+                            hand.WhenAddChildren -= CardAreaEvent.add2HandOP;
+                            OpponentOperate.DrawCard(card, mainwindow.card_2_Deck, mainwindow.card_2_hand);
+                            hand.WhenAddChildren += CardAreaEvent.add2HandOP;
+                        }
                     }
+                    
                     break;
                 case ActionCommand.GAME_LIFE_CHANGE:
                     break;
@@ -1165,6 +1177,7 @@ namespace NBX3.Service
                     {
                         MoveInfo moveInfo = JsonConvert.DeserializeObject<MoveInfo>(bj.json);
                         CardUI card = opponent.deck.Main[moveInfo.cardID];
+                        MyCanvas mcv_orgin = card.Parent as MyCanvas;
                         MyCanvas mcv_aim = getCanvasByArea(moveInfo.aimArea);
                         Point start = card.TranslatePoint(new Point(), mainwindow.OpBattle);
                         Point end = mcv_aim.TranslatePoint(new Point(), mainwindow.OpBattle);
@@ -1174,6 +1187,85 @@ namespace NBX3.Service
                         (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
                         Canvas.SetLeft(card,start.X);
                         Canvas.SetTop(card,start.Y);
+
+                        #region 纯移动
+
+                        if (card.Status == moveInfo.aimStatus)
+                        {
+                            if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
+                            {
+                                start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
+                                start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                                Canvas.SetLeft(card, start.X);
+                                Canvas.SetTop(card, start.Y);
+                            }
+                            switch (mcv_aim.area)
+                            {
+                                case Area.MONSTER_1_OP:
+                                case Area.MONSTER_2_OP:
+                                case Area.MONSTER_3_OP:
+                                case Area.MONSTER_4_OP:
+                                case Area.MONSTER_5_OP:
+                                    if (moveInfo.isAdd)
+                                    {
+                                        if (mcv_aim.Children.Count>0)
+                                        {
+                                            end.X += (mcv_aim.ActualWidth - card.Width) / 2;
+                                        }
+                                        
+                                    }
+                                    else
+                                    {
+                                        end.X -= (mcv_aim.ActualWidth - card.Width) / 2 + card.Width;
+                                    }          
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
+                            MyStoryboard msb = CardAnimation.CanvasXY(end);
+                            msb.card = card;
+                            msb.Completed += (sender, e) =>
+                            {
+                                msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                
+                                msb.card.getAwayFromParents();
+                                card.Status = moveInfo.aimStatus;
+                                if (moveInfo.isAdd)
+                                {
+                                    mcv_aim.Children.Add(msb.card);
+                                }
+                                else
+                                {
+                                    mcv_aim.Children.Insert(0, card);
+                                }
+                                Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
+                                Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
+                                if (mcv_aim.Children.Count == 1)
+                                {
+
+                                    switch (moveInfo.aimStatus)
+                                    {
+                                        case Status.FRONT_ATK:
+                                        case Status.BACK_ATK:
+                                            msb.card.centerAtVerticalInParent();
+                                            break;
+                                        case Status.FRONT_DEF:
+                                        case Status.BACK_DEF:
+                                            msb.card.centerAtHorizontalInParent();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                }
+                            };
+                            msb.Begin(card);
+                            return;
+                        }
+
+                        #endregion
 
                         #region 背攻→背防
 
@@ -1191,10 +1283,11 @@ namespace NBX3.Service
                                 {
                                     mcv_aim.Children.Add(msb.card);
                                     msb.card.set2BackDef();
-                                    msb.card.centerAtVerticalInParent();
+                                    msb.card.centerAtHorizontalInParent();
 
                                 }
                             };
+                            msb.FillBehavior = FillBehavior.Stop;
                             msb.Begin(card);
                             break;
                         }
@@ -1231,27 +1324,19 @@ namespace NBX3.Service
                                 msb2.card.BeginAnimation(Canvas.TopProperty, null);
 
                                 msb2.card.getAwayFromParents();
+                                msb2.card.set2FrontAtk();
                                 if (moveInfo.isAdd)
                                 {
                                     mcv_aim.Children.Add(msb2.card);
-                                    Canvas.SetLeft(msb2.card, mcv_aim.ActualWidth - card.Width);
-                                    Canvas.SetTop(msb2.card, (mcv_aim.ActualHeight - card.Height) / 2);
+
                                 }
                                 else
                                 {
                                     mcv_aim.Children.Insert(0, msb2.card);
-                                    Canvas.SetLeft(msb2.card, 0 - card.Width);
-                                    Canvas.SetTop(msb2.card, (mcv_aim.ActualHeight - card.Height) / 2);
+
+
                                 }
 
-                                if (mcv_aim.Children.Count == 1)
-                                {
-                                    msb2.card.centerAtVerticalInParent();
-                                }
-                                else
-                                {
-                                    CardOperate.sort_XYZ_def(mcv_aim);
-                                }
                             };
                             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
                             animator
@@ -1264,69 +1349,157 @@ namespace NBX3.Service
 
                         #endregion
 
-                        #region 纯移动
+                        #region 背防→表攻
 
-                        if (card.Status == moveInfo.aimStatus)
+                        if ((card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF) && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
-                            MyStoryboard msb = CardAnimation.CanvasXY(end, 300);
+                            if (mcv_aim.area == Area.GRAVEYARD_OP)
+                            {
+                                start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
+                                start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+
+                                card.getAwayFromParents();
+                                Canvas.SetLeft(card, start.X);
+                                Canvas.SetTop(card, start.Y);
+                                (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
+                                //MyStoryboard msb = CanvasXY(start, end, 500);
+                                msb.card = card;
+                                msb.Completed += (object c, EventArgs d) =>
+                                {
+                                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                    msb.card.getAwayFromParents();
+                                    msb.card.set2FrontAtk();
+                                    mcv_aim.Children.Add(msb.card);
+
+                                };
+                                msb.Begin(card);
+                            }
+                        }
+
+                        #endregion
+
+                        #region 表攻→背攻
+
+                        if (moveInfo.aimStatus == Status.BACK_ATK)
+                        {
+                            switch (card.Status)
+                            {
+                                case Status.FRONT_ATK:
+                                    {
+                                        MyStoryboard msb = CardAnimation.CanvasXY_Scale120(end);
+                                        msb.card = card;
+                                        msb.Completed += (sender, e) =>
+                                        {
+
+                                            msb.card.getAwayFromParents();
+                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                            Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
+                                            Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
+                                            msb.card.set2BackAtk();
+                                            mcv_aim.Children.Add(card);
+                                        };
+                                        MyStoryboard msb1 = CardAnimation.ScaleX_021(150);
+
+                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+                                        animator.addAnime(msb).addAnime(msb1).Begin(card);
+
+                                    }   
+                                    break;
+                                case Status.FRONT_DEF:
+                                    {
+                                        MyStoryboard msb = CardAnimation.CanvasXY_scale120_rotate9020(end);
+                                        msb.Completed += (sender, e) =>
+                                        {
+
+                                            msb.card.getAwayFromParents();
+                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                            msb.card.set2BackAtk();
+                                        };
+                                        MyStoryboard msb1 = CardAnimation.ScaleX_021(150);
+                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+                                        animator.addAnime(msb).addAnime(msb1).Begin(card);
+                                    }
+                                    break;
+                                case Status.BACK_ATK:
+                                    break;
+                                case Status.BACK_DEF:
+                                    {
+                                        start.X += (mcv_orgin.ActualHeight - card.Width) / 2 - (mcv_orgin.ActualWidth - card.Height) / 2;
+                                        start.Y += -card.Width - (mcv_orgin.ActualHeight - card.Width) / 2 + (mcv_orgin.ActualWidth - card.Height) / 2;
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y); ;
+                                        MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
+                                        msb.card = card;
+                                        msb.Completed += (sender, e) =>
+                                        {
+
+                                            msb.card.getAwayFromParents();
+                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                            Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width)/2);
+                                            Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
+                                            msb.card.set2BackAtk();
+                                            mcv_aim.Children.Add(msb.card);
+                                        };
+                                        msb.Begin(card);
+                                    }
+                                    
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                        #endregion
+
+                        #region 背防→背攻
+
+                        if (card.Status == Status.BACK_DEF && moveInfo.aimStatus == Status.BACK_ATK)
+                        {
+                            MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
                             msb.card = card;
                             msb.Completed += (sender, e) =>
                             {
+
+                                msb.card.getAwayFromParents();
                                 msb.card.BeginAnimation(Canvas.LeftProperty, null);
                                 msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                msb.card.getAwayFromParents();
-                                mcv_aim.Children.Add(msb.card);
-                                if (mcv_aim.Children.Count == 1)
+                                if (moveInfo.isAdd)
                                 {
-                                    switch (moveInfo.aimStatus)
-                                    {
-                                        case Status.FRONT_ATK:
-                                        case Status.BACK_ATK:
-                                            msb.card.centerAtVerticalInParent();
-                                            break;
-                                        case Status.FRONT_DEF:
-                                        case Status.BACK_DEF:
-                                            msb.card.centerAtHorizontalInParent();
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    
+                                    mcv_aim.Children.Add(msb.card);
+                                    msb.card.set2BackAtk();
+                                    msb.card.centerAtVerticalInParent();
+
                                 }
                             };
                             msb.Begin(card);
-                            return;
+                            break;
                         }
+
                         #endregion
-
-                        //msb = CardAnimation.CanvasXY(new Point(end.X + (mcv_aim.ActualWidth - card.Width) / 2, end.Y + (mcv_aim.ActualHeight - card.Height) / 2),200);
-                        //msb.card = card;
-                        //msb.Completed += (sender, e)=>{
-                        //    msb.card.getAwayFromParents();
-                        //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                        //    msb.card.BeginAnimation(Canvas.TopProperty, null);
-                        //    if (msb.card.Status == Status.BACK_ATK && moveInfo.aimStatus == Status.FRONT_ATK)
-                        //    {
-                        //        CardAnimation.turn2Front(card);
-                        //    }
-                        //    if (moveInfo.isAdd)
-                        //    {
-                        //        mcv_aim.Children.Add(msb.card);
-                        //        msb.card.centerAtVerticalInParent();
-
-                        //    }
-                        //    if (!moveInfo.isAdd)
-                        //    {
-                        //        mcv_aim.Children.Insert(0,msb.card);
-                        //        CardOperate.sort_XYZ_def(mcv_aim);
-                        //    }
-                        //};
-
-                        //msb.Begin(card);
 
                     }
                     break;
                 case ActionCommand.CARD_DISAPPEAR:
+                    {
+                        DisappearInfo disappearInfo = JsonConvert.DeserializeObject<DisappearInfo>(bj.json);
+                        CardUI card = opponent.deck.Main[disappearInfo.cardID];
+                        MyStoryboard msb = CardAnimation.Opacity20(100);
+                        msb.card = card;
+                        msb.Completed += (sender, e) =>
+                        {
+                            msb.card.getAwayFromParents();
+                            (Application.Current.MainWindow as MainWindow).card_2_Outside.Children.Add(card);
+                            msb.card.Status = disappearInfo.aimStatus;
+                        };
+                        MyStoryboard msb2 = CardAnimation.Opacity21(100);
+                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+                        animator.addAnime(msb).addAnime(msb2).Begin(card);
+                    }   
                     break;
                 case ActionCommand.CARD_SIGN_ACTION:
                     break;
@@ -1447,7 +1620,7 @@ namespace NBX3.Service
                 case Area.NON_VALUE:
                     return null;
                 case Area.GRAVEYARD:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_Graveyard;
                 case Area.MAINDECK:
                     return null;
                 case Area.BANISH:
@@ -1457,7 +1630,7 @@ namespace NBX3.Service
                 case Area.EXTRA:
                     return null;
                 case Area.HAND:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_hand;
                 case Area.MONSTER_1:
                     return (Application.Current.MainWindow as MainWindow).card_2_6;
                 case Area.MONSTER_2:
@@ -1479,9 +1652,9 @@ namespace NBX3.Service
                 case Area.MAGICTRAP_5:
                     return (Application.Current.MainWindow as MainWindow).card_2_5;
                 case Area.PENDULUM_LEFT:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_Left;
                 case Area.PENDULUM_RIGHT:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_Right;
                 case Area.GRAVEYARD_OP:
                     return null;
                 case Area.MAINDECK_OP:

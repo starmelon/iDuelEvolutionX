@@ -1,4 +1,7 @@
-﻿using iDuel_EvolutionX.Model;
+﻿using iDuel_EvolutionX.EventJson;
+using iDuel_EvolutionX.Model;
+using NBX3.Service;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,8 +39,28 @@ namespace iDuel_EvolutionX.UI
             {
                 card.set2FrontAtk();
             }
+
+            #region 指令发送
+
+            MoveInfo moveInfo = new MoveInfo();
+            int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+            moveInfo.cardID = cardid;
+            moveInfo.isAdd = true;
+            moveInfo.aimArea = cv.area;
+            moveInfo.aimStatus = Status.FRONT_ATK;
+            String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_MOVE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
             //card.set2FrontAtk();
-            
+
             card.ContextMenu = AllMenu.Instance.cm_graveyard;
         }
 
@@ -85,7 +108,7 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
-        /// 卡片离开手卡区时，手卡区控件的操作
+        /// 卡片离开P卡区时，手卡区控件的操作
         /// </summary>
         /// <param name="cv">手卡区控件</param>
         /// <param name="card">卡片</param>
@@ -240,6 +263,7 @@ namespace iDuel_EvolutionX.UI
                 animator0.Begin(second);
                 Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
                 Canvas.SetLeft(card, cv.ActualWidth - card.ActualWidth);
+                card.set2FrontAtk();
                 Service.CardOperate.sort_XYZ_atk(cv);
             }
 
@@ -349,6 +373,19 @@ namespace iDuel_EvolutionX.UI
         public static void add2MagicTrap(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                case Status.FRONT_DEF:
+                    card.set2FrontAtk();
+                    break;
+                case Status.BACK_ATK:
+                case Status.BACK_DEF:
+                    card.set2BackAtk();
+                    break;
+                default:
+                    break;
+            }
             int count = cv.Children.Count;
             if (count == 1)
             {
@@ -371,7 +408,7 @@ namespace iDuel_EvolutionX.UI
             {
                 return;
             }
-            Service.CardOperate.sort_HandCard(cv);
+            
         }
 
         #endregion
@@ -419,6 +456,85 @@ namespace iDuel_EvolutionX.UI
         #endregion
 
         #region 敌方区域
+
+        #region 墓地区控件事件
+
+        /// <summary>
+        /// 卡片进入墓地时，墓地控件的操作
+        /// </summary>
+        /// <param name="cv">墓地控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2GraveyradOP(MyCanvas cv, CardUI card)
+        {
+
+            card.reSetAtk();
+            card.centerAtVerticalInParent();
+            card.clearSigns();
+            if ((card.StatusLast == Status.BACK_DEF || card.StatusLast == Status.BACK_ATK ) && card.Status == Status.FRONT_ATK)
+            {
+                CardAnimation.turn2Front(card);
+            }
+
+            //card.set2FrontAtk();
+
+            
+        }
+
+        /// <summary>
+        /// 卡片离开墓地时，墓地控件操作
+        /// </summary>
+        /// <param name="cv">墓地控件</param>
+        /// <param name="card">卡片</param>
+        public static void romoveFromGraveyardOP(MyCanvas cv, CardUI card)
+        {
+
+        }
+
+        #endregion
+
+        #region 除外区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2BanishOP(MyCanvas cv, CardUI card)
+        {
+            card.reSetAtk();
+            card.centerAtVerticalInParent();
+            card.clearSigns();
+            card.ContextMenu = AllMenu.Instance.cm_outside;
+        }
+
+        #endregion
+
+
+        #region P卡区控件事件
+
+        /// <summary>
+        /// 卡片以顶层覆盖方式进入P卡区时，P卡区控件的操作
+        /// </summary>
+        /// <param name="cv">P卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2PendulumOP(MyCanvas cv, CardUI card)
+        {
+            card.reSetAtk();
+            card.centerAtVerticalInParent();
+            card.ContextMenu = AllMenu.Instance.cm_pendulum;
+        }
+
+        /// <summary>
+        /// 卡片离开P卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromPendulumOP(MyCanvas cv, CardUI card)
+        {
+            card.clearSigns();
+        }
+
+        #endregion
 
         #region 卡组区控件事件
 
@@ -490,13 +606,13 @@ namespace iDuel_EvolutionX.UI
         /// <summary>
         /// 卡片以覆盖方式进入怪物区时，怪物区控件的操作
         /// </summary>
-        /// <param name="cv">怪物区控件</param>
+        /// <param name="mcv">怪物区控件</param>
         /// <param name="card">卡片</param>
-        public static void add2MonsterOP(MyCanvas cv, CardUI card)
+        public static void add2MonsterOP(MyCanvas mcv, CardUI card)
         {
 
 
-            int count = cv.Children.Count;
+            int count = mcv.Children.Count;
             if (count == 1)
             {
 
@@ -513,12 +629,14 @@ namespace iDuel_EvolutionX.UI
             }
             else
             {
+                Canvas.SetLeft(card, mcv.ActualWidth - card.Width);
+                Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
                 card.ContextMenuOpening += (sender, e) =>
                 {
 
                     card.ContextMenu.DataContext = card;
                 };
-                CardUI second = cv.Children[count - 2] as CardUI;
+                CardUI second = mcv.Children[count - 2] as CardUI;
 
                 second.reSetAtk();//当被叠放时要重置攻击力
                 second.clearSigns();//当被叠放时要清除卡片指示物
@@ -558,9 +676,9 @@ namespace iDuel_EvolutionX.UI
                 }
 
                 animator0.Begin(second);
-                Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
-                Canvas.SetLeft(card, cv.ActualWidth - card.ActualWidth);
-                Service.CardOperate.sort_XYZ_atk(cv);
+                Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
+                Canvas.SetLeft(card, mcv.ActualWidth - card.ActualWidth);
+                Service.CardOperate.sort_XYZ_atk(mcv);
             }
 
             //MainWindow mainwin = Application.Current.MainWindow as MainWindow;
@@ -569,14 +687,173 @@ namespace iDuel_EvolutionX.UI
 
             if (card.Status != Status.BACK_ATK && card.Status != Status.BACK_DEF)
             {
-                bindingAtk(cv, card);
+                bindingAtk(mcv, card);
             }
             
 
             #endregion
 
             //添加指示物
-            showSigns(cv, card);
+            showSigns(mcv, card);
+        }
+
+        public static void insert2MonsterOP(MyCanvas mcv, CardUI card)
+        {
+            if (mcv.Children.Count == 0)
+            {
+
+                if (card.Status == Status.BACK_ATK || card.Status == Status.FRONT_ATK)
+                {
+                    card.centerAtVerticalInParent();
+                }
+                else
+                {
+                    card.centerAtHorizontalInParent();
+                }
+                card.ContextMenu = AllMenu.Instance.cm_monster;
+            }
+
+            if (mcv.Children.Count > 1)
+            {
+                card.reSetAtk();
+                int count = mcv.Children.Count;
+                CardUI top = mcv.Children[count - 1] as CardUI;
+                if (top.Status == Status.FRONT_ATK || top.Status == Status.BACK_ATK)
+                {
+                    //Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
+                    //Canvas.SetLeft(card, 0);
+                    Canvas.SetLeft(card, 0 - card.Width);
+                    Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
+                    Service.CardOperate.sort_XYZ_atk(mcv);
+                }
+                else
+                {
+                    if (count == 2)
+                    {
+                        card.centerAtVerticalInParent();
+                    }
+                    else
+                    {
+                        Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
+                        Canvas.SetLeft(card, 0);
+                        Service.CardOperate.sort_XYZ_def2(mcv);
+                    }
+
+                }
+
+            }
+
+
+
+        }
+
+        /// <summary>
+        /// 卡片离开怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromMonsterOP(MyCanvas cv, CardUI card)
+        {
+
+            int count = cv.Children.Count;
+            if (count == 0)
+            {
+
+                Binding bind = new Binding();
+                BindingOperations.ClearBinding(cv.tb_atkDef, TextBlock.TextProperty);
+                cv.tb_atkDef.IsHitTestVisible = false;
+                return;
+            }
+            CardUI top = cv.Children[count - 1] as CardUI;
+            if (top.Status == Status.BACK_ATK || top.Status == Status.FRONT_ATK)
+            {
+                Service.CardOperate.sort_XYZ_atk(cv);
+            }
+            else
+            {
+
+            }
+            bindingAtk(cv, top);//绑定顶层卡片攻击力
+        }
+
+        #endregion
+
+        #region 魔陷区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2MagicTrapOP(MyCanvas cv, CardUI card)
+        {
+            card.reSetAtk();
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                case Status.FRONT_DEF:
+                    card.set2FrontAtk();
+                    break;
+                case Status.BACK_ATK:
+                case Status.BACK_DEF:
+                    card.set2BackAtk();
+                    break;
+                default:
+                    break;
+            }
+            int count = cv.Children.Count;
+            if (count == 1)
+            {
+                card.centerAtVerticalInParent();
+                card.ContextMenu = AllMenu.Instance.cm_magictrap;
+                //添加指示物
+                showSigns(cv, card);
+            }
+        }
+
+        /// <summary>
+        /// 卡片离开怪物区时，怪物区控件的操作
+        /// </summary>
+        /// <param name="cv">怪物区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromMagicTrapOP(MyCanvas cv, CardUI card)
+        {
+
+
+        }
+
+        #endregion
+
+        #region 手卡区控件事件
+
+        /// <summary>
+        /// 卡片以覆盖方式进入手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2HandOP(MyCanvas cv, CardUI card)
+        {
+            card.clearSigns();
+            card.reSetAtk();
+            card.set2BackAtk();
+
+            Service.CardOperate.sort_HandCard(cv);
+
+        }
+
+        /// <summary>
+        /// 卡片离开手卡区时，手卡区控件的操作
+        /// </summary>
+        /// <param name="cv">手卡区控件</param>
+        /// <param name="card">卡片</param>
+        public static void removeFromHandOP(MyCanvas cv, CardUI card)
+        {
+            int count = cv.Children.Count;
+            if (count == 0)
+            {
+                return;
+            }
+            Service.CardOperate.sort_HandCard(cv);
         }
 
         #endregion

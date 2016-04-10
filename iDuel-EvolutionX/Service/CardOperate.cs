@@ -498,7 +498,7 @@ namespace iDuel_EvolutionX.Service
                     MoveInfo moveInfo = new MoveInfo();
                     int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
                     moveInfo.cardID = cardid;
-                    moveInfo.isAdd = false;
+                    moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
                     moveInfo.aimStatus = Status.BACK_ATK;
                     String contentJson = JsonConvert.SerializeObject(moveInfo);
@@ -522,9 +522,40 @@ namespace iDuel_EvolutionX.Service
                     MoveInfo moveInfo = new MoveInfo();
                     int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
                     moveInfo.cardID = cardid;
-                    moveInfo.isAdd = false;
+                    moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
-                    moveInfo.aimStatus = Status.FRONT_ATK;
+                    switch (cv.area)
+                    {
+                        case Area.MONSTER_1:
+                        case Area.MONSTER_2:
+                        case Area.MONSTER_3:
+                        case Area.MONSTER_4:
+                        case Area.MONSTER_5:
+                            switch (card.Status)
+                            {
+                                case Status.FRONT_ATK:
+                                case Status.FRONT_DEF:
+                                    moveInfo.aimStatus = Status.FRONT_ATK;
+                                    break;
+                                case Status.BACK_ATK:
+                                case Status.BACK_DEF:
+                                    moveInfo.aimStatus = Status.BACK_ATK;
+                                    break;
+                            }
+                            
+                            break;
+                        case Area.MAGICTRAP_1:
+                        case Area.MAGICTRAP_2:
+                        case Area.MAGICTRAP_3:
+                        case Area.MAGICTRAP_4:
+                        case Area.MAGICTRAP_5:
+                            moveInfo.aimStatus = card.Status;
+                            break;
+                        default:
+                            moveInfo.aimStatus = Status.FRONT_ATK;
+                            break;
+                    }
+                    
                     String contentJson = JsonConvert.SerializeObject(moveInfo);
 
                     BaseJson bj = new BaseJson();
@@ -1118,7 +1149,7 @@ namespace iDuel_EvolutionX.Service
                     moveInfo.cardID = cardid;
                     moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
-                    moveInfo.aimStatus = Status.FRONT_ATK;
+                    moveInfo.aimStatus = card.Status;
                     String contentJson = JsonConvert.SerializeObject(moveInfo);
 
                     BaseJson bj = new BaseJson();
@@ -1140,7 +1171,7 @@ namespace iDuel_EvolutionX.Service
             }
         }
 
-        private static int getCardID(CardUI card)
+        public static int getCardID(CardUI card)
         {
             int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
             if (cardid == -1)
@@ -1340,22 +1371,7 @@ namespace iDuel_EvolutionX.Service
                 if( sp != null ) sp.Children.Clear();
 
                 #endregion
-                if (cv.area == Area.MAINDECK)
-                {
-                    DrawInfo orderInfo = new DrawInfo();
-
-                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
-                    orderInfo.cardID = cardid;
-                    String contentJson = JsonConvert.SerializeObject(orderInfo);
-
-                    BaseJson bj = new BaseJson();
-                    bj.guid = DuelOperate.getInstance().myself.userindex;
-                    bj.cid = "";
-                    bj.action = ActionCommand.GAME_DRAW;
-                    bj.json = contentJson;
-                    String json = JsonConvert.SerializeObject(bj);
-                    DuelOperate.getInstance().sendMsg(json);
-                }
+                
 
 
                 card.getAwayFromParents();
@@ -1373,7 +1389,48 @@ namespace iDuel_EvolutionX.Service
                     Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
                 }
                 mainwindow.card_1_hand.Children.Add(card);
-                
+
+                if (cv.area == Area.MAINDECK)
+                {
+                    DrawInfo orderInfo = new DrawInfo();
+
+                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    orderInfo.cardID = cardid;
+                    String contentJson = JsonConvert.SerializeObject(orderInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.GAME_DRAW;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+                }
+                else
+                {
+                    #region 指令发送
+
+                    MoveInfo moveInfo = new MoveInfo();
+                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    moveInfo.cardID = cardid;
+                    moveInfo.isAdd = true;
+                    moveInfo.aimArea = cv_aim.area;
+                    moveInfo.aimStatus = Status.BACK_ATK;
+                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.CARD_MOVE;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+
+                    #endregion
+                }
+
+
+
                 //sort_HandCard(cv_aim);
                 //card.ContextMenu = AllMenu.cm_hand;
 
@@ -1391,9 +1448,9 @@ namespace iDuel_EvolutionX.Service
                 //    DuelOperate.getInstance().sendMsg("Draw=1,"+card.duelindex, report);
                 //    return;
                 //}
-             
+
                 //DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex + "," + cv_aim.Name, report);
-                
+
 
             }
         }
@@ -1419,10 +1476,10 @@ namespace iDuel_EvolutionX.Service
                 CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 //if (cv.Name.Equals(cv_aim.Name)) return;
@@ -1434,6 +1491,26 @@ namespace iDuel_EvolutionX.Service
                 card.getAwayFromParents();
                 card.set2FrontAtk();
                 cv_aim.Children.Add(card);
+
+                #region 指令发送
+
+                MoveInfo moveInfo = new MoveInfo();
+                int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                moveInfo.cardID = cardid;
+                moveInfo.isAdd = true;
+                moveInfo.aimArea = cv_aim.area;
+                moveInfo.aimStatus = Status.FRONT_ATK;
+                String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.CARD_MOVE;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
+
+                #endregion
             }
         }
 
@@ -1459,10 +1536,10 @@ namespace iDuel_EvolutionX.Service
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
@@ -1486,6 +1563,24 @@ namespace iDuel_EvolutionX.Service
                     card.set2FrontAtk();
                 }
                 cv_aim.Children.Add(card);
+
+                #region 指令发送
+
+                DisappearInfo moveInfo = new DisappearInfo();
+                int cardid = getCardID(card);
+                moveInfo.cardID = cardid;
+                moveInfo.aimStatus = card.Status;
+                String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.CARD_DISAPPEAR;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
+
+                #endregion
                 //cv.Children.Remove(card);
                 //if (!cv.Name.Equals("card_1_Graveyard") && !cv.Name.Equals("card_1_Outside") && !cv.Equals(mainwindow.card_1_Deck) && !cv.Equals(mainwindow.card_1_Left) && !cv.Equals(mainwindow.card_1_Right))
                 //{
@@ -1524,10 +1619,10 @@ namespace iDuel_EvolutionX.Service
                 //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
@@ -1541,24 +1636,23 @@ namespace iDuel_EvolutionX.Service
                 #endregion
 
                 //脱离父控件
-                bool isfailed = card.getAwayFromParents();
-                if (isfailed) 
-                {
-                    return;
+                card.getAwayFromParents();
 
-                }
 
                 //对目标地的处理
+                card.set2FrontAtk();
                 cv_aim.Children.Add(card);
                 
+                
+
                 //if (!cv.Name.Equals("card_1_Graveyard") && !cv.Name.Equals("card_1_Outside") && !cv.Equals(mainwindow.card_1_Deck) && !cv.Equals(mainwindow.card_1_Right) && !cv.Equals(mainwindow.card_1_Left))
                 //{
                 //    CardOperate.sort(cv, card);
                 //}
 
                 //card_FrontAtk(card);
-                
-                
+
+
                 //CardOperate.sort_SingleCard(card);
 
 
@@ -3834,7 +3928,7 @@ namespace iDuel_EvolutionX.Service
                     Point end = new Point(endX,average2);
                     //Canvas.SetTop(card, average2);
                     //Canvas.SetLeft(card, endX);
-                    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end);
                     msb.card = card;
                     msb.Completed += (object c, EventArgs d) =>
                     {
@@ -3854,7 +3948,7 @@ namespace iDuel_EvolutionX.Service
                 Point start = card.TranslatePoint(new Point(), cv);
                 double endX = (cv.ActualHeight - card.Width)/2;
                 Point end = new Point(endX, average2);
-                MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                MyStoryboard msb = CardAnimation.CanvasXY(end);
                 msb.card = card;
                 msb.Completed += (object c, EventArgs d) =>
                 {
@@ -3904,7 +3998,7 @@ namespace iDuel_EvolutionX.Service
                 if (card_top.Status == Status.BACK_ATK || card_top.Status == Status.FRONT_ATK)
                 {
                     Point end = new Point(canvas_left_single, canvas_top);
-                    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end);
                     msb.card = card_top;
                     msb.Completed += (object c, EventArgs d) =>
                     {
@@ -3931,7 +4025,7 @@ namespace iDuel_EvolutionX.Service
                     if (Canvas.GetLeft(card_top) != canvas_left_single || Canvas.GetTop(card_top) != canvas_top)
                     {
                         Point end = new Point(canvas_left_single, canvas_top);
-                        MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                        MyStoryboard msb = CardAnimation.CanvasXY(end);
                         msb.card = card_top;
                         msb.Completed += (object c, EventArgs d) =>
                         {
@@ -3954,7 +4048,7 @@ namespace iDuel_EvolutionX.Service
                 {
                     CardUI card_top2 = cv.Children[card_num - 1] as CardUI;
                     Point end = new Point(canvas_left_single, canvas_top);
-                    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end);
                     msb.card = card_top2;
                     msb.Completed += (object c, EventArgs d) =>
                     {
@@ -3979,7 +4073,7 @@ namespace iDuel_EvolutionX.Service
 
                         //Canvas.SetTop(card, average2);
                         //Canvas.SetLeft(card, endX);
-                        MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                        MyStoryboard msb = CardAnimation.CanvasXY(end);
                         msb.card = card;
                         msb.Completed += (object c, EventArgs d) =>
                         {
@@ -4113,7 +4207,7 @@ namespace iDuel_EvolutionX.Service
                 }
                 //Canvas.SetTop(card, average2);
                 //Canvas.SetLeft(card, endX);
-                MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
+                MyStoryboard msb = CardAnimation.CanvasXY(end);
                 msb.card = card;
                 msb.Completed += (object c, EventArgs d) =>
                 {
@@ -4190,7 +4284,7 @@ namespace iDuel_EvolutionX.Service
                         end = new Point(end_, average2);
                         //Canvas.SetLeft(card, end);
                     }
-                    MyStoryboard msb = CardAnimation.CanvasXY(end, 200);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end);
                     msb.card = card;
                     msb.Completed += (object c, EventArgs d) =>
                     {

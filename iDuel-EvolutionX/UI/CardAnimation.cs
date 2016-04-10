@@ -1227,6 +1227,10 @@ namespace iDuel_EvolutionX.UI
             da.EasingFunction = easing;
             //Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
             Storyboard.SetTargetProperty(da, new PropertyPath("RenderTransform.Children[1].Angle"));
+            da.Completed += (sender, e) =>
+            {
+                
+            };
             return da;
         }
 
@@ -1426,11 +1430,11 @@ namespace iDuel_EvolutionX.UI
         /// <param name="end">移动结束点</param>
         /// <param name="time">移动耗时（毫秒）</param>
         /// <returns></returns>
-        public static MyStoryboard CanvasXY(Point end, double time)
+        public static MyStoryboard CanvasXY(Point end)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(CanvasX(end.X, time));
-            msb.Children.Add(CanvasY(end.Y, time));
+            msb.Children.Add(CanvasX(end.X, 150));
+            msb.Children.Add(CanvasY(end.Y, 150));
 
             return msb;
         }
@@ -1443,6 +1447,17 @@ namespace iDuel_EvolutionX.UI
             msb.Children.Add(CanvasY(end.Y, 200));
             msb.Children.Add(scaleX(1, 0, 200));
            
+            return msb;
+        }
+
+        public static MyStoryboard CanvasXY_scale120_rotate9020(Point end)
+        {
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(CanvasX(end.X, 200));
+            msb.Children.Add(CanvasY(end.Y, 200));
+            msb.Children.Add(scaleX(1, 0, 200));
+            msb.Children.Add(Rotate(-90, 0, 200));
+
             return msb;
         }
 
@@ -1460,7 +1475,7 @@ namespace iDuel_EvolutionX.UI
             return CanvasXY_Rotate(end, 200, 0, -90, 200);
         }
 
-        public static MyStoryboard CanvasXY_Rotate_9020(Point end, double movetime, double startAngle, double endAngle, double rotatetime)
+        public static MyStoryboard CanvasXY_Rotate_9020(Point end)
         {
             return CanvasXY_Rotate(end, 200, -90, 0, 200);
         }

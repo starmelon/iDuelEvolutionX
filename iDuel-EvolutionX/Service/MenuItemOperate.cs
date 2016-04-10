@@ -1,7 +1,9 @@
 ﻿using iDuel_EvolutionX;
+using iDuel_EvolutionX.EventJson;
 using iDuel_EvolutionX.Model;
 using iDuel_EvolutionX.UI;
 using NBX3.Service;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,6 +141,24 @@ namespace iDuel_EvolutionX.Service
         {
             CardUI card = e.OriginalSource as CardUI;
             CardAnimation.fadeOut2FadeIn(card);
+
+            #region 指令发送
+
+            DisappearInfo moveInfo = new DisappearInfo();
+            int cardid = CardOperate.getCardID(card);
+            moveInfo.cardID = cardid;
+            moveInfo.aimStatus = Status.FRONT_ATK;
+            String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_DISAPPEAR;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
         }
 
         /// <summary>

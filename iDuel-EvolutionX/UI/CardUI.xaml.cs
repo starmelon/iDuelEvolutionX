@@ -29,6 +29,7 @@ namespace iDuel_EvolutionX.UI
         public BitmapImage backImage;       //卡背
         public BitmapImage originalImage;   //卡图
         private Status status;               //攻守正背
+        private Status statusLast;           //上一个状态
         private Location lastLocation;
         private Location curLocation;        //当前位置（具体位置+所在层次）
         public List<SignTextBlock> signs;
@@ -44,8 +45,17 @@ namespace iDuel_EvolutionX.UI
 
             set
             {
+                statusLast = status;
                 status = value;
                 showImg();
+            }
+        }
+
+        public Status StatusLast
+        {
+            get
+            {
+                return statusLast;
             }
         }
 
@@ -115,6 +125,8 @@ namespace iDuel_EvolutionX.UI
 
             }
         }
+
+        
 
         public void outputChange()
         {
@@ -477,9 +489,11 @@ namespace iDuel_EvolutionX.UI
 
         private void setAngle2zero()
         {
+
             TransformGroup tfg = this.RenderTransform as TransformGroup;
             RotateTransform rt = tfg.Children[1] as RotateTransform;
-            //this.BeginAnimation(TransformGroup.ChildrenProperty., null);
+            
+            //this.BeginAnimation(rt, null);
             rt.Angle = 0;
         }
 
