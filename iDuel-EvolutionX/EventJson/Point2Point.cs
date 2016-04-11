@@ -86,4 +86,20 @@ namespace iDuel_EvolutionX.EventJson
         public int cardID;
         public Status aimStatus;
     }
+
+    public class StatusChangeInfo
+    {
+        public int cardID;
+        public Status aimStatus;
+    }
+
+    public class ActiveInfo
+    {
+        public int cardID;
+    }
+
+    public class Aim2CardInfo
+    {
+        public int cardID;
+    }
 }

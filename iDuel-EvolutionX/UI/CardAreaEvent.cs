@@ -356,7 +356,7 @@ namespace iDuel_EvolutionX.UI
             }
             else
             {
-
+                Service.CardOperate.sort_XYZ_def(cv);
             }
             bindingAtk(cv, top);//绑定顶层卡片攻击力
         }
@@ -771,7 +771,7 @@ namespace iDuel_EvolutionX.UI
             }
             else
             {
-
+                Service.CardOperate.sort_XYZ_def(cv);
             }
             bindingAtk(cv, top);//绑定顶层卡片攻击力
         }
@@ -867,7 +867,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv"></param>
         /// <param name="card"></param>
-        private static void bindingAtk(MyCanvas cv, CardUI card)
+        public static void bindingAtk(MyCanvas cv, CardUI card)
         {
             Binding bind = new Binding();
             bind.Source = card;

@@ -49,10 +49,10 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>-->
     </UserControl.Resources>
-    <UserControl.CommandBindings>
+    <!--<UserControl.CommandBindings>
         <CommandBinding Command="command:CardCommands.ActiveCard" Executed="Executed_activeCard" />
         <CommandBinding Command="command:CardCommands.Aim2Card" Executed="Executed_aim2Card" />
-    </UserControl.CommandBindings>
+    </UserControl.CommandBindings>-->
 
     <Grid  Width="56" Height="80" Background="Transparent">
         

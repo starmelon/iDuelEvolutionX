@@ -260,6 +260,7 @@ namespace iDuel_EvolutionX.UI
             }
 
             msb0.card = card;
+            msb0.FillBehavior = FillBehavior.Stop;
             msb0.Completed += (object c, EventArgs d) =>
             {
                 msb0.card.set2BackDef();

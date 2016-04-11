@@ -52,25 +52,45 @@ namespace iDuel_EvolutionX.Service
             CardUI card = e.OriginalSource as CardUI;
             MyCanvas mcv = card.Parent as MyCanvas;
 
+            #region 指令发送
+
+            StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+            int cardid = CardOperate.getCardID(card);
+            statuschangeInfo.cardID = cardid;
+
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
-                    CardAnimation.Rotate2FrontDef(card); 
+                    CardAnimation.Rotate2FrontDef(card);
+                    statuschangeInfo.aimStatus = Status.FRONT_DEF;  
                     break;
                 case Status.FRONT_DEF:
                     CardAnimation.Rotate2FrontAtk(card);
+                    statuschangeInfo.aimStatus = Status.FRONT_ATK;
                     break;
                 case Status.BACK_ATK:
                     CardAnimation.Rotate2BackDef(card);
+                    statuschangeInfo.aimStatus = Status.BACK_DEF;
                     break;
                 case Status.BACK_DEF:
                     CardAnimation.Rotate2FrontAtk2(card);
+                    statuschangeInfo.aimStatus = Status.FRONT_ATK;
                     break;
                 default:
                     break;
             }
 
-            
+            String contentJson = JsonConvert.SerializeObject(statuschangeInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_STATUS_CHANGE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
         }
 
         /// <summary>
@@ -82,22 +102,45 @@ namespace iDuel_EvolutionX.Service
         {
             CardUI card = e.OriginalSource as CardUI;
             //Canvas cv = card.Parent as Canvas;
+            #region 指令发送
+
+            StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+            int cardid = CardOperate.getCardID(card);
+            statuschangeInfo.cardID = cardid;
 
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
+                    CardAnimation.turn2Back(card);
+                    statuschangeInfo.aimStatus = Status.BACK_ATK;
+                    break;
                 case Status.FRONT_DEF:
                     CardAnimation.turn2Back(card);
+                    statuschangeInfo.aimStatus = Status.BACK_DEF;
                     break;
                 case Status.BACK_ATK:
+                    CardAnimation.turn2Front(card);
+                    statuschangeInfo.aimStatus = Status.FRONT_ATK;
+                    break;
                 case Status.BACK_DEF:
                     CardAnimation.turn2Front(card);
+                    statuschangeInfo.aimStatus = Status.FRONT_DEF;
                     break;
                 default:
                     break;
             }
 
+            String contentJson = JsonConvert.SerializeObject(statuschangeInfo);
 
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_STATUS_CHANGE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
         }
 
         /// <summary>
@@ -116,6 +159,23 @@ namespace iDuel_EvolutionX.Service
 
             CardAnimation.turn2BackDef(card);
 
+            #region 指令发送
+
+            StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+            int cardid = CardOperate.getCardID(card);
+            statuschangeInfo.cardID = cardid;
+            statuschangeInfo.aimStatus = Status.BACK_DEF;
+            String contentJson = JsonConvert.SerializeObject(statuschangeInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_STATUS_CHANGE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
         }
 
         /// <summary>
@@ -188,13 +248,72 @@ namespace iDuel_EvolutionX.Service
             CardAnimation.move2MainDeck(card);
         }
 
-
+        /// <summary>
+        /// 发动效果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void execute_activeCard(object sender, ExecutedRoutedEventArgs e)
         {
-            MyStoryboard msb = CardAnimation.EffectOrigin();
+
+            //MyStoryboard msb = CardAnimation.EffectOrigin();
             
-            msb.Begin(sender as Border);
-            
+            //msb.Begin(sender as Border);
+            CardUI card = e.OriginalSource as CardUI;
+
+            card.active();
+
+            #region 指令发送
+
+            ActiveInfo activeInfo = new ActiveInfo();
+            int cardid = CardOperate.getCardID(card);
+            activeInfo.cardID = cardid;
+            String contentJson = JsonConvert.SerializeObject(activeInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_ACTIVE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
+
+        }
+
+        /// <summary>
+        /// 成为对象
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void execute_aim2Card(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            //MyStoryboard msb = CardAnimation.EffectOrigin();
+
+            //msb.Begin(sender as Border);
+            CardUI card = e.OriginalSource as CardUI;
+
+            card.beAim();
+
+            #region 指令发送
+
+            ActiveInfo activeInfo = new ActiveInfo();
+            int cardid = CardOperate.getCardID(card);
+            activeInfo.cardID = cardid;
+            String contentJson = JsonConvert.SerializeObject(activeInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARR_SELECT_AIM;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
+
         }
 
         //判断要执行的命令

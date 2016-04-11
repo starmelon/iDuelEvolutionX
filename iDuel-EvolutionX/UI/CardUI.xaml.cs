@@ -1,4 +1,5 @@
 ﻿using iDuel_EvolutionX.Model;
+using iDuel_EvolutionX.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -161,6 +162,16 @@ namespace iDuel_EvolutionX.UI
 
             this.ContextMenuOpening += CardUI_ContextMenuOpening;
             this.MouseWheel += CardUI_MouseWheel;
+
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.ActiveCard,
+                    MenuItemOperate.execute_activeCard));
+
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.Aim2Card,
+                    MenuItemOperate.execute_aim2Card));
 
             curLocation = new Location();
             lastLocation = new Location();
@@ -373,6 +384,7 @@ namespace iDuel_EvolutionX.UI
         {
             Status = Status.BACK_DEF;
             showImg();
+            setAngle290();
         }
 
         /// <summary>
@@ -513,12 +525,23 @@ namespace iDuel_EvolutionX.UI
         {
             (FindResource("ActiveCard") as Storyboard).Begin();
             e.Handled = true;
+
         }
 
         private void Executed_aim2Card(object sender, ExecutedRoutedEventArgs e)
         {
             (FindResource("beAim2") as Storyboard).Begin();
             e.Handled = true;
+        }
+
+        public void active()
+        {
+            (FindResource("ActiveCard") as Storyboard).Begin();
+        }
+
+        public void beAim()
+        {
+            (FindResource("beAim2") as Storyboard).Begin();
         }
 
         #endregion 
