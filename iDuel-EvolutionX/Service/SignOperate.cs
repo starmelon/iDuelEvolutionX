@@ -1,5 +1,8 @@
-﻿using iDuel_EvolutionX.Model;
+﻿using iDuel_EvolutionX.EventJson;
+using iDuel_EvolutionX.Model;
 using iDuel_EvolutionX.UI;
+using NBX3.Service;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +46,30 @@ namespace iDuel_EvolutionX.Service
             stb.Tag = card;
             sp.Children.Add(stb);
             e.Handled = true;
+
+            #region 指令发送
+
+            SignInfo signInfo = new SignInfo();
+            int cardid = CardOperate.getCardID(card);
+            signInfo.cardID = cardid;
+            foreach (SignTextBlock item in sp.Children)
+            {
+                Dictionary<string, string> content = new Dictionary<string, string>();
+                content.Add(item.Content.ToString(), item.ToolTip.ToString());
+                signInfo.signs.Add(item.BorderBrush, content); 
+                
+            }
+            String contentJson = JsonConvert.SerializeObject(signInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_SIGN_ACTION;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
             //addBlueSign = new RoutedUICommand("addBlueSign", "addBlueSign", typeof(CardCommands));
             //addBlackSign = new RoutedUICommand("addBlackSign", "addBlackSign", typeof(CardCommands));
             //addRedSign = new RoutedUICommand("addRedSign", "addRedSign", typeof(CardCommands));

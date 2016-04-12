@@ -1194,6 +1194,66 @@ namespace NBX3.Service
                         Point end = mcv_aim.TranslatePoint(new Point(), mainwindow.OpBattle);
                         end = new Point(end.X + (mcv_aim.ActualWidth - card.Width) / 2, end.Y + (mcv_aim.ActualHeight - card.Height) / 2);
 
+                        #region 怪物区→魔陷，清除指示物
+
+                        switch (mcv_aim.area)
+                        {
+                            case Area.MAGICTRAP_1_OP:
+                            case Area.MAGICTRAP_2_OP:
+                            case Area.MAGICTRAP_3_OP:
+                            case Area.MAGICTRAP_4_OP:
+                            case Area.MAGICTRAP_5_OP:
+                                {
+                                    switch (mcv_orgin.area)
+                                    {
+                                        case Area.MONSTER_1_OP:
+                                        case Area.MONSTER_2_OP:
+                                        case Area.MONSTER_3_OP:
+                                        case Area.MONSTER_4_OP:
+                                        case Area.MONSTER_5_OP:
+                                            card.clearSigns();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                        #endregion
+
+                        #region 魔陷→怪物区，清除指示物
+
+                        switch (mcv_aim.area)
+                        {
+                            case Area.MONSTER_1_OP:
+                            case Area.MONSTER_2_OP:
+                            case Area.MONSTER_3_OP:
+                            case Area.MONSTER_4_OP:
+                            case Area.MONSTER_5_OP:
+                                {
+                                    switch (mcv_orgin.area)
+                                    {
+                                        case Area.MAGICTRAP_1_OP:
+                                        case Area.MAGICTRAP_2_OP:
+                                        case Area.MAGICTRAP_3_OP:
+                                        case Area.MAGICTRAP_4_OP:
+                                        case Area.MAGICTRAP_5_OP:
+                                            card.clearSigns();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                        #endregion
+
                         card.getAwayFromParents();
                         (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
                         Canvas.SetLeft(card,start.X);
@@ -1594,6 +1654,29 @@ namespace NBX3.Service
                     }   
                     break;
                 case ActionCommand.CARD_SIGN_ACTION:
+                    {
+                        SignInfo signInfo = JsonConvert.DeserializeObject<SignInfo>(bj.json);
+                        CardUI card = opponent.deck.Main[signInfo.cardID];
+                        MyCanvas mcv = card.Parent as MyCanvas;
+                        StackPanel sp = mcv.signs;
+                        sp.Children.Clear();
+                        card.clearSigns();
+                        foreach (var item in signInfo.signs)
+                        {
+                            if (!item.Value.Equals("0"))
+                            {
+                                SignTextBlock stb = new SignTextBlock();
+                                stb.Height = 25;
+                                stb.Width = 25;
+                                stb.BorderBrush = item.Key;
+                                Dictionary<string, string> content = item.Value;
+                                stb.Content = content.;
+                                card.signs.Add(stb);
+                                stb.Tag = card;
+                                sp.Children.Add(stb);
+                            }       
+                        }                                      
+                    }
                     break;
                 case ActionCommand.CARD_ATK:
                     break;

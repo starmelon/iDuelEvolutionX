@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace iDuel_EvolutionX.EventJson
@@ -101,5 +102,11 @@ namespace iDuel_EvolutionX.EventJson
     public class Aim2CardInfo
     {
         public int cardID;
+    }
+
+    public class SignInfo
+    {
+        public int cardID;
+        public Dictionary<Brush, Dictionary<string, string>> signs = new Dictionary<Brush, Dictionary<string, string>>();
     }
 }

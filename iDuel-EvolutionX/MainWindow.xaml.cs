@@ -165,6 +165,19 @@ namespace iDuel_EvolutionX
             card_1_Left.signs = sp_sign_left;
             card_1_Right.signs = sp_sign_right;
 
+            card_2_1.signs = sp_sign_2_1;
+            card_2_2.signs = sp_sign_2_2;
+            card_2_3.signs = sp_sign_2_3;
+            card_2_4.signs = sp_sign_2_4;
+            card_2_5.signs = sp_sign_2_5;
+            card_2_6.signs = sp_sign_2_6;
+            card_2_7.signs = sp_sign_2_7;
+            card_2_8.signs = sp_sign_2_8;
+            card_2_9.signs = sp_sign_2_9;
+            card_2_10.signs = sp_sign_2_10;
+            card_2_Left.signs = sp_sign_left_op;
+            card_2_Right.signs = sp_sign_right_op;
+
             #endregion
 
             #region <-- 注册场地控件的拖放事件 -->

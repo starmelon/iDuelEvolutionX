@@ -1,5 +1,10 @@
-﻿using iDuel_EvolutionX.Model;
+﻿using iDuel_EvolutionX.EventJson;
+using iDuel_EvolutionX.Model;
+using iDuel_EvolutionX.Service;
+using NBX3.Service;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -76,25 +81,31 @@ namespace iDuel_EvolutionX.UI
         /// <param name="e"></param>
         private void content_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Console.WriteLine(e.Delta);
+            //Console.WriteLine(e.Delta);
             if (e.Delta>0)
             {
                 this.Content = (Convert.ToInt32(this.Content) + 3).ToString();
+                sendSignInfo();
             }
             else
             {
                 int temp = Convert.ToInt32(this.Content) - 1;
+                this.Content = temp.ToString();
+                sendSignInfo();
                 if (temp < 1)
                 {
                     clearSelf();
                 }
                 else
                 {
-                    this.Content = temp.ToString(); ;
+                    
+                    ;
                 }
                 //this.Content = (temp < 0 ? 0 : temp ).ToString();
             }
+
             
+
         }
 
         /// <summary>
@@ -109,8 +120,34 @@ namespace iDuel_EvolutionX.UI
                 this.Content = (Convert.ToInt32(this.Content) + 1).ToString();
             }
 
-            
-            
+            sendSignInfo();
+        }
+
+        private void sendSignInfo()
+        {
+            #region 指令发送
+
+            SignInfo signInfo = new SignInfo();
+            int cardid = CardOperate.getCardID(this.Tag as CardUI);
+            signInfo.cardID = cardid;
+            StackPanel sp = this.Parent as StackPanel;
+            foreach (SignTextBlock item in sp.Children)
+            {
+                Dictionary<string, string> content = new Dictionary<string, string>();
+                content.Add(item.Content.ToString(), item.ToolTip.ToString());
+                signInfo.signs.Add(item.BorderBrush, content);
+            }
+            String contentJson = JsonConvert.SerializeObject(signInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_SIGN_ACTION;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
         }
 
         public void clearSelf()
