@@ -1642,21 +1642,9 @@ namespace iDuel_EvolutionX.Service
                 //对目标地的处理
                 card.set2FrontAtk();
                 cv_aim.Children.Add(card);
+
                 
                 
-
-                //if (!cv.Name.Equals("card_1_Graveyard") && !cv.Name.Equals("card_1_Outside") && !cv.Equals(mainwindow.card_1_Deck) && !cv.Equals(mainwindow.card_1_Right) && !cv.Equals(mainwindow.card_1_Left))
-                //{
-                //    CardOperate.sort(cv, card);
-                //}
-
-                //card_FrontAtk(card);
-
-
-                //CardOperate.sort_SingleCard(card);
-
-
-
             }
         }
 

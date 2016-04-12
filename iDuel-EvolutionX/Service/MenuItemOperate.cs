@@ -190,6 +190,26 @@ namespace iDuel_EvolutionX.Service
 
             CardAnimation.move2Graveyard(card);
 
+            #region 指令发送
+
+            MoveInfo moveInfo = new MoveInfo();
+            int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+            moveInfo.cardID = cardid;
+            moveInfo.isAdd = true;
+            moveInfo.aimArea = Area.GRAVEYARD;
+            moveInfo.aimStatus = Status.FRONT_ATK;
+            String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+            BaseJson bj = new BaseJson();
+            bj.guid = DuelOperate.getInstance().myself.userindex;
+            bj.cid = "";
+            bj.action = ActionCommand.CARD_MOVE;
+            bj.json = contentJson;
+            String json = JsonConvert.SerializeObject(bj);
+            DuelOperate.getInstance().sendMsg(json);
+
+            #endregion
+
         }
 
         /// <summary>
