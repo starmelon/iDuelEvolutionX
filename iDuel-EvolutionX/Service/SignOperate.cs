@@ -54,10 +54,10 @@ namespace iDuel_EvolutionX.Service
             signInfo.cardID = cardid;
             foreach (SignTextBlock item in sp.Children)
             {
-                Dictionary<string, string> content = new Dictionary<string, string>();
-                content.Add(item.Content.ToString(), item.ToolTip.ToString());
-                signInfo.signs.Add(item.BorderBrush, content); 
-                
+                //Dictionary<string, string> content = new Dictionary<string, string>();
+                //content.Add(item.Content.ToString(), item.ToolTip.ToString());
+                signInfo.signs.Add(new SignInfo.SignMessage(item.BorderBrush, item.Content.ToString(), item.ToolTip == null?null:item.ToolTip.ToString()));
+        
             }
             String contentJson = JsonConvert.SerializeObject(signInfo);
 

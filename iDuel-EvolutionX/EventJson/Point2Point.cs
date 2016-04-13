@@ -26,7 +26,7 @@ namespace iDuel_EvolutionX.EventJson
         CARD_SIGN_ACTION,  //指示物改变
         CARD_ATK,          //攻击
         CARD_STATUS_CHANGE,//卡片状态改变
-        CARD_REMARK,       //修改卡片备注
+        CARD_MESSAGE,       //修改卡片备注
 
 
     }
@@ -107,6 +107,28 @@ namespace iDuel_EvolutionX.EventJson
     public class SignInfo
     {
         public int cardID;
-        public Dictionary<Brush, Dictionary<string, string>> signs = new Dictionary<Brush, Dictionary<string, string>>();
+        public List<SignMessage> signs = new List<SignMessage>();
+
+        public class SignMessage
+        {
+            public Brush brush;
+            public string count;
+            public string remark;
+
+            public SignMessage(Brush brush,string count,string remark)
+            {
+                this.brush = brush;
+                this.count = count;
+                this.remark = remark;
+            }
+        }
+    }
+
+    public class CardMessage
+    {
+        public int cardID;
+        public string curAtk;               
+        public string curDef;
+        public string remark;              
     }
 }

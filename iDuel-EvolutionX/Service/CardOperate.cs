@@ -4481,6 +4481,26 @@ namespace iDuel_EvolutionX.Service
                 mad.Top = p.Y + tb.Height;
                 mad.Left = p.X + (tb.ActualWidth / 2) - mad.Width /2;
                 mad.ShowDialog();
+
+                #region 指令发送
+
+                CardMessage cardMessage = new CardMessage();
+                int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                cardMessage.cardID = cardid;
+                cardMessage.curAtk = card.curAtk;
+                cardMessage.curDef = card.curDef;
+                cardMessage.remark = card.ToolTip == null ? null : card.ToolTip.ToString() ;
+                String contentJson = JsonConvert.SerializeObject(cardMessage);
+
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.CARD_MESSAGE;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
+
+                #endregion
                 //MessageBox.Show(tb.Name);
             }
         }

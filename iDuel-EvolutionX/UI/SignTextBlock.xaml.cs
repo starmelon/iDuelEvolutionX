@@ -39,6 +39,7 @@ namespace iDuel_EvolutionX.UI
             EditRemark er = new EditRemark();
             er.sendResult += (result) => {
                 this.ToolTip = result;
+                sendSignInfo(); 
             };
             er.Owner = Application.Current.MainWindow;
             Point p = this.PointToScreen(new Point(0, 0));
@@ -133,9 +134,7 @@ namespace iDuel_EvolutionX.UI
             StackPanel sp = this.Parent as StackPanel;
             foreach (SignTextBlock item in sp.Children)
             {
-                Dictionary<string, string> content = new Dictionary<string, string>();
-                content.Add(item.Content.ToString(), item.ToolTip.ToString());
-                signInfo.signs.Add(item.BorderBrush, content);
+                signInfo.signs.Add(new SignInfo.SignMessage(item.BorderBrush, item.Content.ToString(), item.ToolTip == null ? null : item.ToolTip.ToString()));
             }
             String contentJson = JsonConvert.SerializeObject(signInfo);
 

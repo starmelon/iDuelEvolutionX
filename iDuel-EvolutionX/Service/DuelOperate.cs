@@ -1422,7 +1422,7 @@ namespace NBX3.Service
 
                         #region 背防→表攻
 
-                        if ((card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF) && moveInfo.aimStatus == Status.FRONT_ATK)
+                        if ((card.Status == Status.BACK_DEF ) && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
                             switch (mcv_aim.area)
                             {
@@ -1462,10 +1462,58 @@ namespace NBX3.Service
                                 case Area.MONSTER_4_OP:
                                 case Area.MONSTER_5_OP:
                                     {
-                                        if (mcv_aim.Children.Count>0)
+                                        if (mcv_aim.Children.Count > 0)
                                         {
-
+                                            if (moveInfo.isAdd)
+                                            {
+                                                end.X += (mcv_aim.ActualWidth - card.Width) / 2;
+                                            }
+                                            else
+                                            {
+                                                end.X -= (mcv_aim.ActualWidth - card.Width) / 2 + card.Width;
+                                            }
                                         }
+
+                                        start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
+                                        start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                                        //card.getAwayFromParents();
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
+
+                                        MyStoryboard msb1 = CardAnimation.CanvasXY_scale120_rotate9020(end);
+                                        //MyStoryboard msb1 = CardAnimation.CanvasXY_Scale120(end);
+                                        msb1.card = card;
+                                        msb1.Completed += (sender, e) =>
+                                        {
+                                            msb1.card.set2FrontAtk();
+                                        };
+                                        MyStoryboard msb2 = CardAnimation.scalX_021();
+                                        msb2.card = card;
+                                        msb2.Completed += (sender, e) =>
+                                        {
+                                            msb2.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb2.card.BeginAnimation(Canvas.TopProperty, null);
+
+                                            msb2.card.getAwayFromParents();
+                                            msb2.card.set2FrontAtk();
+                                            if (moveInfo.isAdd)
+                                            {
+                                                mcv_aim.Children.Add(msb2.card);
+
+                                            }
+                                            else
+                                            {
+                                                mcv_aim.Children.Insert(0, msb2.card);
+
+
+                                            }
+
+                                        };
+                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+                                        animator
+                                            .addAnime(msb1)
+                                            .addAnime(msb2)
+                                            .Begin(card);
                                     }
                                     break;
                                 default:
@@ -1663,15 +1711,15 @@ namespace NBX3.Service
                         card.clearSigns();
                         foreach (var item in signInfo.signs)
                         {
-                            if (!item.Value.Equals("0"))
+                            if (!item.count.Equals("0"))
                             {
                                 SignTextBlock stb = new SignTextBlock();
                                 stb.Height = 25;
                                 stb.Width = 25;
-                                stb.BorderBrush = item.Key;
-                                Dictionary<string, string> content = item.Value;
-                                stb.Content = content.;
+                                stb.BorderBrush = item.brush;
+                                stb.Content = item.count;
                                 card.signs.Add(stb);
+                                stb.ToolTip = item.remark;
                                 stb.Tag = card;
                                 sp.Children.Add(stb);
                             }       
@@ -1748,7 +1796,14 @@ namespace NBX3.Service
                         }
                     }
                     break;
-                case ActionCommand.CARD_REMARK:
+                case ActionCommand.CARD_MESSAGE:
+                    {
+                        CardMessage cardMessage = JsonConvert.DeserializeObject<CardMessage>(bj.json);
+                        CardUI card = opponent.deck.Main[cardMessage.cardID];
+                        card.CurAtk = cardMessage.curAtk;
+                        card.CurDef = cardMessage.curDef;
+                        card.ToolTip = cardMessage.remark;
+                    }
                     break;
                 default:
                     break;

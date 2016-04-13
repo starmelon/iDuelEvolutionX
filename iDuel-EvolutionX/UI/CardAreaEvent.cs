@@ -303,6 +303,7 @@ namespace iDuel_EvolutionX.UI
             if (cv.Children.Count > 1)
             {
                 card.reSetAtk();
+                card.set2FrontAtk();
                 int count = cv.Children.Count;
                 CardUI top = cv.Children[count - 1] as CardUI;
                 if (top.Status == Status.FRONT_ATK || top.Status == Status.BACK_ATK)
