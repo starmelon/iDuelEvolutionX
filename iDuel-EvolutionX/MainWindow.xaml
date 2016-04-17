@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:iDuel_EvolutionX.UI"
         xmlns:local2="clr-namespace:iDuel_EvolutionX.Model"
         xmlns:local3="clr-namespace:iDuel_EvolutionX.DataConverter"
-        Title="iDuel-EvolutionX" BorderThickness="1"  WindowStyle="None" Width="981" Height="628" BorderBrush="Black"   ResizeMode="NoResize" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="Unspecified" MouseDown="Window_MouseDown" AllowsTransparency="False" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown"  >
+        Title="iDuel-EvolutionX" BorderThickness="1"  WindowStyle="None" Width="981" Height="628" BorderBrush="Black"   ResizeMode="CanMinimize" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="Unspecified" MouseDown="Window_MouseDown" AllowsTransparency="False" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown"  >
     <!--Height = "624" Width = "975"-->
     <Window.Resources>
         <Style x:Key="star" TargetType="ColumnDefinition">
@@ -269,10 +269,33 @@
                 </Rectangle>
                 <!--己方血条数值-->
                 <TextBlock Grid.Column="2" Grid.Row="9" x:Name="tbk_life_P1"  TextAlignment="Center" Text="0" Padding="5" FontSize="17" HorizontalAlignment="Center" />
-                <StackPanel Grid.Column="2" Grid.Row="7" >
-                    <Button x:Name="btn_roll"  Content="roll" Height="{Binding RelativeSource={RelativeSource Self},Path=ActualWidth}" Width="{Binding ElementName=btn_deck,Path=ActualHeight}" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>
-                    <Button x:Name="btn_coin" Grid.Column="2" Grid.Row="7" Content="coin" Height="{Binding RelativeSource={RelativeSource Self},Path=ActualWidth}" Width="{Binding ElementName=btn_deck,Path=ActualHeight}" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>
-                </StackPanel>
+
+                <Grid Grid.Column="2" Grid.Row="7" Background="Transparent" Opacity="1">
+                    <Grid.Triggers>
+                        <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard AutoReverse="False">
+                                    <DoubleAnimation  Storyboard.TargetProperty="Opacity" Duration="00:00:0.3" From="0" To="1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="UIElement.MouseLeave" >
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation  Storyboard.TargetProperty="Opacity" Duration="00:00:0.3" From="1" To="0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Grid.Triggers>
+
+                    <StackPanel  >
+                        <Button x:Name="btn_roll"  Content="roll" Height="40" Width="{Binding RelativeSource={RelativeSource Self},Path=Height}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource GameButton}" />
+                        <Button x:Name="btn_coin"  Content="coin" Margin="0,-1,0,0" Height="40" Width="{Binding RelativeSource={RelativeSource Self},Path=Height}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource GameButton}"/>
+                        <Button x:Name="btn_token" Content="T"    Margin="0,-1,0,0" Height="40" Width="{Binding RelativeSource={RelativeSource Self},Path=Height}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource GameButton}"/>
+                    </StackPanel>
+                </Grid>
+                
+                
 
 
                 <Grid Grid.Column="2" Grid.Row="7" Width="200" Margin="150,0,0,0" Background="Transparent">
@@ -922,65 +945,65 @@
 
 
                     <!-- 指示物栈 -->
-                    <ScrollViewer  Grid.Column="0" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="0" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_1" Orientation="Horizontal" FlowDirection="RightToLeft"  Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="2" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="2" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_2" Orientation="Horizontal" FlowDirection="RightToLeft"  Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="4" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="4" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_3" Orientation="Horizontal" FlowDirection="RightToLeft"  Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="6" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="6" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_4" Orientation="Horizontal" FlowDirection="RightToLeft"  Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="8" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="8" Grid.Row="9" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_5"  Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="0" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer  Grid.Column="0" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_6" Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" />
                     </ScrollViewer>
-                    <ScrollViewer Grid.Column="2" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer Grid.Column="2" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_7" Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" />
                     </ScrollViewer>
-                    <ScrollViewer Grid.Column="4" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer Grid.Column="4" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_8" Orientation="Horizontal" FlowDirection="RightToLeft"  Height="auto"  />
                     </ScrollViewer>
-                    <ScrollViewer Grid.Column="6" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
+                    <ScrollViewer Grid.Column="6" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <StackPanel x:Name="sp_sign_1_9" Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" VerticalAlignment="Top" />
                     </ScrollViewer>
-                    <ScrollViewer Grid.Column="8" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Top">
-                        <StackPanel x:Name="sp_sign_1_10"  Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" VerticalAlignment="Top"/>
+                    <ScrollViewer  Grid.Column="8" Grid.Row="7" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <StackPanel x:Name="sp_sign_1_10" Orientation="Horizontal" FlowDirection="RightToLeft" Height="auto" VerticalAlignment="Top"/>
                     </ScrollViewer>
 
-                    <ScrollViewer  Grid.Column="8" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="8" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_1" Orientation="Horizontal" FlowDirection="LeftToRight"   Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="6" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="6" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_2" Orientation="Horizontal" FlowDirection="LeftToRight"   Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="4" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="4" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_3" Orientation="Horizontal" FlowDirection="LeftToRight"   Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="2" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="2" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_4" Orientation="Horizontal" FlowDirection="LeftToRight"  Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="0" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="0" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_5" Orientation="Horizontal" FlowDirection="LeftToRight"   Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="8" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="8" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_6" Orientation="Horizontal" FlowDirection="LeftToRight"  Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="6" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="6" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_7" Orientation="Horizontal" FlowDirection="LeftToRight"  Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="4" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="4" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_8" Orientation="Horizontal" FlowDirection="LeftToRight"   Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="2" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="2" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_9" Orientation="Horizontal" FlowDirection="LeftToRight"  Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
-                    <ScrollViewer  Grid.Column="0" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" VerticalAlignment="Bottom">
+                    <ScrollViewer  Grid.Column="0" Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Bottom">
                         <StackPanel x:Name="sp_sign_2_10" Orientation="Horizontal" FlowDirection="LeftToRight"  Height="auto" VerticalAlignment="Bottom" />
                     </ScrollViewer>
                     
@@ -1035,7 +1058,38 @@
 
             </Grid>
 
-            <Canvas Grid.Column="3"  x:Name="Battle" />
+            <Canvas Grid.Column="3"  x:Name="Battle" >
+                <Image Name="img_summon" Source="/Image/summon_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+                <Image Name="img_overlay" Source="/Image/overlay_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+                <Image Name="img_synchro" Source="/Image/synchro_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Canvas>
             <Canvas Grid.Column="3" RenderTransformOrigin="0.5,0.5" x:Name="OpBattle">
                 <Canvas.RenderTransform>
                     <TransformGroup>
@@ -1045,6 +1099,36 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Canvas.RenderTransform>
+                <Image Name="img_summon_op" Source="/Image/summon_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+                <Image Name="img_overlay_op" Source="/Image/overlay_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+                <Image Name="img_synchro_op" Source="/Image/synchro_circle.png" Width="100" Height="100" RenderOptions.BitmapScalingMode="HighQuality"  IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5" >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <RotateTransform/>
+                            <SkewTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
             </Canvas>
 
 

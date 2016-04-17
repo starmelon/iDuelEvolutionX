@@ -939,7 +939,7 @@ namespace iDuel_EvolutionX.Service
                                     #region 指令发送
 
                                     MoveInfo moveInfo = new MoveInfo();
-                                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                                    int cardid = getCardID(card);
                                     moveInfo.cardID = cardid;
                                     moveInfo.isAdd = false;
                                     moveInfo.aimArea = cv_aim.area;
@@ -963,10 +963,19 @@ namespace iDuel_EvolutionX.Service
                                 {
                                     cv_aim.Children.Add(card);
 
+                                    #region 召唤动画
+
+                                    Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                    Canvas.SetLeft(mainwindow.img_overlay, summon2.X - ((mainwindow.img_overlay.Width - cv_aim.ActualWidth) / 2));
+                                    Canvas.SetTop(mainwindow.img_overlay, summon2.Y - ((mainwindow.img_overlay.Height - cv_aim.ActualHeight) / 2));
+                                    CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay);
+
+                                    #endregion
+
                                     #region 指令发送
 
                                     MoveInfo moveInfo = new MoveInfo();
-                                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                                    int cardid = getCardID(card);
                                     moveInfo.cardID = cardid;
                                     moveInfo.isAdd = true;
                                     moveInfo.aimArea = cv_aim.area;
@@ -1142,6 +1151,41 @@ namespace iDuel_EvolutionX.Service
                     //card.set2FrontAtk();
                     cv_aim.Children.Add(card);
 
+                    switch (card.info.sCardType)
+                    {
+                        case "融合怪兽":
+                            break;
+                        case "同调怪兽":
+                            {
+                                #region 召唤动画
+
+                                Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                Canvas.SetLeft(mainwindow.img_synchro, summon2.X - ((mainwindow.img_synchro.Width - cv_aim.ActualWidth) / 2));
+                                Canvas.SetTop(mainwindow.img_synchro, summon2.Y - ((mainwindow.img_synchro.Height - cv_aim.ActualHeight) / 2));
+                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_synchro);
+
+                                #endregion
+                            }
+
+
+                            break;
+                        default:
+                            {
+                                #region 召唤动画
+
+                                Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                Canvas.SetLeft(mainwindow.img_summon, summon2.X - ((mainwindow.img_summon.Width - cv_aim.ActualWidth) / 2));
+                                Canvas.SetTop(mainwindow.img_summon, summon2.Y - ((mainwindow.img_summon.Height - cv_aim.ActualHeight) / 2));
+                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_summon);
+
+                                #endregion
+                            }
+
+                            break;
+                    }
+                    //!card.info.sCardType.Equals("XYZ怪兽") && !card.info.sCardType.Equals("融合怪兽") && !card.info.sCardType.Equals("同调怪兽") && !card.info.CardDType.Contains("灵摆")
+                    
+
                     #region 指令发送
 
                     MoveInfo moveInfo = new MoveInfo();
@@ -1176,7 +1220,7 @@ namespace iDuel_EvolutionX.Service
             int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
             if (cardid == -1)
             {
-                cardid = DuelOperate.getInstance().myself.deck.Extra.IndexOf(card);
+                cardid = -DuelOperate.getInstance().myself.deck.Extra.IndexOf(card) - 1;
             }
 
             return cardid;
@@ -1274,24 +1318,28 @@ namespace iDuel_EvolutionX.Service
 
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
-                ////获得卡片对象
-                //Card card = data.GetData(typeof(BitmapImage)) as Card;
-                ////MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
+                //获得卡片对象
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
+                //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
-                ////判断卡片原有位置的父容器类型
-                //Canvas cv = card.Parent as Canvas;
+                //判断卡片原有位置的父容器类型
+                MyCanvas cv = card.Parent as MyCanvas;
 
-                ////获取放置容器
-                //Canvas cv_aim = sender as Canvas;
+                //获取放置容器
+                MyCanvas cv_aim = sender as MyCanvas;
 
-                ////判断目标位置是否是原位置
-                //if (cv.Name.Equals(cv_aim.Name)) return;
+                //判断目标位置是否是原位置
+                if (cv.area == cv_aim.area) return;
 
-                ////对出发地的判断处理
-                //if (!card.sCardType.Equals("XYZ怪兽") && !card.sCardType.Equals("融合怪兽") && !card.sCardType.Equals("同调怪兽") && !card.CardDType.Contains("灵摆"))
-                //{                 
-                //    return;
-                //}
+                //判断卡片类型
+                if (!card.info.sCardType.Equals("XYZ怪兽") && !card.info.sCardType.Equals("融合怪兽") && !card.info.sCardType.Equals("同调怪兽") && !card.info.CardDType.Contains("灵摆"))
+                {
+                    return;
+                }
+
+                card.getAwayFromParents();
+                cv_aim.Children.Add(card);
+
                 //if (cv.Name.Equals("card_1_hand") || cv.Name.Equals("card_1_Deck"))
                 //{
                 //    return;
@@ -1317,7 +1365,7 @@ namespace iDuel_EvolutionX.Service
 
                 //cv_aim.Children.Add(card);
                 //CardOperate.sort(cv_aim, card);
-                ////card.ContextMenu = CardMenu.cm_deck;
+                //card.ContextMenu = CardMenu.cm_deck;
 
 
 
@@ -1665,238 +1713,291 @@ namespace iDuel_EvolutionX.Service
 
             if (data.GetDataPresent(typeof(BitmapImage)))
             {
-                ////获得卡片对象
-                //Card card = data.GetData(typeof(BitmapImage)) as Card;
-                ////MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
+                //获得卡片对象
+                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
+                //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
 
-                ////判断卡片原有位置的父容器类型
-                //Canvas cv = card.Parent as Canvas;
+                //判断卡片原有位置的父容器类型
+                MyCanvas cv = card.Parent as MyCanvas;
 
-                ////获取放置容器
-                //Canvas cv_aim = sender as Canvas;
+                //获取放置容器
+                MyCanvas cv_aim = sender as MyCanvas;
 
-                ////判断目标位置是否是原位置
-                //if (cv.Name.Equals(cv_aim.Name)) return;
-
-                ////对出发地的判断处理
-
-                //if (cv_magictraps_1.Contains(cv))
-                //{
-                //    if (cv_aim.Children.Count > 0)
-                //    {
-                //        #region 选取对象
-
-                //        if (e.KeyStates == DragDropKeyStates.AltKey && !mb_right.Equals("Pressed"))
-                //        {
-                //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
-
-                //            MyStoryboard msb = CardAnimation.EffectOrigin();
-                //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
-                //            MyStoryboard msb2 = CardAnimation.EffectAim();
-                //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
-                //            return;
-                //        }
-
-                //        #endregion
-                //    }
-                //}
-
-                //if (cv_monsters_1.Contains(cv))
-                //{
-                //    if (cv_aim.Children.Count > 0)
-                //    {
-                //        #region 选取对象
-
-                //        if (e.KeyStates == DragDropKeyStates.AltKey && !mb_right.Equals("Pressed"))
-                //        {
-                //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
-
-                //            MyStoryboard msb = CardAnimation.EffectOrigin();
-                //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
-                //            MyStoryboard msb2 = CardAnimation.EffectAim();
-                //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
-                //            return;
-                //        }
-
-                //        #endregion
-
-                //        #region 攻击宣言
-
-                //        if (e.KeyStates == DragDropKeyStates.None && !mb_right.Equals("Pressed"))
-                //        {
-                //            #region 攻击动画
-
-                //            Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
-                //            Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
-                //            //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
+                if (DuelOperate.getInstance().curPhase == Phase.BP)
+                {
 
 
-                //            MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
-                //            msb.Completed += (object sender_, EventArgs e_) =>
-                //            {
-                //                mainwindow.OpBattle.Children.Remove(msb.sword);
-                //                msb.sword = null;
+                    if (e.KeyStates == DragDropKeyStates.None && !mb_right.Equals("Pressed"))
+                    {
+                        #region 攻击动画
 
-                //            };
-                //            MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
-                //            msb2.Completed += (object sender_, EventArgs e_) =>
-                //            {
-                //                mainwindow.OpBattle.Children.Remove(msb2.sword);
-                //                msb2.sword = null;
-                //            };
-                //            MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
-                //            msb3.Completed += (object sender_, EventArgs e_) =>
-                //            {
-                //                mainwindow.OpBattle.Children.Remove(msb3.sword);
-                //                msb3.sword = null;
-
-                //            };
-                //            MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
-                //            msb4.Completed += (object sender_, EventArgs e_) =>
-                //            {
-                //                mainwindow.OpBattle.Children.Remove(msb4.sword);
-                //                msb4.sword = null;
-                //                //mainwindow.OpBattle.Children.Remove(msb4.sword);
-                //                //msb4.sword = null;
-
-                //            };
+                        Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
+                        Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
+                        //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
-                //            msb4.Begin();
-                //            msb.Begin();
-                //            msb2.Begin();
-                //            msb3.Begin();
+                        MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
+                        msb.Completed += (object sender_, EventArgs e_) =>
+                        {
+                            mainwindow.OpBattle.Children.Remove(msb.sword);
+                            msb.sword = null;
 
-                //            #endregion
+                        };
+                        MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
+                        msb2.Completed += (object sender_, EventArgs e_) =>
+                        {
+                            mainwindow.OpBattle.Children.Remove(msb2.sword);
+                            msb2.sword = null;
+                        };
+                        MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
+                        msb3.Completed += (object sender_, EventArgs e_) =>
+                        {
+                            mainwindow.OpBattle.Children.Remove(msb3.sword);
+                            msb3.sword = null;
 
-                //            DuelOperate.getInstance().sendMsg("Atk=" + card.duelindex + "," + cv_aim.Name, "攻击宣言");
-                //            return;
-                //        }
+                        };
+                        MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
+                        msb4.Completed += (object sender_, EventArgs e_) =>
+                        {
+                            mainwindow.OpBattle.Children.Remove(msb4.sword);
+                            msb4.sword = null;
+                            //mainwindow.OpBattle.Children.Remove(msb4.sword);
+                            //msb4.sword = null;
 
-                //        #endregion
+                        };
 
 
+                        msb4.Begin();
+                        msb.Begin();
+                        msb2.Begin();
+                        msb3.Begin();
+
+                        #endregion
+                    }
+                }
+
+                    ////判断目标位置是否是原位置
+                    //if (cv.Name.Equals(cv_aim.Name)) return;
+
+                    ////对出发地的判断处理
+
+                    //if (cv_magictraps_1.Contains(cv))
+                    //{
+                    //    if (cv_aim.Children.Count > 0)
+                    //    {
+                    //        #region 选取对象
+
+                    //        if (e.KeyStates == DragDropKeyStates.AltKey && !mb_right.Equals("Pressed"))
+                    //        {
+                    //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
+
+                    //            MyStoryboard msb = CardAnimation.EffectOrigin();
+                    //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
+                    //            MyStoryboard msb2 = CardAnimation.EffectAim();
+                    //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
+                    //            return;
+                    //        }
+
+                    //        #endregion
+                    //    }
+                    //}
+
+                    //if (cv_monsters_1.Contains(cv))
+                    //{
+                    //    if (cv_aim.Children.Count > 0)
+                    //    {
+                    //        #region 选取对象
+
+                    //        if (e.KeyStates == DragDropKeyStates.AltKey && !mb_right.Equals("Pressed"))
+                    //        {
+                    //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
+
+                    //            MyStoryboard msb = CardAnimation.EffectOrigin();
+                    //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
+                    //            MyStoryboard msb2 = CardAnimation.EffectAim();
+                    //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
+                    //            return;
+                    //        }
+
+                    //        #endregion
+
+                    //        #region 攻击宣言
+
+                    //        if (e.KeyStates == DragDropKeyStates.None && !mb_right.Equals("Pressed"))
+                    //        {
+                    //            #region 攻击动画
+
+                    //            Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
+                    //            Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
+                    //            //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
+                    //            MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
+                    //            msb.Completed += (object sender_, EventArgs e_) =>
+                    //            {
+                    //                mainwindow.OpBattle.Children.Remove(msb.sword);
+                    //                msb.sword = null;
 
-                //    }
+                    //            };
+                    //            MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
+                    //            msb2.Completed += (object sender_, EventArgs e_) =>
+                    //            {
+                    //                mainwindow.OpBattle.Children.Remove(msb2.sword);
+                    //                msb2.sword = null;
+                    //            };
+                    //            MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
+                    //            msb3.Completed += (object sender_, EventArgs e_) =>
+                    //            {
+                    //                mainwindow.OpBattle.Children.Remove(msb3.sword);
+                    //                msb3.sword = null;
 
-                //    #region 转移控制权
+                    //            };
+                    //            MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
+                    //            msb4.Completed += (object sender_, EventArgs e_) =>
+                    //            {
+                    //                mainwindow.OpBattle.Children.Remove(msb4.sword);
+                    //                msb4.sword = null;
+                    //                //mainwindow.OpBattle.Children.Remove(msb4.sword);
+                    //                //msb4.sword = null;
 
-                //    //if (e.KeyStates == DragDropKeyStates.ShiftKey)
-                //    //{
-                //    //    if (DuelOperate.getInstance().opponent.deck.Main.Contains(card) || DuelOperate.getInstance().opponent.deck.Extra.Contains(card) )
-                //    //    {
-                //    //        card.ToolTip = null;
-                //    //        card.ContextMenu = null;
-                //    //    }
+                    //            };
 
-                //    //    cv.Children.Remove(card);
-                //    //    CardOperate.sort(cv, card);
 
-                //    //    #region 取消拖拽的事件注册
+                    //            msb4.Begin();
+                    //            msb.Begin();
+                    //            msb2.Begin();
+                    //            msb3.Begin();
 
-                //    //    card.PreviewMouseMove -= new MouseEventHandler(DuelEvent.CardDragStart);
-                //    //    card.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble);
+                    //            #endregion
 
-                //    //    card.QueryContinueDrag -= new QueryContinueDragEventHandler(DuelEvent.card_DragContinue);
-                //    //    card.MouseEnter -= new MouseEventHandler(DuelEvent.card_picture_MouseEnter);
+                    //            DuelOperate.getInstance().sendMsg("Atk=" + card.duelindex + "," + cv_aim.Name, "攻击宣言");
+                    //            return;
+                    //        }
 
-                //    //    #endregion
-
-                //    //    #region 转移指示物
-
-                //    //    StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //    //    if (sp.Children.Count > 0)
-                //    //    {
-                //    //        StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                //    //        int count = sp.Children.Count;
-                //    //        for (int i = 0; i < count; i++)
-                //    //        {
-                //    //            Grid gd = sp.Children[0] as Grid;
-                //    //            TextBlock tb = gd.Children[1] as TextBlock;
-                //    //            tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                //    //            sp.Children.Remove(gd);
-                //    //            sp_aim.Children.Add(gd);
-                //    //        }
-                //    //    }
-
-                //    //    #endregion
-
-                //    //    //if (!card.isMine)
-                //    //    //{
-                //    //    //    DuelOperate.getInstance().sendMsg("ControlChange=" + "1," + card.duelindex + "," + cv_aim.Name, "转移控制权");
-                //    //    //    card.isMine = true;
-                //    //    //}
-                //    //    //else if (card.isMine)
-                //    //    //{
-                //    //    //    DuelOperate.getInstance().sendMsg("ControlChange=" + "2," + card.duelindex + "," + cv_aim.Name, "转移控制权");
-                //    //    //    card.isMine = false;
-                //    //    //}
-
-                //    //    DuelOperate.getInstance().sendMsg("ControlChange="  + card.duelindex + "," + cv_aim.Name, "转移控制权");
-                //    //    if (cv_aim.Children.Count > 0)
-                //    //    {
-                //    //        if (card.isDef)
-                //    //        {
-                //    //            card_FrontAtk(card);
-                //    //        }
-                //    //        cv_aim.Children.Insert(0, card);
-                //    //    }
-                //    //    else
-                //    //    {
-                //    //        cv_aim.Children.Add(card);
-                //    //        if (cv.Children.Count > 1 && card.sCardType.Equals("XYZ怪兽"))
-                //    //        {
-                //    //            int ControlChangeNum = cv.Children.Count;
-                //    //            for (int i = 0; i < ControlChangeNum; i++)
-                //    //            {
-                //    //                Card card2 = cv.Children[0] as Card;
-                //    //                Base.getawayParerent(card2);
-                //    //                CardOperate.sort(cv_aim, card2);
-                //    //                //if (!card2.isMine)
-                //    //                //{
-                //    //                //    //DuelOperate.getInstance().sendMsg("ControlChange=" + "1," + card2.duelindex + "," + cv_aim.Name, "转移控制权");
-                //    //                //    card2.isMine = true;
-                //    //                //}
-                //    //                //else if (card2.isMine)
-                //    //                //{
-                //    //                //    //DuelOperate.getInstance().sendMsg("ControlChange=" + "2," + card2.duelindex + "," + cv_aim.Name, "转移控制权");
-                //    //                //    card2.isMine = false;
-                //    //                //}
-
-                //    //                cv_aim.Children.Insert(0, card2);
-
-                //    //                #region 取消拖拽的事件注册
-
-                //    //                card2.PreviewMouseMove -= new MouseEventHandler(DuelEvent.CardDragStart);
-                //    //                card2.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble);
-
-                //    //                card2.QueryContinueDrag -= new QueryContinueDragEventHandler(DuelEvent.card_DragContinue);
-                //    //                card2.MouseEnter -= new MouseEventHandler(DuelEvent.card_picture_MouseEnter);
-
-                //    //                #endregion
-
-                //    //            }
-
-                //    //        }
-                //    //    }
-                //    //    card.SetPic();
-                //    //    CardOperate.sort(cv_aim, card);
+                    //        #endregion
 
 
 
-                //    //    return;
-                //    //}
 
-                //    #endregion
-                //}
 
-                
+                    //    }
 
-                //对目标地的处理
-                
-            }
+                    //    #region 转移控制权
+
+                    //    //if (e.KeyStates == DragDropKeyStates.ShiftKey)
+                    //    //{
+                    //    //    if (DuelOperate.getInstance().opponent.deck.Main.Contains(card) || DuelOperate.getInstance().opponent.deck.Extra.Contains(card) )
+                    //    //    {
+                    //    //        card.ToolTip = null;
+                    //    //        card.ContextMenu = null;
+                    //    //    }
+
+                    //    //    cv.Children.Remove(card);
+                    //    //    CardOperate.sort(cv, card);
+
+                    //    //    #region 取消拖拽的事件注册
+
+                    //    //    card.PreviewMouseMove -= new MouseEventHandler(DuelEvent.CardDragStart);
+                    //    //    card.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble);
+
+                    //    //    card.QueryContinueDrag -= new QueryContinueDragEventHandler(DuelEvent.card_DragContinue);
+                    //    //    card.MouseEnter -= new MouseEventHandler(DuelEvent.card_picture_MouseEnter);
+
+                    //    //    #endregion
+
+                    //    //    #region 转移指示物
+
+                    //    //    StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
+                    //    //    if (sp.Children.Count > 0)
+                    //    //    {
+                    //    //        StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
+                    //    //        int count = sp.Children.Count;
+                    //    //        for (int i = 0; i < count; i++)
+                    //    //        {
+                    //    //            Grid gd = sp.Children[0] as Grid;
+                    //    //            TextBlock tb = gd.Children[1] as TextBlock;
+                    //    //            tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
+                    //    //            sp.Children.Remove(gd);
+                    //    //            sp_aim.Children.Add(gd);
+                    //    //        }
+                    //    //    }
+
+                    //    //    #endregion
+
+                    //    //    //if (!card.isMine)
+                    //    //    //{
+                    //    //    //    DuelOperate.getInstance().sendMsg("ControlChange=" + "1," + card.duelindex + "," + cv_aim.Name, "转移控制权");
+                    //    //    //    card.isMine = true;
+                    //    //    //}
+                    //    //    //else if (card.isMine)
+                    //    //    //{
+                    //    //    //    DuelOperate.getInstance().sendMsg("ControlChange=" + "2," + card.duelindex + "," + cv_aim.Name, "转移控制权");
+                    //    //    //    card.isMine = false;
+                    //    //    //}
+
+                    //    //    DuelOperate.getInstance().sendMsg("ControlChange="  + card.duelindex + "," + cv_aim.Name, "转移控制权");
+                    //    //    if (cv_aim.Children.Count > 0)
+                    //    //    {
+                    //    //        if (card.isDef)
+                    //    //        {
+                    //    //            card_FrontAtk(card);
+                    //    //        }
+                    //    //        cv_aim.Children.Insert(0, card);
+                    //    //    }
+                    //    //    else
+                    //    //    {
+                    //    //        cv_aim.Children.Add(card);
+                    //    //        if (cv.Children.Count > 1 && card.sCardType.Equals("XYZ怪兽"))
+                    //    //        {
+                    //    //            int ControlChangeNum = cv.Children.Count;
+                    //    //            for (int i = 0; i < ControlChangeNum; i++)
+                    //    //            {
+                    //    //                Card card2 = cv.Children[0] as Card;
+                    //    //                Base.getawayParerent(card2);
+                    //    //                CardOperate.sort(cv_aim, card2);
+                    //    //                //if (!card2.isMine)
+                    //    //                //{
+                    //    //                //    //DuelOperate.getInstance().sendMsg("ControlChange=" + "1," + card2.duelindex + "," + cv_aim.Name, "转移控制权");
+                    //    //                //    card2.isMine = true;
+                    //    //                //}
+                    //    //                //else if (card2.isMine)
+                    //    //                //{
+                    //    //                //    //DuelOperate.getInstance().sendMsg("ControlChange=" + "2," + card2.duelindex + "," + cv_aim.Name, "转移控制权");
+                    //    //                //    card2.isMine = false;
+                    //    //                //}
+
+                    //    //                cv_aim.Children.Insert(0, card2);
+
+                    //    //                #region 取消拖拽的事件注册
+
+                    //    //                card2.PreviewMouseMove -= new MouseEventHandler(DuelEvent.CardDragStart);
+                    //    //                card2.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble);
+
+                    //    //                card2.QueryContinueDrag -= new QueryContinueDragEventHandler(DuelEvent.card_DragContinue);
+                    //    //                card2.MouseEnter -= new MouseEventHandler(DuelEvent.card_picture_MouseEnter);
+
+                    //    //                #endregion
+
+                    //    //            }
+
+                    //    //        }
+                    //    //    }
+                    //    //    card.SetPic();
+                    //    //    CardOperate.sort(cv_aim, card);
+
+
+
+                    //    //    return;
+                    //    //}
+
+                    //    #endregion
+                    //}
+
+
+
+                    //对目标地的处理
+
+                }
         }
 
         #endregion
@@ -3297,7 +3398,9 @@ namespace iDuel_EvolutionX.Service
             csv.Left = p.X - ((csv.Width - mainwindow.card_1_8.ActualWidth) / 2);
             mcv.AllowDrop = false;
             csv.ShowDialog();
-            
+            //csv
+
+
         }
 
         /// <summary>

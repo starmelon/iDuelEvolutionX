@@ -131,4 +131,15 @@ namespace iDuel_EvolutionX.EventJson
         public string curDef;
         public string remark;              
     }
+
+    public class PhaseInfo
+    {
+        public Phase phase;
+    }
+
+    public class Atk
+    {
+        public int cardID;
+        public int aimID;
+    }
 }

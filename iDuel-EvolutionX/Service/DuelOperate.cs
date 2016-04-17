@@ -40,7 +40,10 @@ namespace NBX3.Service
         public Deck temp_deck;
         public int main = -1;
         public int extra = -1;
+        public Phase curPhase = Phase.STOP;
+
         
+
         private DuelOperate()
         {
             myself = new Duelist();
@@ -669,6 +672,45 @@ namespace NBX3.Service
             Color bs2 = (Color)mainwindow.bd_step2.Effect.GetValue(DropShadowEffect.ColorProperty);
             if (bs == Colors.Blue && bs2 == Colors.Blue)
             {
+                switch (rta.Name)
+                {
+                    case "rta_dp":
+                        curPhase = Phase.DP;
+                        break;
+                    case "rta_sp":
+                        curPhase = Phase.SP;
+                        break;
+                    case "rta_m1":
+                        curPhase = Phase.M1;
+                        break;
+                    case "rta_bp":
+                        curPhase = Phase.BP;
+                        break;
+                    case "rta_m2":
+                        curPhase = Phase.M2;
+                        break;
+                    case "rta_ep":
+                        curPhase = Phase.EP;
+                        break;
+                    default:
+                        curPhase = Phase.STOP;
+                        break;
+                }
+
+                #region 指令发送
+
+                PhaseInfo moveInfo = new PhaseInfo();
+                String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.GAME_SET_PHASE;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
+
+                #endregion
                 //DuelOperate.getInstance().sendMsg("ChangePhase=" + rta.Name, rta.Name.Replace("rta_", "").ToUpper() + " 阶段");
 
                 int press = Grid.GetColumn(rta);
@@ -994,9 +1036,11 @@ namespace NBX3.Service
         /// <param name="report"></param>
         public void sendMsg(string msg)
         {
+            //return;
+
             sendstack.Add(sendstack.Count, msg);
 
-            receiveMsg(msg);
+            //receiveMsg(msg);
 
             if (Server.check())
             {
@@ -1153,6 +1197,39 @@ namespace NBX3.Service
 
                     break;
                 case ActionCommand.GAME_SET_PHASE:
+                    {
+                        PhaseInfo phase = JsonConvert.DeserializeObject<PhaseInfo>(bj.json);
+                        Rectangle rta = null;
+                        switch (phase.phase)
+                        {
+                            case Phase.STOP:
+                                break;
+                            case Phase.DP:
+                                rta = mainwindow.FindName("rta_dp") as Rectangle;
+                                break;
+                            case Phase.SP:
+                                rta = mainwindow.FindName("rta_sp") as Rectangle;
+                                break;
+                            case Phase.M1:
+                                rta = mainwindow.FindName("rta_m1") as Rectangle;
+                                break;
+                            case Phase.BP:
+                                rta = mainwindow.FindName("rta_bp") as Rectangle;
+                                break;
+                            case Phase.M2:
+                                rta = mainwindow.FindName("rta_m2") as Rectangle;
+                                break;
+                            case Phase.EP:
+                                rta = mainwindow.FindName("rta_ep") as Rectangle;
+                                break;
+                        }
+
+
+
+                        int press = Grid.GetColumn(rta);
+                        OpponentOperate.ChangePhase(rta, press);
+                        
+                    }
                     break;
                 case ActionCommand.GAME_DRAW:
                     {
@@ -1187,7 +1264,16 @@ namespace NBX3.Service
                 case ActionCommand.CARD_MOVE:
                     {
                         MoveInfo moveInfo = JsonConvert.DeserializeObject<MoveInfo>(bj.json);
-                        CardUI card = opponent.deck.Main[moveInfo.cardID];
+                        CardUI card = null;
+                        if (moveInfo.cardID<0)
+                        {
+                            card = opponent.deck.Extra[-moveInfo.cardID-1];
+                        }
+                        else
+                        {
+                            card = opponent.deck.Main[moveInfo.cardID];
+                        }
+                         
                         MyCanvas mcv_orgin = card.Parent as MyCanvas;
                         MyCanvas mcv_aim = getCanvasByArea(moveInfo.aimArea);
                         Point start = card.TranslatePoint(new Point(), mainwindow.OpBattle);
@@ -1415,7 +1501,7 @@ namespace NBX3.Service
                                 .addAnime(msb2)
                                 .Begin(card);
 
-                            break;
+                            
                         }
 
                         #endregion
@@ -1519,6 +1605,9 @@ namespace NBX3.Service
                                 default:
                                     break;
                             }
+
+                            
+                            
                             //if (mcv_aim.area == Area.GRAVEYARD_OP)
                             //{
                             //    start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
@@ -1654,32 +1743,84 @@ namespace NBX3.Service
 
                         #region 表防→表攻
 
-                        //if ((card.Status == Status.FRONT_DEF || card.Status == Status.FRONT_DEF) && moveInfo.aimStatus == Status.FRONT_ATK)
-                        //{
-                        //    if (mcv_aim.area == Area.GRAVEYARD_OP)
-                        //    {
-                        //        start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
-                        //        start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                        if (mcv_orgin.area == Area.EXTRA_OP)
+                        {
+                            switch (mcv_aim.area)
+                            {
+                                case Area.MONSTER_1_OP:
+                                case Area.MONSTER_2_OP:
+                                case Area.MONSTER_3_OP:
+                                case Area.MONSTER_4_OP:
+                                case Area.MONSTER_5_OP:
+                                    {
+                                        switch (card.info.sCardType)
+                                        {
+                                            case "XYZ怪兽":
+                                                {
+                                                    if (moveInfo.isAdd && mcv_aim.Children.Count > 0)
+                                                    {
+                                                        #region 召唤动画
 
-                        //        card.getAwayFromParents();
-                        //        Canvas.SetLeft(card, start.X);
-                        //        Canvas.SetTop(card, start.Y);
-                        //        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                        //        MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
-                        //        MyStoryboard msb = CanvasXY(start, end, 500);
-                        //        msb.card = card;
-                        //        msb.Completed += (object c, EventArgs d) =>
-                        //        {
-                        //            msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                        //            msb.card.BeginAnimation(Canvas.TopProperty, null);
-                        //            msb.card.getAwayFromParents();
-                        //            msb.card.set2FrontAtk();
-                        //            mcv_aim.Children.Add(msb.card);
+                                                        Point summon2 = mcv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.OpBattle);
+                                                        Canvas.SetLeft(mainwindow.img_overlay_op, summon2.X - ((mainwindow.img_overlay_op.Width - mcv_aim.ActualWidth) / 2));
+                                                        Canvas.SetTop(mainwindow.img_overlay_op, summon2.Y - ((mainwindow.img_overlay_op.Height - mcv_aim.ActualHeight) / 2));
+                                                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay_op);
 
-                        //        };
-                        //        msb.Begin(card);
-                        //    }
-                        //}
+                                                        #endregion
+                                                    }
+                                                    else
+                                                    {
+                                                        #region 召唤动画
+
+                                                        Point summon2 = mcv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.OpBattle);
+                                                        Canvas.SetLeft(mainwindow.img_summon_op, summon2.X - ((mainwindow.img_summon_op.Width - mcv_aim.ActualWidth) / 2));
+                                                        Canvas.SetTop(mainwindow.img_summon_op, summon2.Y - ((mainwindow.img_summon_op.Height - mcv_aim.ActualHeight) / 2));
+                                                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_summon_op);
+
+                                                        #endregion
+                                                    }
+
+                                                }
+
+                                                break;
+                                            case "融合怪兽":
+                                                break;
+                                            case "同调怪兽":
+                                                {
+                                                    #region 召唤动画
+
+                                                    Point summon2 = mcv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.OpBattle);
+                                                    Canvas.SetLeft(mainwindow.img_synchro_op, summon2.X - ((mainwindow.img_synchro_op.Width - mcv_aim.ActualWidth) / 2));
+                                                    Canvas.SetTop(mainwindow.img_synchro_op, summon2.Y - ((mainwindow.img_synchro_op.Height - mcv_aim.ActualHeight) / 2));
+                                                    CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_synchro_op);
+
+                                                    #endregion
+                                                }
+
+
+                                                break;
+                                            default:
+                                                {
+                                                    #region 召唤动画
+
+                                                    Point summon2 = mcv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                                    Canvas.SetLeft(mainwindow.img_summon, summon2.X - ((mainwindow.img_summon.Width - mcv_aim.ActualWidth) / 2));
+                                                    Canvas.SetTop(mainwindow.img_summon, summon2.Y - ((mainwindow.img_summon.Height - mcv_aim.ActualHeight) / 2));
+                                                    CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_summon);
+
+                                                    #endregion
+                                                }
+
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                      
 
                         #endregion
                     }
@@ -1704,7 +1845,15 @@ namespace NBX3.Service
                 case ActionCommand.CARD_SIGN_ACTION:
                     {
                         SignInfo signInfo = JsonConvert.DeserializeObject<SignInfo>(bj.json);
-                        CardUI card = opponent.deck.Main[signInfo.cardID];
+                        CardUI card = null;
+                        if (signInfo.cardID < 0)
+                        {
+                            card = opponent.deck.Extra[-signInfo.cardID - 1];
+                        }
+                        else
+                        {
+                            card = opponent.deck.Main[signInfo.cardID];
+                        }
                         MyCanvas mcv = card.Parent as MyCanvas;
                         StackPanel sp = mcv.signs;
                         sp.Children.Clear();
@@ -1727,6 +1876,9 @@ namespace NBX3.Service
                     }
                     break;
                 case ActionCommand.CARD_ATK:
+                    {
+
+                    }
                     break;
                 case ActionCommand.CARD_STATUS_CHANGE:
                     {

@@ -287,7 +287,18 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        public static void Rotate_Scale_FadeInAndOut(FrameworkElement uie)
+        {
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(Rotate(0, 180, 1100));
+            msb.Children.Add(scaleX(0, 1.5, 900));
+            msb.Children.Add(ScaleY(0, 1.5, 900));
+            msb.Children.Add(Opacity(1,0, 1100));
 
+            msb.FillBehavior = FillBehavior.Stop;
+
+            msb.Begin(uie); 
+        }
 
 
         /// <summary>
@@ -1277,7 +1288,7 @@ namespace iDuel_EvolutionX.UI
                 EasingMode = EasingMode.EaseOut
             };
             yA.EasingFunction = easing;
-            Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"));
+            Storyboard.SetTargetProperty(yA, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"));
             return yA;
         }
 
@@ -1394,6 +1405,37 @@ namespace iDuel_EvolutionX.UI
             Storyboard.SetTargetProperty(da, new PropertyPath("Opacity"));
 
             return da;
+        }
+
+        public static DoubleAnimationUsingKeyFrames Opacity(double from, double to, double time)
+        {
+            DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
+
+            LinearDoubleKeyFrame keyFram = new LinearDoubleKeyFrame();
+            keyFram.Value = 0;
+            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0));
+            keyFramesAnimation.KeyFrames.Add(keyFram);
+
+            LinearDoubleKeyFrame keyFram2 = new LinearDoubleKeyFrame();
+            keyFram2.Value = 1;
+            keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time*0.23d));
+            keyFramesAnimation.KeyFrames.Add(keyFram2);
+
+            LinearDoubleKeyFrame keyFram3 = new LinearDoubleKeyFrame();
+            keyFram3.Value = 1;
+            keyFram3.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time*0.77d));
+            keyFramesAnimation.KeyFrames.Add(keyFram3);
+
+            LinearDoubleKeyFrame keyFram4 = new LinearDoubleKeyFrame();
+            keyFram3.Value = 0;
+            keyFram3.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
+            keyFramesAnimation.KeyFrames.Add(keyFram4);
+
+
+            Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("Opacity"));
+
+            return keyFramesAnimation;
         }
 
         #endregion

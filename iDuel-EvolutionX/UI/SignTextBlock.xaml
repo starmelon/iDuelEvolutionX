@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:iDuel_EvolutionX.UI"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Style="{DynamicResource SignTextBlock}">
+             d:DesignHeight="300" d:DesignWidth="300" Style="{DynamicResource SignTextBlock}" IsHitTestVisible="True"  >
     <UserControl.Resources>
         <SolidColorBrush x:Key="UserControl.MouseOver.Background" Color="#FFBEE6FD"/>
         <SolidColorBrush x:Key="UserControl.MouseOver.Border" Color="#FF3C7FB1"/>
@@ -16,13 +16,13 @@
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Grid>
-                            <Border x:Name="ellipse" CornerRadius="12.5" BorderThickness="2" BorderBrush="{TemplateBinding UserControl.BorderBrush}"  Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Style="{DynamicResource bd_style}" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" >
+                        <Grid Name="gird">
+                            <!--<Border x:Name="ellipse" CornerRadius="12.5"  BorderThickness="2" BorderBrush="{TemplateBinding UserControl.BorderBrush}"  Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Style="{DynamicResource bd_style}" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" >
                                 <Border.Effect>
                                     <DropShadowEffect Color="#d24726" BlurRadius="5" Direction="225"  ShadowDepth="0" Opacity="1" />
                                 </Border.Effect>
-                            </Border>
-                            <!--<Ellipse x:Name="ellipse" StrokeThickness="2" Stroke="{TemplateBinding UserControl.BorderBrush}" Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Fill="{TemplateBinding UserControl.Background}" SizeChanged="ellipse_SizeChanged" />-->
+                            </Border>-->
+                            <Ellipse x:Name="ellipse"  StrokeThickness="2" Stroke="{TemplateBinding UserControl.BorderBrush}" Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Fill="{TemplateBinding UserControl.Background}" SizeChanged="ellipse_SizeChanged" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" />
 
                             <TextBlock 
                                 x:Name="content" Text="{TemplateBinding UserControl.Content}"   
@@ -36,12 +36,17 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.MouseOver.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.MouseOver.Border}"/>
+                                <!--<Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.MouseOver.Border}"/>-->
+                                <Setter Property="Fill" TargetName="ellipse" Value="{Binding ElementName=ellipse,Path=Stroke}"/>
+                                <Setter Property="Fill" TargetName="ellipse" Value="{Binding ElementName=ellipse,Path=Stroke}"/>
+                                <!--<Setter Property="Background" TargetName="gird" Value="{Binding ElementName=ellipse,Path=Fill}"></Setter>-->
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Border}"/>
+                                <!--<Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Border}"/>-->
+                                <Setter Property="Fill" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Background}"/>
+                                <Setter Property="Fill" TargetName="ellipse" Value="{StaticResource UserControl.Disabled.Border}"/>
                                 <Setter Property="TextElement.Foreground" TargetName="content" Value="{StaticResource UserControl.Disabled.Foreground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>

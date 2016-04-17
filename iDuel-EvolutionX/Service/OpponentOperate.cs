@@ -804,7 +804,7 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         /// <param name="rta"></param>
         /// <param name="press"></param>
-        private static void ChangePhase(Rectangle rta, int press)
+        public static void ChangePhase(Rectangle rta, int press)
         {
 
 
@@ -887,7 +887,7 @@ namespace iDuel_EvolutionX.Service
         }
 
         #endregion
-
+         
         #region <-- 选择对象 -->
 
         /// <summary>

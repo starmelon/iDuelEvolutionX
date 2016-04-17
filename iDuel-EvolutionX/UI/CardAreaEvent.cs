@@ -129,7 +129,14 @@ namespace iDuel_EvolutionX.UI
         public static void add2Extra(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
-            card.set2BackAtk();
+            if (card.info.CardDType.Contains("灵摆"))
+            {
+                card.set2FrontAtk();
+            }
+            else
+            {
+                card.set2BackAtk();
+            }
             card.centerAtVerticalInParent();
             card.clearSigns();
             
@@ -583,7 +590,14 @@ namespace iDuel_EvolutionX.UI
         public static void add2ExtraOP(MyCanvas cv, CardUI card)
         {
             card.reSetAtk();
-            card.set2BackAtk();
+            if (card.info.CardDType.Contains("灵摆"))
+            {
+                card.set2FrontAtk();
+            }
+            else
+            {
+                card.set2BackAtk();
+            }
             card.centerAtVerticalInParent();
             card.clearSigns();
 

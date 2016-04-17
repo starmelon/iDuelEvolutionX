@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="UI/ResourceDictionary/TextBlockNum.xaml"/>
                 <ResourceDictionary Source="UI/ResourceDictionary/MyBorder.xaml"/>
                 <ResourceDictionary Source="UI/ResourceDictionary/MyMenuItem.xaml"/>
+                <ResourceDictionary Source="UI/ResourceDictionary/GameButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

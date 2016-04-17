@@ -57,56 +57,68 @@ namespace iDuel_EvolutionX.UI
             MyStoryboard msb = CardAnimation.scalXY_120();
             msb.Completed += (object c, EventArgs d) =>
             {
-
-                while (mcv.Children.Count != 0)
+                if (mcv_from.area == Area.MAINDECK)
                 {
-                    Random r = new Random(40);
-                    int which = r.Next(mcv.Children.Count);
-                    CardUI card = mcv.Children[which] as CardUI;
-                    card.getAwayFromParents();
-                    switch (mcv_from.area)
+                    while (mcv.Children.Count != 0)
                     {
-                        case Area.MAINDECK:
-                            card.set2BackAtk();
-                            break;
-                        case Area.GRAVEYARD:
-                            break;
-                        case Area.BANISH:
-                            break;
-                        case Area.SPACE:
-                            break;
-                        case Area.EXTRA:
-                            break;
-                        case Area.MONSTER_1:
-                            break;
-                        case Area.MONSTER_2:
-                            break;
-                        case Area.MONSTER_3:
-                            break;
-                        case Area.MONSTER_4:
-                            break;
-                        case Area.MONSTER_5:
-                            break;
-                        default:
-                            break;
+                        Random r = new Random(40);
+                        int which = r.Next(mcv.Children.Count);
+                        CardUI card = mcv.Children[which] as CardUI;
+                        card.getAwayFromParents();
+                        card.set2BackAtk();
+                        mcv_from.Children.Add(card);
+                        card.BeginAnimation(Canvas.LeftProperty, null);
+                        card.BeginAnimation(Canvas.TopProperty, null);
+                        card.centerAtVerticalInParent();
                     }
-
-                    mcv_from.Children.Add(card);
-                    card.BeginAnimation(Canvas.LeftProperty, null);
-                    card.BeginAnimation(Canvas.TopProperty, null);
-                    card.centerAtVerticalInParent();
                 }
+                else
+                {
+                    while (mcv.Children.Count != 0)
+                    {
+                        CardUI card = mcv.Children[0] as CardUI;
+                        card.getAwayFromParents();
+                        switch (mcv_from.area)
+                        {
+                            case Area.BANISH:
+                                if (card.StatusLast == Status.BACK_ATK)
+                                {
+                                    card.set2BackAtk();
+                                }
+                                break;
+                            case Area.EXTRA:
+                                
+                                break;
+                            default:
+                                break;
+                        }
+
+                        mcv_from.Children.Add(card);
+                        card.BeginAnimation(Canvas.LeftProperty, null);
+                        card.BeginAnimation(Canvas.TopProperty, null);
+                        card.centerAtVerticalInParent();
+                    }
+                }
+                
                 addTheDelegateOfMCV();
 
                 mcv_from.AllowDrop = true;
-                MyStoryboard msb0 = CardAnimation.scalXY_021(mcv_from.Children);
-                //msb0.FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop;
-                msb0.Completed += (object c0, EventArgs d0) =>
+                if (mcv_from.Children.Count == 0)
                 {
                     this.Close();
+                }
+                else
+                {
+                    MyStoryboard msb0 = CardAnimation.scalXY_021(mcv_from.Children);
+                    //msb0.FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop;
+                    msb0.Completed += (object c0, EventArgs d0) =>
+                    {
+                        this.Close();
 
-                };
-                msb0.Begin();
+                    };
+                    msb0.Begin();
+                }
+                
             };
             msb.Begin(this);
         }

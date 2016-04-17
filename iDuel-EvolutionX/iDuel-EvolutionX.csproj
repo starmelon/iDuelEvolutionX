@@ -15,6 +15,8 @@
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>发布\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,8 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,6 +54,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Image\Iduel.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -106,6 +109,7 @@
     <Compile Include="Model\CardInfo.cs" />
     <Compile Include="Model\Deck.cs" />
     <Compile Include="Model\Location.cs" />
+    <Compile Include="Model\Phasecs.cs" />
     <Compile Include="Model\Position.cs" />
     <Compile Include="Model\Status.cs" />
     <Compile Include="Net\TcpCommon.cs" />
@@ -201,6 +205,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Drop2MonsterWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ResourceDictionary\GameButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -335,6 +343,27 @@
       <Project>{1c3f7628-7590-4bad-ab4c-b89b58a0d001}</Project>
       <Name>TransLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\summon_circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\overLay_circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\synchro_circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="www.ico.la_b916e5578638376b1bc517767fbd0060_128X128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="www.ico.la_8fe135e4c13f1fd60b04842175967dd7_256X256.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\icon_256X256.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Iduel.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets')" />
