@@ -137,7 +137,7 @@ namespace iDuel_EvolutionX.EventJson
         public Phase phase;
     }
 
-    public class Atk
+    public class AtkInfo
     {
         public int cardID;
         public int aimID;

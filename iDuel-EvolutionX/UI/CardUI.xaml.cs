@@ -274,7 +274,7 @@ namespace iDuel_EvolutionX.UI
                             return;
                         }
                     }
-                    if (info.CardDType.Contains("同调"))
+                    if (info.sCardType.Contains("同调"))
                     {
                         originalImage = new BitmapImage(new Uri("/Image/Cardpic/GTT.jpg", UriKind.Relative));
                         return;

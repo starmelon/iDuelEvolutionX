@@ -1226,7 +1226,16 @@ namespace iDuel_EvolutionX.Service
             return cardid;
         }
 
+        public static int getCardIDOP(CardUI card)
+        {
+            int cardid = DuelOperate.getInstance().opponent.deck.Main.IndexOf(card);
+            if (cardid == -1)
+            {
+                cardid = -DuelOperate.getInstance().opponent.deck.Extra.IndexOf(card) - 1;
+            }
 
+            return cardid;
+        }
 
         #endregion
 
@@ -1725,55 +1734,77 @@ namespace iDuel_EvolutionX.Service
 
                 if (DuelOperate.getInstance().curPhase == Phase.BP)
                 {
-
-
-                    if (e.KeyStates == DragDropKeyStates.None && !mb_right.Equals("Pressed"))
+                    if (cv_aim.Children.Count > 0)
                     {
-                        #region 攻击动画
 
-                        Point p1 = cv.TranslatePoint(new Point(cv.ActualWidth / 2, cv.ActualHeight / 2), mainwindow.OpBattle);
-                        Point p2 = cv_aim.TranslatePoint(new Point(cv_aim.ActualWidth / 2, cv_aim.ActualHeight / 2), mainwindow.OpBattle);
-                        //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
+                        #region 指令发送
 
+                        AtkInfo atkInfo = new AtkInfo();
+                        CardUI aim = cv_aim.Children[0] as CardUI;
+                        atkInfo.cardID = getCardID(card);
+                        atkInfo.aimID = getCardIDOP(aim);
+                        String contentJson = JsonConvert.SerializeObject(atkInfo);
 
-                        MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
-                        msb.Completed += (object sender_, EventArgs e_) =>
-                        {
-                            mainwindow.OpBattle.Children.Remove(msb.sword);
-                            msb.sword = null;
-
-                        };
-                        MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 700);
-                        msb2.Completed += (object sender_, EventArgs e_) =>
-                        {
-                            mainwindow.OpBattle.Children.Remove(msb2.sword);
-                            msb2.sword = null;
-                        };
-                        MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 600);
-                        msb3.Completed += (object sender_, EventArgs e_) =>
-                        {
-                            mainwindow.OpBattle.Children.Remove(msb3.sword);
-                            msb3.sword = null;
-
-                        };
-                        MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 800);
-                        msb4.Completed += (object sender_, EventArgs e_) =>
-                        {
-                            mainwindow.OpBattle.Children.Remove(msb4.sword);
-                            msb4.sword = null;
-                            //mainwindow.OpBattle.Children.Remove(msb4.sword);
-                            //msb4.sword = null;
-
-                        };
-
-
-                        msb4.Begin();
-                        msb.Begin();
-                        msb2.Begin();
-                        msb3.Begin();
+                        BaseJson bj = new BaseJson();
+                        bj.guid = DuelOperate.getInstance().myself.userindex;
+                        bj.cid = "";
+                        bj.action = ActionCommand.CARD_ATK;
+                        bj.json = contentJson;
+                        String json = JsonConvert.SerializeObject(bj);
+                        DuelOperate.getInstance().sendMsg(json);
 
                         #endregion
+
+
+                        if (e.KeyStates == DragDropKeyStates.None && !mb_right.Equals("Pressed"))
+                        {
+                            #region 攻击动画
+
+                            Point p1 = card.TranslatePoint(new Point(card.ActualWidth / 2, card.ActualHeight / 2), mainwindow.OpBattle);
+                            Point p2 = aim.TranslatePoint(new Point(aim.ActualWidth / 2, aim.ActualHeight / 2), mainwindow.OpBattle);
+                            //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
+
+
+                            MyStoryboard msb = CardAnimation.Atk(p1, p2, 600);
+                            msb.Completed += (object sender_, EventArgs e_) =>
+                            {
+                                mainwindow.OpBattle.Children.Remove(msb.sword);
+                                msb.sword = null;
+
+                            };
+                            MyStoryboard msb2 = CardAnimation.Atk(p1, p2, 500);
+                            msb2.Completed += (object sender_, EventArgs e_) =>
+                            {
+                                mainwindow.OpBattle.Children.Remove(msb2.sword);
+                                msb2.sword = null;
+                            };
+                            MyStoryboard msb3 = CardAnimation.Atk(p1, p2, 400);
+                            msb3.Completed += (object sender_, EventArgs e_) =>
+                            {
+                                mainwindow.OpBattle.Children.Remove(msb3.sword);
+                                msb3.sword = null;
+
+                            };
+                            MyStoryboard msb4 = CardAnimation.Atkline(p1, p2, 600);
+                            msb4.Completed += (object sender_, EventArgs e_) =>
+                            {
+                                mainwindow.OpBattle.Children.Remove(msb4.sword);
+                                msb4.sword = null;
+                                //mainwindow.OpBattle.Children.Remove(msb4.sword);
+                                //msb4.sword = null;
+
+                            };
+
+
+                            msb4.Begin();
+                            msb.Begin();
+                            msb2.Begin();
+                            msb3.Begin();
+
+                            #endregion
+                        }
                     }
+                    
                 }
 
                     ////判断目标位置是否是原位置

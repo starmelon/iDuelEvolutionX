@@ -1042,13 +1042,13 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         /// <param name="Move_cv"></param>
         /// <param name="Move_cv_aim"></param>
-        private static void Atk(Canvas Move_cv, Canvas Move_cv_aim)
+        public static void Atk(CardUI card, CardUI aim)
         {
             TransLibrary.StoryboardChain tls = new TransLibrary.StoryboardChain();
 
-            Point p1 = Move_cv.TranslatePoint(new Point(Move_cv.ActualWidth / 2, Move_cv.ActualHeight / 2), mainwindow.OpBattle);
-            Point p2 = Move_cv_aim.TranslatePoint(new Point(Move_cv_aim.ActualWidth / 2, Move_cv_aim.ActualHeight / 2), mainwindow.OpBattle);
-            double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
+            Point p1 = card.TranslatePoint(new Point(card.ActualWidth / 2, card.ActualHeight / 2), mainwindow.OpBattle);
+            Point p2 = aim.TranslatePoint(new Point(aim.ActualWidth / 2, aim.ActualHeight / 2), mainwindow.OpBattle);
+            //double angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * (180 / Math.PI) + 90;
 
 
             MyStoryboard msb = CardAnimation.Atk(p1, p2, 800);
