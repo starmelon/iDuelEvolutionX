@@ -15,6 +15,11 @@ namespace iDuel_EvolutionX.Model
         public CardUI card { get; set; }
         public List<CardUI> cards;
 
+        public MyStoryboard()
+        {
+            this.FillBehavior = FillBehavior.Stop;
+        }
+        
         public void run(CardUI card) {
             this.card = card;
             this.Begin(card);

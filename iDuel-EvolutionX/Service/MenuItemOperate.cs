@@ -131,19 +131,23 @@ namespace iDuel_EvolutionX.Service
             switch (card.Status)
             {
                 case Status.FRONT_ATK:
-                    CardAnimation.turn2Back(card);
+                    card.set2BackAtk2();
+                    CardAnimation.turn(card);
                     statuschangeInfo.aimStatus = Status.BACK_ATK;
                     break;
                 case Status.FRONT_DEF:
-                    CardAnimation.turn2Back(card);
+                    card.set2BackDef2();
+                    CardAnimation.turn(card);
                     statuschangeInfo.aimStatus = Status.BACK_DEF;
                     break;
                 case Status.BACK_ATK:
-                    CardAnimation.turn2Front(card);
+                    card.set2FrontAtk2();
+                    CardAnimation.turn(card);
                     statuschangeInfo.aimStatus = Status.FRONT_ATK;
                     break;
                 case Status.BACK_DEF:
-                    CardAnimation.turn2Front(card);
+                    card.set2FrontDef2();
+                    CardAnimation.turn(card);
                     statuschangeInfo.aimStatus = Status.FRONT_DEF;
                     break;
                 default:

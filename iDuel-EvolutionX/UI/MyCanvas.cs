@@ -19,12 +19,12 @@ using System.Windows.Shapes;
 namespace iDuel_EvolutionX.UI
 {
     //定义一个当控件拥有元素发生变化时所接受的委托
-    public delegate void CollectionChangeDelegate(MyCanvas mcv,CardUI card);
+    public delegate void CollectionChangeDelegate(MyCanvas mcv, CardUI card);
 
     /// <summary>
     /// MyCanvas.xaml 的交互逻辑
     /// </summary>
-    public partial class MyCanvas : Canvas
+    public class MyCanvas : Canvas
     {
         public Area area = Area.NON_VALUE;
         public Position x;
@@ -41,7 +41,7 @@ namespace iDuel_EvolutionX.UI
             set
             {
                 whenRemoveChildren = value;
-                
+
             }
         }
         private event CollectionChangeDelegate whenAddChildren;
@@ -74,10 +74,10 @@ namespace iDuel_EvolutionX.UI
 
         public MyCanvas()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
 
-        
+
 
         protected override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent)
         {
@@ -97,18 +97,18 @@ namespace iDuel_EvolutionX.UI
 
             return re.ToString();
 
-            
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string strValue = value as string;
-            return Int32.Parse (strValue);
+            return Int32.Parse(strValue);
             //return DependencyProperty.UnsetValue;
         }
     }
 
-    
+
 
     /// <summary>
     ///自定义的转换器
@@ -128,7 +128,7 @@ namespace iDuel_EvolutionX.UI
             if (mcv.Children.Count > 0)
             {
                 CardUI card = mcv.Children[mcv.Children.Count - 1] as CardUI;
-                if ( card.info.sCardType.Contains("魔法") || card.info.sCardType.Contains("陷阱") )
+                if (card.info.sCardType.Contains("魔法") || card.info.sCardType.Contains("陷阱"))
                 {
                     return null;
                 }
@@ -220,9 +220,9 @@ namespace iDuel_EvolutionX.UI
             OnPropertyChanged("Item[]");
             if (owner.WhenAddChildren != null)
             {
-                owner.WhenAddChildren(owner,element as CardUI);
+                owner.WhenAddChildren(owner, element as CardUI);
             }
-            
+
             return index;
         }
 
@@ -261,9 +261,9 @@ namespace iDuel_EvolutionX.UI
                 {
                     owner.WhenRemoveChildren(owner, element as CardUI);
                 }
-    
+
             }
-            
+
         }
 
         public override UIElement this[int index]
@@ -299,3 +299,4 @@ namespace iDuel_EvolutionX.UI
         }
     }
 }
+

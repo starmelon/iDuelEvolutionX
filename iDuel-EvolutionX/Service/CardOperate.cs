@@ -3748,7 +3748,8 @@ namespace iDuel_EvolutionX.Service
                     CardOperate.sort_HandCard(cv_aim);
                     foreach (CardUI card in cards)
                     {
-                        CardAnimation.turn2Front(card);
+                        card.set2FrontAtk2();
+                        CardAnimation.turn(card);
 
                     }
                     cv_aim.WhenAddChildren += new CollectionChangeDelegate(CardAreaEvent.add2Hand);

@@ -1,5 +1,6 @@
 ﻿using iDuel_EvolutionX.EventJson;
 using iDuel_EvolutionX.Model;
+using iDuel_EvolutionX.Service;
 using NBX3.Service;
 using Newtonsoft.Json;
 using System;
@@ -33,7 +34,7 @@ namespace iDuel_EvolutionX.UI
             card.clearSigns();
             if (card.Status == Status.BACK_ATK)
             {
-                CardAnimation.turn2Front(card);
+                CardAnimation.turn(card);
             }
             else
             {
@@ -43,8 +44,7 @@ namespace iDuel_EvolutionX.UI
             #region 指令发送
 
             MoveInfo moveInfo = new MoveInfo();
-            int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
-            moveInfo.cardID = cardid;
+            moveInfo.cardID = CardOperate.getCardID(card);
             moveInfo.isAdd = true;
             moveInfo.aimArea = cv.area;
             moveInfo.aimStatus = Status.FRONT_ATK;
@@ -465,6 +465,28 @@ namespace iDuel_EvolutionX.UI
 
         #region 敌方区域
 
+        #region
+        /// <summary>
+        /// 卡片进入墓地时，墓地控件的操作
+        /// </summary>
+        /// <param name="cv">墓地控件</param>
+        /// <param name="card">卡片</param>
+        public static void add2OPBattle(MyCanvas cv, CardUI card)
+        {
+
+            if ((card.StatusLast == Status.BACK_DEF || card.StatusLast == Status.BACK_ATK) && card.Status == Status.FRONT_ATK)
+            {
+                CardAnimation.turn(card);
+            }
+
+            if ((card.StatusLast == Status.FRONT_ATK || card.StatusLast == Status.FRONT_DEF) && card.Status == Status.BACK_ATK)
+            {
+                CardAnimation.turn(card);
+            }
+
+        }
+        #endregion
+
         #region 墓地区控件事件
 
         /// <summary>
@@ -480,7 +502,7 @@ namespace iDuel_EvolutionX.UI
             card.clearSigns();
             if ((card.StatusLast == Status.BACK_DEF || card.StatusLast == Status.BACK_ATK ) && card.Status == Status.FRONT_ATK)
             {
-                CardAnimation.turn2Front(card);
+                CardAnimation.turn(card);
             }
 
             //card.set2FrontAtk();

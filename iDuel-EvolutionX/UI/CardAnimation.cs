@@ -333,37 +333,37 @@ namespace iDuel_EvolutionX.UI
 
         }
 
-        /// <summary>
-        /// 表示形式变更
-        /// 背面→正面
-        /// </summary>
-        /// <param name="card"></param>
-        public static void turn2Front(CardUI card)
-        {
-            //setAnimePrepare(card);
+        ///// <summary>
+        ///// 表示形式变更
+        ///// 背面→正面
+        ///// </summary>
+        ///// <param name="card"></param>
+        //public static void turn2Front(CardUI card)
+        //{
+        //    //setAnimePrepare(card);
 
-            MyStoryboard msb0 = scalX_120();
-            msb0.card = card;
-            msb0.Completed += (object c, EventArgs d) =>
-            {
-                switch (msb0.card.Status)
-                {
-                    case Status.BACK_ATK:
-                        msb0.card.Status = Status.FRONT_ATK;
-                        break;
-                    case Status.BACK_DEF:
-                        msb0.card.Status = Status.FRONT_DEF;
-                        break;
-                    default:
-                        break;
-                }
-            };
-            MyStoryboard msb1 = scalX_021();
+        //    MyStoryboard msb0 = scalX_120();
+        //    msb0.card = card;
+        //    msb0.Completed += (object c, EventArgs d) =>
+        //    {
+        //        switch (msb0.card.Status)
+        //        {
+        //            case Status.BACK_ATK:
+        //                msb0.card.Status = Status.FRONT_ATK;
+        //                break;
+        //            case Status.BACK_DEF:
+        //                msb0.card.Status = Status.FRONT_DEF;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    };
+        //    MyStoryboard msb1 = scalX_021();
 
-            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-            animator.addAnime(msb0).addAnime(msb1).Begin(card);
+        //    TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+        //    animator.addAnime(msb0).addAnime(msb1).Begin(card);
 
-        }
+        //}
 
 
         
@@ -1476,20 +1476,57 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard CanvasXY(Point end)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(CanvasX(end.X, 150));
-            msb.Children.Add(CanvasY(end.Y, 150));
+            msb.Children.Add(CanvasX(end.X, 500));
+            msb.Children.Add(CanvasY(end.Y, 500));
 
             return msb;
         }
 
-        public static MyStoryboard CanvasXY_Scale120(Point end) {
+        
+
+        public static MyStoryboard CanvasXY_Scale120(Point end,EventHandler complete) {
 
             
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(CanvasX(end.X, 200));
-            msb.Children.Add(CanvasY(end.Y, 200));
+            msb.Children.Add(CanvasX(end.X, 500));
+            msb.Children.Add(CanvasY(end.Y, 500));
             msb.Children.Add(scaleX(1, 0, 200));
-           
+            msb.Completed += complete;
+            return msb;
+        }
+
+        public static MyStoryboard CanvasXY_Turn(Point end,CardUI card)
+        {
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(CanvasX(end.X, 5000));
+            msb.Children.Add(CanvasY(end.Y, 5000));
+            DoubleAnimation da = scaleX(1, 0, 200);
+            msb.card = card;
+            da.Completed += (sender,e)=> {
+                msb.card.set2FrontAtk();
+            };
+            msb.Children.Add(da);
+            DoubleAnimation da2 = scaleX(0, 1, 200);
+            da2.BeginTime = TimeSpan.FromMilliseconds(200);
+            msb.Children.Add(da2);
+            msb.CurrentTimeInvalidated += Msb_CurrentTimeInvalidated;
+            return msb;
+        }
+
+        private static void Msb_CurrentTimeInvalidated(object sender, EventArgs e)
+        {
+            Console.WriteLine((sender as ClockGroup).CurrentTime);
+            //throw new NotImplementedException();
+        }
+
+        public static MyStoryboard CanvasXY_Scale120(Point end)
+        {
+
+
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(CanvasX(end.X, 500));
+            msb.Children.Add(CanvasY(end.Y, 500));
+            msb.Children.Add(scaleX(1, 0, 200));
             return msb;
         }
 
@@ -2645,6 +2682,77 @@ namespace iDuel_EvolutionX.UI
 
 
         #endregion
+
+        #endregion
+
+        #region 2016.04.20
+
+        
+
+        /// <summary>
+        /// 表示形式变更
+        /// 背面→正面
+        /// </summary>
+        /// <param name="card"></param>
+        public static void turn(CardUI card)
+        {
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator
+                .addAnime(ScaleX_120(150))
+                .addComplete((sender, e) =>{
+                    card.showImg();
+                    })
+                .addAnime(ScaleX_021(200)).Begin(card);
+        }
+
+        public static void move(CardUI card,Point end,MyCanvas aim)
+        {
+            MyStoryboard msb = CardAnimation.CanvasXY(end);
+            msb.Completed += (sender, e) =>
+            {
+                card.getAwayFromParents();
+                card.BeginAnimation(Canvas.LeftProperty, null);
+                card.BeginAnimation(Canvas.TopProperty, null);
+                Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
+                Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
+                aim.Children.Add(card);
+            };
+            msb.Begin(card);
+        }
+
+        public static void move_rotate(CardUI card,Point end,MyCanvas aim)
+        {
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            switch (card.Status)
+            {
+                case Status.FRONT_ATK:
+                case Status.BACK_ATK:
+                    animator.addAnime(CanvasXY_Rotate_9020(end)).addComplete((sender, e) =>
+                    {
+                        card.getAwayFromParents();
+                        card.BeginAnimation(Canvas.LeftProperty, null);
+                        card.BeginAnimation(Canvas.TopProperty, null);
+                        Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
+                        Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
+                        aim.Children.Add(card);
+                    }).Begin(card);
+                    break;
+                case Status.BACK_DEF:
+                case Status.FRONT_DEF:
+                    animator.addAnime(CanvasXY_Rotate_0290(end)).addComplete((sender, e) =>
+                    {
+                        card.getAwayFromParents();
+                        card.BeginAnimation(Canvas.LeftProperty, null);
+                        card.BeginAnimation(Canvas.TopProperty, null);
+                        Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
+                        Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
+                        aim.Children.Add(card);
+                    }).Begin(card);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         #endregion
     }

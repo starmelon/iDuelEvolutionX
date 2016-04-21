@@ -1041,7 +1041,7 @@ namespace NBX3.Service
 
             sendstack.Add(sendstack.Count, msg);
 
-            //receiveMsg(msg);
+            receiveMsg(msg);
 
             if (Server.check())
             {
@@ -1335,14 +1335,16 @@ namespace NBX3.Service
                         #endregion
 
                         card.getAwayFromParents();
-                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                        Canvas.SetLeft(card, start.X);
-                        Canvas.SetTop(card, start.Y);
+
 
                         #region 纯移动
 
                         if (card.Status == moveInfo.aimStatus)
                         {
+                            (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                            Canvas.SetLeft(card, start.X);
+                            Canvas.SetTop(card, start.Y);
+
                             if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
                             {
                                 start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
@@ -1422,6 +1424,10 @@ namespace NBX3.Service
 
                         if (card.Status == Status.BACK_ATK && moveInfo.aimStatus == Status.BACK_DEF)
                         {
+                            (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                            Canvas.SetLeft(card, start.X);
+                            Canvas.SetTop(card, start.Y);
+
                             MyStoryboard msb = CardAnimation.CanvasXY_Rotate_0290(end);
                             msb.card = card;
                             msb.Completed += (sender, e) =>
@@ -1449,6 +1455,8 @@ namespace NBX3.Service
 
                         if (card.Status == Status.BACK_ATK && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
+                            
+
                             if (mcv_aim.Children.Count > 0)
                             {
                                 if (moveInfo.isAdd)
@@ -1461,40 +1469,87 @@ namespace NBX3.Service
                                 }
                             }
 
-                            MyStoryboard msb1 = CardAnimation.CanvasXY_Scale120(end);
-                            msb1.card = card;
-                            msb1.Completed += (sender, e) =>
+                            switch (mcv_orgin.area)
                             {
-                                msb1.card.set2FrontAtk();
-                            };
-                            MyStoryboard msb2 = CardAnimation.scalX_021();
-                            msb2.card = card;
-                            msb2.Completed += (sender, e) =>
-                            {
-                                msb2.card.BeginAnimation(Canvas.LeftProperty, null);
-                                msb2.card.BeginAnimation(Canvas.TopProperty, null);
+                                case Area.GRAVEYARD_OP:
+                                    break;
+                                
+                                case Area.BANISH_OP:
+                                    break;
+                                case Area.SPACE_OP:
+                                    break;
+                                case Area.EXTRA_OP:
+                                    break;
+                                case Area.MAINDECK_OP:
+                                case Area.HAND_OP:
+                                    {
+                                        card.set2FrontAtk2();
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
 
-                                msb2.card.getAwayFromParents();
-                                msb2.card.set2FrontAtk();
-                                if (moveInfo.isAdd)
-                                {
-                                    mcv_aim.Children.Add(msb2.card);
+                                        MyStoryboard msb0 = CardAnimation.CanvasXY(end);
+                                        msb0.card = card;
+                                        msb0.Completed += (sender, e) =>
+                                        {
+                                            msb0.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb0.card.BeginAnimation(Canvas.TopProperty, null);
 
-                                }
-                                else
-                                {
-                                    mcv_aim.Children.Insert(0, msb2.card);
+                                            msb0.card.getAwayFromParents();
+                                            msb0.card.set2FrontAtk2();
 
+                                            if (moveInfo.isAdd)
+                                            {
+                                                mcv_aim.Children.Add(msb0.card);
 
-                                }
+                                            }
+                                            else
+                                            {
+                                                mcv_aim.Children.Insert(0, msb0.card);
 
-                            };
-                            msb2.FillBehavior = FillBehavior.Stop;
-                            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-                            animator
-                                .addAnime(msb1)
-                                .addAnime(msb2)
-                                .Begin(card);
+                                            }
+
+                                        };
+                                        msb0.Begin(card);
+                                        
+                                    }
+                                    break;
+                                case Area.MONSTER_1_OP:
+                                case Area.MONSTER_2_OP:
+                                case Area.MONSTER_3_OP:
+                                case Area.MONSTER_4_OP:
+                                case Area.MONSTER_5_OP:
+                                case Area.MAGICTRAP_1_OP:
+                                case Area.MAGICTRAP_2_OP:
+                                case Area.MAGICTRAP_3_OP:
+                                case Area.MAGICTRAP_4_OP:
+                                case Area.MAGICTRAP_5_OP:
+                                case Area.PENDULUM_LEFT_OP:
+                                case Area.PENDULUM_RIGHT_OP:
+                                    {
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
+
+                                        MyStoryboard msb = CardAnimation.CanvasXY(end);
+                                        msb.card = card;
+                                        msb.Completed += (sender, e) =>
+                                        {
+                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                            msb.card.getAwayFromParents();
+                                            msb.card.set2FrontAtk();
+                                            mcv_aim.Children.Add(msb.card);
+                                        };
+                                        msb.FillBehavior = FillBehavior.Stop;
+                                        msb.Begin(card);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            
 
 
                         }
@@ -1505,6 +1560,10 @@ namespace NBX3.Service
 
                         if ((card.Status == Status.BACK_DEF) && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
+                            (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                            Canvas.SetLeft(card, start.X);
+                            Canvas.SetTop(card, start.Y);
+
                             switch (mcv_aim.area)
                             {
 
@@ -1515,26 +1574,28 @@ namespace NBX3.Service
                                 case Area.MAGICTRAP_5_OP:
                                 case Area.GRAVEYARD_OP:
                                     {
+                                        card.set2FrontAtk2();
                                         start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
                                         start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
-
-                                        card.getAwayFromParents();
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
-                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                                        MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
-                                        //MyStoryboard msb = CanvasXY(start, end, 500);
-                                        msb.card = card;
-                                        msb.Completed += (object c, EventArgs d) =>
-                                        {
-                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                            msb.card.getAwayFromParents();
-                                            msb.card.set2FrontAtk();
-                                            mcv_aim.Children.Add(msb.card);
 
-                                        };
-                                        msb.Begin(card);
+                                        CardAnimation.move_rotate(card, end, mcv_aim);
+
+                                        //MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
+                                        ////MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
+                                        ////MyStoryboard msb = CanvasXY(start, end, 500);
+                                        //msb.card = card;
+                                        //msb.Completed += (object c, EventArgs d) =>
+                                        //{
+                                        //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                                        //    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                                        //    msb.card.getAwayFromParents();
+                                        //    msb.card.set2FrontAtk();
+                                        //    mcv_aim.Children.Add(msb.card);
+
+                                        //};
+                                        //msb.Begin(card);
                                     }
                                     break;
                                 case Area.MONSTER_1_OP:
@@ -1626,80 +1687,54 @@ namespace NBX3.Service
                             //    };
                             //    msb.Begin(card);
                             //}
+                            break;
                         }
 
                         #endregion
 
-                        #region 表攻→背攻
+                        #region →背攻
 
                         if (moveInfo.aimStatus == Status.BACK_ATK)
                         {
+                            
+
                             switch (card.Status)
                             {
                                 case Status.FRONT_ATK:
                                     {
-                                        MyStoryboard msb = CardAnimation.CanvasXY_Scale120(end);
-                                        msb.card = card;
-                                        msb.Completed += (sender, e) =>
-                                        {
+                                        card.set2BackAtk2();
 
-                                            msb.card.getAwayFromParents();
-                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                            Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
-                                            Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
-                                            msb.card.set2BackAtk();
-                                            mcv_aim.Children.Add(card);
-                                        };
-                                        MyStoryboard msb1 = CardAnimation.ScaleX_021(150);
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
 
-                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-                                        animator.addAnime(msb).addAnime(msb1).Begin(card);
-
+                                        CardAnimation.move(card, end, mcv_aim);
                                     }
                                     break;
                                 case Status.FRONT_DEF:
                                     {
-                                        MyStoryboard msb = CardAnimation.CanvasXY_scale120_rotate9020(end);
-                                        msb.card = card;
-                                        msb.Completed += (sender, e) =>
-                                        {
+                                        card.set2BackAtk2();
 
-                                            msb.card.getAwayFromParents();
-                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                            Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
-                                            Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
-                                            msb.card.set2BackAtk();
-                                            mcv_aim.Children.Add(msb.card);
-                                        };
-                                        MyStoryboard msb1 = CardAnimation.ScaleX_021(150);
-                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-                                        animator.addAnime(msb).addAnime(msb1).Begin(card);
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
+
+                                        CardAnimation.move_rotate(card, end, mcv_aim);
+
                                     }
-                                    break;
-                                case Status.BACK_ATK:
                                     break;
                                 case Status.BACK_DEF:
                                     {
+                                        card.set2BackAtk2();
+
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
                                         start.X += (mcv_orgin.ActualHeight - card.Width) / 2 - (mcv_orgin.ActualWidth - card.Height) / 2;
                                         start.Y += -card.Width - (mcv_orgin.ActualHeight - card.Width) / 2 + (mcv_orgin.ActualWidth - card.Height) / 2;
                                         Canvas.SetLeft(card, start.X);
-                                        Canvas.SetTop(card, start.Y); ;
-                                        MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
-                                        msb.card = card;
-                                        msb.Completed += (sender, e) =>
-                                        {
+                                        Canvas.SetTop(card, start.Y);
 
-                                            msb.card.getAwayFromParents();
-                                            msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                            msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                            Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
-                                            Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
-                                            msb.card.set2BackAtk();
-                                            mcv_aim.Children.Add(msb.card);
-                                        };
-                                        msb.Begin(card);
+                                        CardAnimation.move_rotate(card, end, mcv_aim);
+
                                     }
 
                                     break;
@@ -1710,87 +1745,25 @@ namespace NBX3.Service
 
                         #endregion
 
-                        #region 背防→背攻
+                        #region 正防→表攻
 
-                        if (card.Status == Status.BACK_DEF && moveInfo.aimStatus == Status.BACK_ATK)
+                        if (card.Status == Status.FRONT_DEF && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
-                            MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
-                            msb.card = card;
-                            msb.Completed += (sender, e) =>
-                            {
+                            card.set2FrontAtk2();
 
-                                msb.card.getAwayFromParents();
-                                msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                if (moveInfo.isAdd)
-                                {
-                                    mcv_aim.Children.Add(msb.card);
-                                    msb.card.set2BackAtk();
-                                    msb.card.centerAtVerticalInParent();
+                            (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                            start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
+                            start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                            Canvas.SetLeft(card, start.X);
+                            Canvas.SetTop(card, start.Y);
 
-                                }
-                            };
-                            msb.Begin(card);
-                            break;
+                            CardAnimation.move_rotate(card, end, mcv_aim);
+
                         }
 
                         #endregion
 
-                        //#region 召唤动画
-
-                        //if (mcv_orgin.area == Area.EXTRA_OP)
-                        //{
-                        //    switch (mcv_aim.area)
-                        //    {
-                        //        case Area.MONSTER_1_OP:
-                        //        case Area.MONSTER_2_OP:
-                        //        case Area.MONSTER_3_OP:
-                        //        case Area.MONSTER_4_OP:
-                        //        case Area.MONSTER_5_OP:
-                        //            {
-                        //                if (mcv_aim.Children.Count > 0)
-                        //                {
-                        //                    if (moveInfo.isAdd )
-                        //                    {
-                        //                        overlayAnime(mcv_aim);
-                        //                    }
-                        //                }
-                        //                else
-                        //                {
-                        //                    switch (card.info.sCardType)
-                        //                    {
-
-
-                        //                        case "同调怪兽":
-                        //                            {
-                        //                                synchroAnime(mcv_aim);
-                        //                            }
-                        //                            break;
-                        //                        default:
-                        //                            {
-                        //                                summonAnime(mcv_aim);
-                        //                            }
-                        //                            break;
-                        //                    }
-                        //                }
-                                        
-                                        
-                        //            }
-                        //            break;
-                        //        default:
-                        //            break;
-                        //    }
-                        //}
-
-                        //if (mcv_orgin.area == Area.HAND_OP)
-                        //{
-                        //    if (mcv_aim.Children.Count < 2)
-                        //    {
-                        //        summonAnime(mcv_aim);
-                        //    }        
-                        //}
-
-                        //#endregion
+                            
                         }
                     break;
                 case ActionCommand.CARD_DISAPPEAR:
@@ -1886,7 +1859,7 @@ namespace NBX3.Service
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.FRONT_ATK)
                                 {
-                                    CardAnimation.turn2Front(card);
+                                    CardAnimation.turn(card);
                                     CardAreaEvent.bindingAtk(mcv, card);
                                 }                            
                                 break;
@@ -1898,7 +1871,7 @@ namespace NBX3.Service
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.FRONT_DEF)
                                 {
-                                    CardAnimation.turn2Front(card);
+                                    CardAnimation.turn(card);
                                     CardAreaEvent.bindingAtk(mcv, card);
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.BACK_DEF)

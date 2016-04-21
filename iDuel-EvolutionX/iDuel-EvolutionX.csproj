@@ -148,6 +148,7 @@
     <Compile Include="Service\OpponentOperate.cs" />
     <Compile Include="UI\Base.cs" />
     <Compile Include="UI\CardAnimation.cs" />
+    <Compile Include="UI\MyCanvas.cs" />
     <Compile Include="UI\DragAdorner.cs" />
     <Compile Include="UI\Drop2MonsterWinOP.xaml.cs">
       <DependentUpon>Drop2MonsterWinOP.xaml</DependentUpon>
@@ -159,9 +160,6 @@
     </Compile>
     <Compile Include="UI\ModifyAtkOrDefWin.xaml.cs">
       <DependentUpon>ModifyAtkOrDefWin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\MyCanvas.xaml.cs">
-      <DependentUpon>MyCanvas.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Drop2MainDeckWin.xaml.cs">
       <DependentUpon>Drop2MainDeckWin.xaml</DependentUpon>
@@ -193,10 +191,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ModifyAtkOrDefWin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\MyCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,12 +346,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\synchro_circle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="www.ico.la_b916e5578638376b1bc517767fbd0060_128X128.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="www.ico.la_8fe135e4c13f1fd60b04842175967dd7_256X256.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\icon_256X256.ico" />

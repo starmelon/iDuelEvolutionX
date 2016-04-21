@@ -364,6 +364,12 @@ namespace iDuel_EvolutionX
 
             #region 敌方 
 
+            #region 移动场地
+
+            OpBattle.WhenAddChildren += CardAreaEvent.add2OPBattle;
+
+            #endregion
+
             #region 手卡
 
             card_2_hand.area = Area.HAND_OP;

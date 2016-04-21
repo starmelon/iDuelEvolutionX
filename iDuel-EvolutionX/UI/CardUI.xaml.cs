@@ -48,7 +48,7 @@ namespace iDuel_EvolutionX.UI
             {
                 statusLast = status;
                 status = value;
-                showImg();
+                //showImg();
             }
         }
 
@@ -335,14 +335,10 @@ namespace iDuel_EvolutionX.UI
             switch (Status)
             {
                 case Status.FRONT_ATK:
-                    cardPic.Source = originalImage;
-                    break;
                 case Status.FRONT_DEF:
                     cardPic.Source = originalImage;
                     break;
                 case Status.BACK_ATK:
-                    cardPic.Source = backImage;
-                    break;
                 case Status.BACK_DEF:
                     cardPic.Source = backImage;
                     break;
@@ -368,6 +364,15 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
+        /// 正面攻击表示
+        /// </summary>
+        public void set2FrontAtk2()
+        {
+            Status = Status.FRONT_ATK;
+
+        }
+
+        /// <summary>
         /// 正面防守表示
         /// </summary>
         public void set2FrontDef()
@@ -375,6 +380,14 @@ namespace iDuel_EvolutionX.UI
             Status = Status.FRONT_DEF;
             showImg();
             setAngle290();
+        }
+
+        /// <summary>
+        /// 正面防守表示
+        /// </summary>
+        public void set2FrontDef2()
+        {
+            Status = Status.FRONT_DEF;
         }
 
         /// <summary>
@@ -388,6 +401,14 @@ namespace iDuel_EvolutionX.UI
         }
 
         /// <summary>
+        /// 背面防守表示
+        /// </summary>
+        public void set2BackDef2()
+        {
+            Status = Status.BACK_DEF;
+        }
+
+        /// <summary>
         /// 背面攻击表示
         /// </summary>
         public void set2BackAtk()
@@ -395,6 +416,14 @@ namespace iDuel_EvolutionX.UI
             Status = Status.BACK_ATK;
             showImg();
             setAngle2zero();
+        }
+
+        /// <summary>
+        /// 背面攻击表示
+        /// </summary>
+        public void set2BackAtk2()
+        {
+            Status = Status.BACK_ATK;
         }
 
         /// <summary>
