@@ -31,6 +31,7 @@ namespace iDuel_EvolutionX.UI
             InitializeComponent();
             this.tb_title.Text = getWinTitileByAreaEnum(mcv_from.area);
             this.mcv_from = mcv_from;
+            this.mcv.area = mcv_from.area;
             this.mcv.WhenRemoveChildren += removeFormMcv;
         }
 
@@ -55,6 +56,7 @@ namespace iDuel_EvolutionX.UI
             removeTheDelegateOfMCV();
 
             MyStoryboard msb = CardAnimation.scalXY_120();
+            msb.FillBehavior = FillBehavior.HoldEnd;
             msb.Completed += (object c, EventArgs d) =>
             {
                 if (mcv_from.area == Area.MAINDECK)
@@ -80,14 +82,12 @@ namespace iDuel_EvolutionX.UI
                         card.getAwayFromParents();
                         switch (mcv_from.area)
                         {
-                            case Area.BANISH:
+                            case Area.BANISH:    
+                            case Area.EXTRA:
                                 if (card.StatusLast == Status.BACK_ATK)
                                 {
                                     card.set2BackAtk();
                                 }
-                                break;
-                            case Area.EXTRA:
-                                
                                 break;
                             default:
                                 break;

@@ -295,8 +295,6 @@ namespace iDuel_EvolutionX.UI
             msb.Children.Add(ScaleY(0, 1.5, 900));
             msb.Children.Add(Opacity(1,0, 1100));
 
-            msb.FillBehavior = FillBehavior.Stop;
-
             msb.Begin(uie); 
         }
 
@@ -1338,6 +1336,35 @@ namespace iDuel_EvolutionX.UI
             return xA;
         }
         
+        public static DoubleAnimationUsingKeyFrames CanvasX_KeyFrames(double endX,double time,double totaltiem)
+        {
+
+            DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(totaltiem));
+
+            EasingFunctionBase easing = new CubicEase()
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+
+            EasingDoubleKeyFrame keyFram = new EasingDoubleKeyFrame();
+            keyFram.EasingFunction = easing;
+            keyFram.Value = endX;
+            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
+            keyFramesAnimation.KeyFrames.Add(keyFram);
+
+            //EasingDoubleKeyFrame keyFram2 = new EasingDoubleKeyFrame();
+            //keyFram2.Value = endX;
+            //keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1000));
+            //keyFramesAnimation.KeyFrames.Add(keyFram2);
+
+            
+
+            Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("(Canvas.Left)"));
+
+            return keyFramesAnimation;
+        }
+
         #endregion
 
         #region 5.Y轴移动动画
@@ -1359,6 +1386,36 @@ namespace iDuel_EvolutionX.UI
             yA.EasingFunction = easing;
             Storyboard.SetTargetProperty(yA, new PropertyPath("(Canvas.Top)"));
             return yA;
+        }
+
+
+        public static DoubleAnimationUsingKeyFrames CanvasY_KeyFrames(double endY, double time,double totaltime)
+        {
+
+            DoubleAnimationUsingKeyFrames keyFramesAnimation = new DoubleAnimationUsingKeyFrames();
+            keyFramesAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(totaltime));
+
+            EasingFunctionBase easing = new CubicEase()
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+
+            EasingDoubleKeyFrame keyFram = new EasingDoubleKeyFrame();
+            keyFram.EasingFunction = easing;
+            keyFram.Value = endY;
+            keyFram.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(time));
+            keyFramesAnimation.KeyFrames.Add(keyFram);
+
+            //EasingDoubleKeyFrame keyFram2 = new EasingDoubleKeyFrame();
+            //keyFram2.Value = endY;
+            //keyFram2.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1000));
+            //keyFramesAnimation.KeyFrames.Add(keyFram2);
+
+
+
+            Storyboard.SetTargetProperty(keyFramesAnimation, new PropertyPath("(Canvas.Top)"));
+
+            return keyFramesAnimation;
         }
 
         #endregion
@@ -1471,13 +1528,13 @@ namespace iDuel_EvolutionX.UI
         /// 移动动画
         /// </summary>
         /// <param name="end">移动结束点</param>
-        /// <param name="time">移动耗时（毫秒）</param>
+        /// <param name="time">移动耗时（毫秒）</param
         /// <returns></returns>
         public static MyStoryboard CanvasXY(Point end)
         {
             MyStoryboard msb = new MyStoryboard();
-            msb.Children.Add(CanvasX(end.X, 500));
-            msb.Children.Add(CanvasY(end.Y, 500));
+            msb.Children.Add(CanvasX(end.X, 300));
+            msb.Children.Add(CanvasY(end.Y, 300));
 
             return msb;
         }
@@ -1552,12 +1609,12 @@ namespace iDuel_EvolutionX.UI
 
         public static MyStoryboard CanvasXY_Rotate_0290(Point end)
         {
-            return CanvasXY_Rotate(end, 200, 0, -90, 200);
+            return CanvasXY_Rotate(end, 300, 0, -90, 300);
         }
 
         public static MyStoryboard CanvasXY_Rotate_9020(Point end)
         {
-            return CanvasXY_Rotate(end, 200, -90, 0, 200);
+            return CanvasXY_Rotate(end, 300, -90, 0, 300);
         }
 
         /// <summary>
@@ -2702,10 +2759,10 @@ namespace iDuel_EvolutionX.UI
                 .addComplete((sender, e) =>{
                     card.showImg();
                     })
-                .addAnime(ScaleX_021(200)).Begin(card);
+                .addAnime(ScaleX_021(150)).Begin(card);
         }
 
-        public static void move(CardUI card,Point end,MyCanvas aim)
+        public static void move(CardUI card,Point end,MyCanvas aim,bool isAdd)
         {
             MyStoryboard msb = CardAnimation.CanvasXY(end);
             msb.Completed += (sender, e) =>
@@ -2715,12 +2772,20 @@ namespace iDuel_EvolutionX.UI
                 card.BeginAnimation(Canvas.TopProperty, null);
                 Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
                 Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
-                aim.Children.Add(card);
+                if (isAdd)
+                {
+                    aim.Children.Add(card);
+                }
+                else
+                {
+                    aim.Children.Insert(0,card);
+                }
+                
             };
             msb.Begin(card);
         }
 
-        public static void move_rotate(CardUI card,Point end,MyCanvas aim)
+        public static void move_rotate(CardUI card,Point end,MyCanvas aim,bool isAdd)
         {
             TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
             switch (card.Status)
@@ -2730,11 +2795,31 @@ namespace iDuel_EvolutionX.UI
                     animator.addAnime(CanvasXY_Rotate_9020(end)).addComplete((sender, e) =>
                     {
                         card.getAwayFromParents();
+                        
                         card.BeginAnimation(Canvas.LeftProperty, null);
                         card.BeginAnimation(Canvas.TopProperty, null);
+                        if (isAdd)
+                        {
+                            aim.Children.Add(card);
+                        }
+                        else
+                        {
+                            aim.Children.Insert(0, card);
+                        }
+                        //if (aim.Children.Count>0)
+                        //{
+                        //    Canvas.SetLeft(card, 0);
+                        //    Canvas.SetTop(card, 0);
+                        //}
+                        //else
+                        //{
+                        //    Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
+                        //    Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
+                        //}
                         Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
                         Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
-                        aim.Children.Add(card);
+
+                        card.setAngle2zero();
                     }).Begin(card);
                     break;
                 case Status.BACK_DEF:
@@ -2747,11 +2832,424 @@ namespace iDuel_EvolutionX.UI
                         Canvas.SetLeft(card, (aim.ActualWidth - card.Width) / 2);
                         Canvas.SetTop(card, (aim.ActualHeight - card.Height) / 2);
                         aim.Children.Add(card);
+                        card.setAngle290();
                     }).Begin(card);
                     break;
                 default:
                     break;
             }
+        }
+
+        public static void rotate_turn(CardUI card)
+        {
+            MyStoryboard msb = null;
+            if (card.Status == Status.BACK_DEF)
+            {
+                msb = Rotate_A2D();
+                msb.Completed += (sender, e)=>{
+                    card.setAngle290();
+                    
+                };
+            }
+            if(card.Status == Status.FRONT_ATK)
+            {
+                msb = Rotate_D2A();
+                msb.Completed += (sender, e)=>{
+                    card.setAngle2zero();
+                };
+            }
+            msb.Begin(card);
+            turn(card);
+        }
+
+        /// <summary>
+        /// 叠放召唤
+        /// </summary>
+        /// <param name="mcv"></param>
+        public static void overlaySummon(MyCanvas mcv)
+        {
+            MainWindow mainwin = Application.Current.MainWindow as MainWindow;
+            switch (mcv.area)
+            {
+                case Area.MONSTER_1:
+                case Area.MONSTER_2:
+                case Area.MONSTER_3:
+                case Area.MONSTER_4:
+                case Area.MONSTER_5:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.Battle);
+                        Canvas.SetLeft(mainwin.img_overlay, summon2.X - ((mainwin.img_overlay.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_overlay, summon2.Y - ((mainwin.img_overlay.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_overlay);
+                    }
+                    break;
+                case Area.MONSTER_1_OP:
+                case Area.MONSTER_2_OP:
+                case Area.MONSTER_3_OP:
+                case Area.MONSTER_4_OP:
+                case Area.MONSTER_5_OP:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
+                        Canvas.SetLeft(mainwin.img_overlay_op, summon2.X - ((mainwin.img_overlay_op.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_overlay_op, summon2.Y - ((mainwin.img_overlay_op.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_overlay_op);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            
+        }
+
+        /// <summary>
+        /// 同调召唤动画
+        /// </summary>
+        /// <param name="mcv"></param>
+        public static void synchroSummon(MyCanvas mcv)
+        {
+            MainWindow mainwin = Application.Current.MainWindow as MainWindow;
+            switch (mcv.area)
+            {
+                case Area.MONSTER_1:
+                case Area.MONSTER_2:
+                case Area.MONSTER_3:
+                case Area.MONSTER_4:
+                case Area.MONSTER_5:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.Battle);
+                        Canvas.SetLeft(mainwin.img_synchro, summon2.X - ((mainwin.img_synchro.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_synchro, summon2.Y - ((mainwin.img_synchro.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_synchro);
+                    }
+                    break;
+                case Area.MONSTER_1_OP:
+                case Area.MONSTER_2_OP:
+                case Area.MONSTER_3_OP:
+                case Area.MONSTER_4_OP:
+                case Area.MONSTER_5_OP:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
+                        Canvas.SetLeft(mainwin.img_synchro_op, summon2.X - ((mainwin.img_synchro_op.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_synchro_op, summon2.Y - ((mainwin.img_synchro_op.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_synchro_op);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            
+        }
+
+        /// <summary>
+        /// 通常召唤
+        /// </summary>
+        /// <param name="mcv"></param>
+        public static void commonSummon(MyCanvas mcv)
+        {
+            MainWindow mainwin = Application.Current.MainWindow as MainWindow;
+            switch (mcv.area)
+            {
+                case Area.MONSTER_1:
+                case Area.MONSTER_2:
+                case Area.MONSTER_3:
+                case Area.MONSTER_4:
+                case Area.MONSTER_5:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.Battle);
+                        Canvas.SetLeft(mainwin.img_summon, summon2.X - ((mainwin.img_summon.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_summon, summon2.Y - ((mainwin.img_summon.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_summon);
+                    }
+                    break;
+                case Area.MONSTER_1_OP:
+                case Area.MONSTER_2_OP:
+                case Area.MONSTER_3_OP:
+                case Area.MONSTER_4_OP:
+                case Area.MONSTER_5_OP:
+                    {
+                        Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
+                        Canvas.SetLeft(mainwin.img_summon_op, summon2.X - ((mainwin.img_summon_op.Width - mcv.ActualWidth) / 2));
+                        Canvas.SetTop(mainwin.img_summon_op, summon2.Y - ((mainwin.img_summon_op.Height - mcv.ActualHeight) / 2));
+                        CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_summon_op);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static void CanvasXY_Scale_Rotate(CardUI card,MyCanvas mcv)
+        {
+            
+            
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+            animator
+                .addAnime(ScaleX_120(150))
+                .addComplete((sender, e) =>
+                {
+                    card.set2FrontAtk2();
+                    card.showImg();
+                    card.set2BackAtk2();
+                });
+
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(scaleX(0, 3, 500));
+            msb.Children.Add(ScaleY(1, 3, 500));
+            msb.FillBehavior = FillBehavior.HoldEnd;
+            animator.addAnime(msb);
+
+
+            MyStoryboard msb2 = new MyStoryboard();
+            Point end = new Point();
+            MainWindow main = Application.Current.MainWindow as MainWindow;
+            end.X = (main.OpBattle.ActualWidth - card.Width) / 2.0;
+            end.Y = (main.OpBattle.ActualHeight - card.Height) / 2.0;
+            msb2.Children.Add(CanvasX_KeyFrames( end.X, 650,1000));
+            msb2.Children.Add(CanvasY_KeyFrames( end.Y, 650,1000));
+            msb2.Children.Add(Rotate(0, 180, 450));
+            //msb.Children.Add(Opacity(1, 0, 1100));
+            msb2.FillBehavior = FillBehavior.HoldEnd;
+            //animator.addAnime(msb);
+            msb2.Completed += (sender, e) => 
+            {
+                TransLibrary.StoryboardChain animator2 = new TransLibrary.StoryboardChain();
+                MyStoryboard msb5 = new MyStoryboard();
+                msb5.Children.Add(scaleX(-3, 0, 150));
+                animator2
+                    .addAnime(msb5)
+                    .addComplete((sender2, e2) =>
+                    {
+                        card.showImg();
+                    });
+
+                MyStoryboard msb3 = new MyStoryboard();
+                msb3.Children.Add(scaleX(0, 1, 350));
+                //msb3.Children.Add();
+                msb3.FillBehavior = FillBehavior.HoldEnd;
+                animator2.addAnime(msb3);
+
+
+                MyStoryboard msb4 = new MyStoryboard();
+                Point end2 = new Point();
+                end2 = mcv.TranslatePoint(new Point((mcv.ActualWidth - card.Width) / 2.0, (mcv.ActualHeight - card.Height) / 2.0), main.OpBattle);
+                //end.X = (mcv.ActualWidth - card.Width) / 2.0;
+                //end.Y = (mcv.ActualHeight - card.Height) / 2.0;
+                msb4.Children.Add(CanvasX(end2.X, 650));
+                msb4.Children.Add(CanvasY(end2.Y, 650));
+                msb4.Children.Add(Rotate(180, 0, 450));
+                msb4.Children.Add(ScaleY(3, 1, 500));
+
+                msb4.Completed += (sender3, e3) =>
+                {
+                    card.getAwayFromParents();
+                    card.BeginAnimation(Canvas.LeftProperty, null);
+                    card.BeginAnimation(Canvas.TopProperty, null);
+                    mcv.Children.Add(card);
+                    Canvas.SetLeft(card, (mcv.ActualWidth - card.Width) / 2);
+                    Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
+                    
+                };
+
+                animator2.Begin(card);
+                msb4.Begin(card);
+                //msb.Children.Add(Opacity(1, 0, 1100));
+
+            };
+            //msb2.Duration = new Duration(new TimeSpan(1000));
+
+            animator.Begin(card);
+            msb2.Begin(card);
+            //msb.Begin(uie);
+
+
+        }
+
+        public static void CanvasXY_Scale_Rotate2(CardUI card, MyCanvas mcv,bool isAdd)
+        {
+
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(scaleX(1, 3, 500));
+            msb.Children.Add(ScaleY(1, 3, 500));
+            msb.FillBehavior = FillBehavior.HoldEnd;
+            animator.addAnime(msb);
+
+
+            MyStoryboard msb2 = new MyStoryboard();
+            Point end = new Point();
+            MainWindow main = Application.Current.MainWindow as MainWindow;
+            end.X = (main.OpBattle.ActualWidth - card.Width) / 2.0;
+            end.Y = (main.OpBattle.ActualHeight - card.Height) / 2.0;
+            msb2.Children.Add(CanvasX_KeyFrames(end.X, 650, 1000));
+            msb2.Children.Add(CanvasY_KeyFrames(end.Y, 650, 1000));
+            msb2.Children.Add(Rotate(0, 180, 450));
+            //msb.Children.Add(Opacity(1, 0, 1100));
+            msb2.FillBehavior = FillBehavior.HoldEnd;
+            //animator.addAnime(msb);
+            msb2.Completed += (sender, e) =>
+            {
+                TransLibrary.StoryboardChain animator2 = new TransLibrary.StoryboardChain();
+                MyStoryboard msb5 = new MyStoryboard();
+                msb5.Children.Add(scaleX(3, 0, 150));
+                //msb5.Children.Add(ScaleY(3, 0, 150));
+                animator2
+                    .addAnime(msb5)
+                    .addComplete((sender2, e2) =>
+                    {
+                        card.set2BackAtk2();
+                        card.showImg();
+                    });
+
+                MyStoryboard msb3 = new MyStoryboard();
+                msb3.Children.Add(scaleX(0, 1, 250));
+                //msb3.Children.Add();
+                msb3.FillBehavior = FillBehavior.HoldEnd;
+                animator2.addAnime(msb3);
+
+                //MyStoryboard msb6 = new MyStoryboard();
+                //msb6.Children.Add();
+
+                MyStoryboard msb4 = new MyStoryboard();
+                Point end2 = new Point();
+                end2 = mcv.TranslatePoint(new Point((mcv.ActualWidth - card.Width) / 2.0, (mcv.ActualHeight - card.Height) / 2.0), main.OpBattle);
+                //end.X = (mcv.ActualWidth - card.Width) / 2.0;
+                //end.Y = (mcv.ActualHeight - card.Height) / 2.0;
+                msb4.Children.Add(CanvasX(end2.X, 650));
+                msb4.Children.Add(CanvasY(end2.Y, 650));
+                msb4.Children.Add(Rotate(180, 0, 450));
+                msb4.Children.Add(ScaleY(3, 1, 500));
+
+
+                msb4.Completed += (sender3, e3) =>
+                {
+                    card.getAwayFromParents();
+                    card.BeginAnimation(Canvas.LeftProperty, null);
+                    card.BeginAnimation(Canvas.TopProperty, null);
+
+                    if (isAdd)
+                    {
+                        mcv.Children.Add(card);
+                    }
+                    else
+                    {
+                        mcv.Children.Insert(0,card);
+                    }
+                    
+                    Canvas.SetLeft(card, (mcv.ActualWidth - card.Width) / 2);
+                    Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
+
+                };
+
+                animator2.Begin(card);
+                msb4.Begin(card);
+               
+                //msb.Children.Add(Opacity(1, 0, 1100));
+
+            };
+            //msb2.Duration = new Duration(new TimeSpan(1000));
+
+            animator.Begin(card);
+            msb2.Begin(card);
+            //msb.Begin(uie);
+
+
+        }
+
+        public static void CanvasXY_Scale_Rotate3(CardUI card, MyCanvas mcv, bool isAdd)
+        {
+
+
+            TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
+
+            MyStoryboard msb = new MyStoryboard();
+            msb.Children.Add(scaleX(1, 3, 500));
+            msb.Children.Add(ScaleY(1, 3, 500));
+            msb.FillBehavior = FillBehavior.HoldEnd;
+            animator.addAnime(msb);
+
+
+            MyStoryboard msb2 = new MyStoryboard();
+            Point end = new Point();
+            MainWindow main = Application.Current.MainWindow as MainWindow;
+            end.X = (main.OpBattle.ActualWidth - card.Width) / 2.0;
+            end.Y = (main.OpBattle.ActualHeight - card.Height) / 2.0;
+            msb2.Children.Add(CanvasX_KeyFrames(end.X, 650, 1000));
+            msb2.Children.Add(CanvasY_KeyFrames(end.Y, 650, 1000));
+            msb2.Children.Add(Rotate(-90, -180, 450));
+            //msb.Children.Add(Opacity(1, 0, 1100));
+            msb2.FillBehavior = FillBehavior.HoldEnd;
+            //animator.addAnime(msb);
+            msb2.Completed += (sender, e) =>
+            {
+                TransLibrary.StoryboardChain animator2 = new TransLibrary.StoryboardChain();
+                MyStoryboard msb5 = new MyStoryboard();
+                msb5.Children.Add(scaleX(3, 0, 150));
+                //msb5.Children.Add(ScaleY(3, 0, 150));
+                animator2
+                    .addAnime(msb5)
+                    .addComplete((sender2, e2) =>
+                    {
+                        card.set2BackAtk2();
+                        card.showImg();
+                    });
+
+                MyStoryboard msb3 = new MyStoryboard();
+                msb3.Children.Add(scaleX(0, 1, 250));
+                //msb3.Children.Add();
+                msb3.FillBehavior = FillBehavior.HoldEnd;
+                animator2.addAnime(msb3);
+
+                //MyStoryboard msb6 = new MyStoryboard();
+                //msb6.Children.Add();
+
+                MyStoryboard msb4 = new MyStoryboard();
+                Point end2 = new Point();
+                end2 = mcv.TranslatePoint(new Point((mcv.ActualWidth - card.Width) / 2.0, (mcv.ActualHeight - card.Height) / 2.0), main.OpBattle);
+                //end.X = (mcv.ActualWidth - card.Width) / 2.0;
+                //end.Y = (mcv.ActualHeight - card.Height) / 2.0;
+                msb4.Children.Add(CanvasX(end2.X, 650));
+                msb4.Children.Add(CanvasY(end2.Y, 650));
+                msb4.Children.Add(Rotate(-180, 0, 450));
+                msb4.Children.Add(ScaleY(3, 1, 500));
+
+
+                msb4.Completed += (sender3, e3) =>
+                {
+                    card.getAwayFromParents();
+                    card.BeginAnimation(Canvas.LeftProperty, null);
+                    card.BeginAnimation(Canvas.TopProperty, null);
+
+                    if (isAdd)
+                    {
+                        mcv.Children.Add(card);
+                    }
+                    else
+                    {
+                        mcv.Children.Insert(0, card);
+                    }
+
+                    Canvas.SetLeft(card, (mcv.ActualWidth - card.Width) / 2);
+                    Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
+
+                };
+
+                animator2.Begin(card);
+                msb4.Begin(card);
+
+                //msb.Children.Add(Opacity(1, 0, 1100));
+
+            };
+            //msb2.Duration = new Duration(new TimeSpan(1000));
+
+            animator.Begin(card);
+            msb2.Begin(card);
+            //msb.Begin(uie);
+
+
         }
 
         #endregion

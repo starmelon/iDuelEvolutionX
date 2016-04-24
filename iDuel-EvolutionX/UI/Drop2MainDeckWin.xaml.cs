@@ -15,7 +15,7 @@ namespace iDuel_EvolutionX.UI
 {
     public enum Drop2MainDeckResult
     {
-        UP,
+        TOP,
         MIDDLE,
         BOTTOM
     }
@@ -43,7 +43,7 @@ namespace iDuel_EvolutionX.UI
 
         private void upClick(object sender, RoutedEventArgs e)
         {
-            sendResult(Drop2MainDeckResult.UP);
+            sendResult(Drop2MainDeckResult.TOP);
             this.Close();
         }
 

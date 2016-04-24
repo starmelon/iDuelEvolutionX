@@ -528,7 +528,7 @@ namespace iDuel_EvolutionX.UI
 
         }
 
-        private void setAngle2zero()
+        public void setAngle2zero()
         {
 
             TransformGroup tfg = this.RenderTransform as TransformGroup;
@@ -538,7 +538,7 @@ namespace iDuel_EvolutionX.UI
             rt.Angle = 0;
         }
 
-        private void setAngle290()
+        public void setAngle290()
         {
             TransformGroup tfg = this.RenderTransform as TransformGroup;
             RotateTransform rt = tfg.Children[1] as RotateTransform;

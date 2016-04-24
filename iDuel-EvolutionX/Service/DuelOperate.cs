@@ -1058,75 +1058,6 @@ namespace NBX3.Service
                 mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
             }
 
-            //string sendmsg = "未接收";
-
-            //try
-            //{
-            //    if (command.Length < 5 || command.Length > 6 || !command.Substring(0, 5).Equals("Chat="))
-            //    {
-            //        mainwindow.report.AppendText(myself.name + "：" + Environment.NewLine);
-            //        mainwindow.report.AppendText("[" + (duelOperate.sendstack.Count + 1) + "] " + report + Environment.NewLine);
-
-            //        string send_ = myself.userindex + "," + duelOperate.myself.name + "," + (duelOperate.sendstack.Count + 1) + "," + report + "," + command;
-            //        duelOperate.sendstack.Add(send_);
-
-
-            //        string msg = duelOperate.sendstack[duelOperate.sendstack.Count - 1];
-
-
-            //        if (Server.check())
-            //        {
-            //            Server sr = Server.getInstance(mainwindow);
-            //            sr.sendMsg(msg);
-            //        }
-            //        else if (Client.check())
-            //        {
-            //            Client cl = Client.getInstance(mainwindow);
-            //            cl.sendMsg(msg);
-            //        }
-            //        else
-            //        {
-            //            mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //mainwindow.tb_chat_view.AppendText(myself.name + "：" + command.Remove(0, 5) + Environment.NewLine);
-
-            //        string msg = "2" + "," + duelOperate.myself.name + ",," + report + "," + command;
-
-            //        if (Server.check())
-            //        {
-
-            //            Server sr = Server.getInstance(mainwindow);
-            //            sr.sendMsg(msg);
-            //            Console.WriteLine("sr:" + msg);
-            //        }
-            //        else if (Client.check())
-            //        {
-            //            Client cl = Client.getInstance(mainwindow);
-            //            cl.sendMsg(msg);
-            //            Console.WriteLine("sr:" + msg);
-            //        }
-            //        else
-            //        {
-            //            mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
-            //        }
-            //    }
-
-
-            //    //执行序号+己方昵称+消息序列号+战报+命令
-
-
-
-            //}
-            //catch (Exception ex)
-            //{
-
-            //    MessageBox.Show("send:[" + sendmsg + "]" + ex);
-            //}
-
-
         }
 
         #endregion
@@ -1341,39 +1272,85 @@ namespace NBX3.Service
 
                         if (card.Status == moveInfo.aimStatus)
                         {
+                            card.Status = moveInfo.aimStatus;
                             (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
                             Canvas.SetLeft(card, start.X);
                             Canvas.SetTop(card, start.Y);
 
                             if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
                             {
-                                start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
-                                start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                                start.X += (mcv_orgin.ActualHeight - card.Width) / 2 - (mcv_orgin.ActualWidth - card.Height) / 2;
+                                start.Y += -card.Width - (mcv_orgin.ActualHeight - card.Width) / 2 + (mcv_orgin.ActualWidth - card.Height) / 2;
                                 Canvas.SetLeft(card, start.X);
                                 Canvas.SetTop(card, start.Y);
                             }
                             switch (mcv_aim.area)
                             {
+                                case Area.HAND_OP:
+                                    switch (mcv_orgin.area)
+                                    {
+                                        case Area.MAINDECK_OP:
+                                            
+                                            CardAnimation.CanvasXY_Scale_Rotate(card,mcv_aim);
+                                            return;
+                                        case Area.BANISH_OP:
+                                            card.setAngle290();
+                                            Canvas.SetLeft(card, start.X + (mcv_orgin.ActualHeight - card.Width) / 2.0 - (mcv_orgin.ActualHeight - card.Height) / 2.0);
+                                            Canvas.SetTop(card, start.Y - (mcv_orgin.ActualWidth - card.Width) * 2 - card.Width);
+                                            CardAnimation.move_rotate(card, end, mcv_aim, moveInfo.isAdd);
+                                            return;
+                                        default:
+                                            break;
+                                    }
+                                    
+                                    break;
                                 case Area.MONSTER_1_OP:
                                 case Area.MONSTER_2_OP:
                                 case Area.MONSTER_3_OP:
                                 case Area.MONSTER_4_OP:
                                 case Area.MONSTER_5_OP:
-                                    if (moveInfo.isAdd)
                                     {
-                                        if (mcv_aim.Children.Count > 0)
+                                        if (mcv_orgin.area == Area.BANISH_OP)
                                         {
-                                            end.X += (mcv_aim.ActualWidth - card.Width) / 2;
+                                            card.setAngle290();
+                                            Canvas.SetLeft(card, start.X + (mcv_orgin.ActualHeight - card.Width) / 2.0 - (mcv_orgin.ActualHeight - card.Height) / 2.0);
+                                            Canvas.SetTop(card, start.Y - (mcv_orgin.ActualWidth - card.Width) * 2 - card.Width);
+                                            CardAnimation.move_rotate(card, end, mcv_aim, moveInfo.isAdd);
+                                            CardAnimation.commonSummon(mcv_aim);
+                                            return;
+                                        }
+                                        if (moveInfo.isAdd)
+                                        {
+                                            if (mcv_aim.Children.Count > 0)
+                                            {
+                                                end.X += (mcv_aim.ActualWidth - card.Width) / 2;
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            end.X -= (mcv_aim.ActualWidth - card.Width) / 2 + card.Width;
                                         }
 
                                     }
-                                    else
-                                    {
-                                        end.X -= (mcv_aim.ActualWidth - card.Width) / 2 + card.Width;
-                                    }
+                                    
                                     break;
                                 default:
+                                    {
+                                    
+                                        
+                                    }
                                     break;
+                            }
+
+                            if (mcv_orgin.area == Area.BANISH_OP)
+                            {
+                                card.setAngle290();
+                                Canvas.SetLeft(card, start.X + (mcv_orgin.ActualHeight - card.Width) / 2.0 - (mcv_orgin.ActualHeight - card.Height) / 2.0);
+                                Canvas.SetTop(card, start.Y - (mcv_orgin.ActualWidth - card.Width) * 2 - card.Width);
+                                CardAnimation.move_rotate(card, end, mcv_aim, moveInfo.isAdd);
+                                CardAnimation.commonSummon(mcv_aim);
+                                return;
                             }
 
                             MyStoryboard msb = CardAnimation.CanvasXY(end);
@@ -1385,16 +1362,20 @@ namespace NBX3.Service
 
                                 msb.card.getAwayFromParents();
                                 card.Status = moveInfo.aimStatus;
+
                                 if (moveInfo.isAdd)
                                 {
                                     mcv_aim.Children.Add(msb.card);
+                                    if (mcv_orgin.area == Area.EXTRA_OP && card.info.effect.Contains("灵摆效果"))
+                                    {
+                                        CardAnimation.commonSummon(mcv_aim);
+                                    }
                                 }
                                 else
                                 {
                                     mcv_aim.Children.Insert(0, card);
                                 }
-                                Canvas.SetLeft(msb.card, (mcv_aim.ActualWidth - card.Width) / 2);
-                                Canvas.SetTop(msb.card, (mcv_aim.ActualHeight - card.Height) / 2);
+
                                 if (mcv_aim.Children.Count == 1)
                                 {
 
@@ -1413,8 +1394,15 @@ namespace NBX3.Service
                                     }
 
                                 }
+                                else
+                                {
+                                    msb.card.centerAtVerticalInParent();
+                                }
+
+                                
                             };
                             msb.Begin(card);
+
                             return;
                         }
 
@@ -1479,9 +1467,6 @@ namespace NBX3.Service
                                 case Area.SPACE_OP:
                                     break;
                                 case Area.EXTRA_OP:
-                                    break;
-                                case Area.MAINDECK_OP:
-                                case Area.HAND_OP:
                                     {
                                         card.set2FrontAtk2();
                                         (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
@@ -1500,8 +1485,74 @@ namespace NBX3.Service
 
                                             if (moveInfo.isAdd)
                                             {
-                                                mcv_aim.Children.Add(msb0.card);
+                                                switch (mcv_aim.area)
+                                                {
 
+                                                    case Area.MONSTER_1_OP:
+                                                    case Area.MONSTER_2_OP:
+                                                    case Area.MONSTER_3_OP:
+                                                    case Area.MONSTER_4_OP:
+                                                    case Area.MONSTER_5_OP:
+                                                        if (mcv_aim.Children.Count > 0)
+                                                        {
+                                                            if (card.info.sCardType.Equals("XYZ怪兽"))
+                                                            {
+                                                                CardAnimation.overlaySummon(mcv_aim);
+                                                            }
+                                                            
+                                                        }
+                                                        else
+                                                        {
+                                                            if (card.info.sCardType.Equals("同调怪兽"))
+                                                            {
+                                                                CardAnimation.synchroSummon(mcv_aim);
+                                                            }
+                                                            else
+                                                            {
+                                                                CardAnimation.commonSummon(mcv_aim);
+                                                            }
+                                                        }
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                                
+                                                mcv_aim.Children.Add(msb0.card);
+                                                
+
+                                            }
+                                            else
+                                            {
+                                                mcv_aim.Children.Insert(0, msb0.card);
+                                            }
+
+                                        };
+                                        msb0.Begin(card);
+                                    }
+                                    break;
+                                case Area.MAINDECK_OP:
+                                case Area.HAND_OP:
+                                    {
+                                        
+                                        card.set2FrontAtk2();
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
+
+                                        MyStoryboard msb0 = CardAnimation.CanvasXY(end);
+                                        msb0.card = card;
+                                        msb0.Completed += (sender, e) =>
+                                        {
+                                            msb0.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb0.card.BeginAnimation(Canvas.TopProperty, null);
+
+                                            msb0.card.getAwayFromParents();
+                                            msb0.card.set2FrontAtk2();
+
+                                            if (moveInfo.isAdd)
+                                            {
+                                                mcv_aim.Children.Add(msb0.card);
+                                                CardAnimation.commonSummon(mcv_aim);
                                             }
                                             else
                                             {
@@ -1527,6 +1578,7 @@ namespace NBX3.Service
                                 case Area.PENDULUM_LEFT_OP:
                                 case Area.PENDULUM_RIGHT_OP:
                                     {
+                                        card.set2FrontAtk2();
                                         (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
@@ -1539,9 +1591,16 @@ namespace NBX3.Service
                                             msb.card.BeginAnimation(Canvas.TopProperty, null);
                                             msb.card.getAwayFromParents();
                                             msb.card.set2FrontAtk();
-                                            mcv_aim.Children.Add(msb.card);
+                                            if (moveInfo.isAdd)
+                                            {
+                                                mcv_aim.Children.Add(msb.card);
+                                            }
+                                            else
+                                            {
+                                                mcv_aim.Children.Insert(0,msb.card);
+                                            }
+                                            
                                         };
-                                        msb.FillBehavior = FillBehavior.Stop;
                                         msb.Begin(card);
                                     }
                                     break;
@@ -1560,42 +1619,33 @@ namespace NBX3.Service
 
                         if ((card.Status == Status.BACK_DEF) && moveInfo.aimStatus == Status.FRONT_ATK)
                         {
-                            (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                            Canvas.SetLeft(card, start.X);
-                            Canvas.SetTop(card, start.Y);
+                            //card.set2FrontAtk2();
+                            //(Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                            //Canvas.SetLeft(card, start.X);
+                            //Canvas.SetTop(card, start.Y);
 
                             switch (mcv_aim.area)
                             {
-
+                                case Area.PENDULUM_LEFT_OP:
+                                case Area.PENDULUM_RIGHT_OP:
                                 case Area.MAGICTRAP_1_OP:
                                 case Area.MAGICTRAP_2_OP:
                                 case Area.MAGICTRAP_3_OP:
                                 case Area.MAGICTRAP_4_OP:
                                 case Area.MAGICTRAP_5_OP:
+                                case Area.EXTRA_OP:
                                 case Area.GRAVEYARD_OP:
                                     {
-                                        card.set2FrontAtk2();
-                                        start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
-                                        start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        //Canvas.SetLeft(card, start.X);
+                                        //Canvas.SetTop(card, start.Y);
+                                        start.X += (mcv_orgin.ActualHeight - card.Width) / 2 - (mcv_orgin.ActualWidth - card.Height) / 2;
+                                        start.Y += -card.Width - (mcv_orgin.ActualHeight - card.Width) / 2 + (mcv_orgin.ActualWidth - card.Height) / 2;
+
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
-
-                                        CardAnimation.move_rotate(card, end, mcv_aim);
-
-                                        //MyStoryboard msb = CardAnimation.CanvasXY_Rotate_9020(end);
-                                        ////MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
-                                        ////MyStoryboard msb = CanvasXY(start, end, 500);
-                                        //msb.card = card;
-                                        //msb.Completed += (object c, EventArgs d) =>
-                                        //{
-                                        //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                                        //    msb.card.BeginAnimation(Canvas.TopProperty, null);
-                                        //    msb.card.getAwayFromParents();
-                                        //    msb.card.set2FrontAtk();
-                                        //    mcv_aim.Children.Add(msb.card);
-
-                                        //};
-                                        //msb.Begin(card);
+                                        card.set2FrontAtk2();
+                                        CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
                                     }
                                     break;
                                 case Area.MONSTER_1_OP:
@@ -1604,6 +1654,10 @@ namespace NBX3.Service
                                 case Area.MONSTER_4_OP:
                                 case Area.MONSTER_5_OP:
                                     {
+                                        card.set2FrontAtk2();
+                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        Canvas.SetLeft(card, start.X);
+                                        Canvas.SetTop(card, start.Y);
                                         if (mcv_aim.Children.Count > 0)
                                         {
                                             if (moveInfo.isAdd)
@@ -1622,71 +1676,35 @@ namespace NBX3.Service
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
 
-                                        MyStoryboard msb1 = CardAnimation.CanvasXY_scale120_rotate9020(end);
-                                        //MyStoryboard msb1 = CardAnimation.CanvasXY_Scale120(end);
+                                        MyStoryboard msb1 = CardAnimation.CanvasXY_Rotate_9020(end);
+
                                         msb1.card = card;
                                         msb1.Completed += (sender, e) =>
                                         {
-                                            msb1.card.set2FrontAtk();
-                                        };
-                                        MyStoryboard msb2 = CardAnimation.scalX_021();
-                                        msb2.card = card;
-                                        msb2.Completed += (sender, e) =>
-                                        {
-                                            msb2.card.BeginAnimation(Canvas.LeftProperty, null);
-                                            msb2.card.BeginAnimation(Canvas.TopProperty, null);
+                                            msb1.card.BeginAnimation(Canvas.LeftProperty, null);
+                                            msb1.card.BeginAnimation(Canvas.TopProperty, null);
 
-                                            msb2.card.getAwayFromParents();
-                                            msb2.card.set2FrontAtk();
+                                            msb1.card.getAwayFromParents();
+                                            msb1.card.set2FrontAtk();
                                             if (moveInfo.isAdd)
                                             {
-                                                mcv_aim.Children.Add(msb2.card);
+                                                mcv_aim.Children.Add(msb1.card);
 
                                             }
                                             else
                                             {
-                                                mcv_aim.Children.Insert(0, msb2.card);
-
+                                                mcv_aim.Children.Insert(0, msb1.card);
 
                                             }
 
                                         };
-                                        TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
-                                        animator
-                                            .addAnime(msb1)
-                                            .addAnime(msb2)
-                                            .Begin(card);
+                                        msb1.Begin(card);
                                     }
                                     break;
                                 default:
                                     break;
                             }
 
-
-
-                            //if (mcv_aim.area == Area.GRAVEYARD_OP)
-                            //{
-                            //    start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
-                            //    start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
-
-                            //    card.getAwayFromParents();
-                            //    Canvas.SetLeft(card, start.X);
-                            //    Canvas.SetTop(card, start.Y);
-                            //    (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                            //    MyStoryboard msb = CardAnimation.Rotate_CanvasXY(-90, 0, start, end, 300, 300);
-                            //    MyStoryboard msb = CanvasXY(start, end, 500);
-                            //    msb.card = card;
-                            //    msb.Completed += (object c, EventArgs d) =>
-                            //    {
-                            //        msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                            //        msb.card.BeginAnimation(Canvas.TopProperty, null);
-                            //        msb.card.getAwayFromParents();
-                            //        msb.card.set2FrontAtk();
-                            //        mcv_aim.Children.Add(msb.card);
-
-                            //    };
-                            //    msb.Begin(card);
-                            //}
                             break;
                         }
 
@@ -1702,13 +1720,42 @@ namespace NBX3.Service
                             {
                                 case Status.FRONT_ATK:
                                     {
-                                        card.set2BackAtk2();
+                                        switch (mcv_orgin.area)
+                                        {
+                                            case Area.BANISH_OP:
+                                                card.set2FrontAtk2();
+                                                (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                                card.setAngle290();
+                                                Canvas.SetLeft(card, start.X + (mcv_orgin.ActualHeight - card.Width)/2.0 - (mcv_orgin.ActualHeight - card.Height) / 2.0);
+                                                Canvas.SetTop(card, start.Y - (mcv_orgin.ActualWidth - card.Width)*2 - card.Width);
+                                                CardAnimation.CanvasXY_Scale_Rotate3(card, mcv_aim, moveInfo.isAdd);
+                                                break;
+                                            case Area.GRAVEYARD_OP:
+                                                (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                                Canvas.SetLeft(card, start.X );
+                                                Canvas.SetTop(card, start.Y);
+                                                CardAnimation.CanvasXY_Scale_Rotate2(card, mcv_aim,moveInfo.isAdd);
+                                                break;
+                                            case Area.EXTRA_OP:
+                                                break;
+                                            case Area.MONSTER_1_OP:
+                                            case Area.MONSTER_2_OP:
+                                            case Area.MONSTER_3_OP:
+                                            case Area.MONSTER_4_OP:
+                                            case Area.MONSTER_5_OP:
+                                            default:
+                                                {
+                                                    card.set2BackAtk2();
 
-                                        (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                                        Canvas.SetLeft(card, start.X);
-                                        Canvas.SetTop(card, start.Y);
+                                                    (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                                    Canvas.SetLeft(card, start.X);
+                                                    Canvas.SetTop(card, start.Y);
 
-                                        CardAnimation.move(card, end, mcv_aim);
+                                                    CardAnimation.move(card, end, mcv_aim,moveInfo.isAdd);
+                                                }
+                                                break;
+                                        }
+                                        
                                     }
                                     break;
                                 case Status.FRONT_DEF:
@@ -1719,7 +1766,7 @@ namespace NBX3.Service
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
 
-                                        CardAnimation.move_rotate(card, end, mcv_aim);
+                                        CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
 
                                     }
                                     break;
@@ -1733,7 +1780,7 @@ namespace NBX3.Service
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
 
-                                        CardAnimation.move_rotate(card, end, mcv_aim);
+                                        CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
 
                                     }
 
@@ -1752,12 +1799,28 @@ namespace NBX3.Service
                             card.set2FrontAtk2();
 
                             (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+
                             start.X += (mcv_aim.ActualHeight - card.Width) / 2 - (mcv_aim.ActualWidth - card.Height) / 2;
                             start.Y += -card.Width - (mcv_aim.ActualHeight - card.Width) / 2 + (mcv_aim.ActualWidth - card.Height) / 2;
                             Canvas.SetLeft(card, start.X);
                             Canvas.SetTop(card, start.Y);
 
-                            CardAnimation.move_rotate(card, end, mcv_aim);
+                            switch (mcv_aim.area)
+                            {
+                                case Area.MONSTER_1_OP:
+                                case Area.MONSTER_2_OP:
+                                case Area.MONSTER_3_OP:
+                                case Area.MONSTER_4_OP:
+                                case Area.MONSTER_5_OP:
+                                    if (mcv_aim.Children.Count > 0)
+                                    {
+                                        end.X = end.X - (mcv_aim.ActualWidth - card.Width) / 2 - card.Width;
+                                    }
+                                    break;
+                            }
+                            
+
+                            CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
 
                         }
 
@@ -1775,8 +1838,10 @@ namespace NBX3.Service
                         msb.Completed += (sender, e) =>
                         {
                             msb.card.getAwayFromParents();
-                            (Application.Current.MainWindow as MainWindow).card_2_Outside.Children.Add(card);
                             msb.card.Status = disappearInfo.aimStatus;
+                            card.showImg();
+                            (Application.Current.MainWindow as MainWindow).card_2_Outside.Children.Add(card);
+                            
                         };
                         MyStoryboard msb2 = CardAnimation.Opacity21(100);
                         TransLibrary.StoryboardChain animator = new TransLibrary.StoryboardChain();
@@ -1827,11 +1892,13 @@ namespace NBX3.Service
                             case Status.FRONT_ATK:
                                 if (statuschangeInfo.aimStatus == Status.FRONT_DEF)
                                 {
+                                    
                                     CardAnimation.Rotate2FrontDef(card);
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.BACK_ATK)
                                 {
-                                    CardAnimation.turn2Back(card);
+                                    card.set2BackAtk2();
+                                    CardAnimation.turn(card);
                                     cleanTbAtk(mcv);
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.BACK_DEF)
@@ -1847,7 +1914,8 @@ namespace NBX3.Service
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.BACK_DEF)
                                 {
-                                    CardAnimation.turn2Back(card);
+                                    card.set2BackDef2();
+                                    CardAnimation.turn(card);
                                     cleanTbAtk(mcv);
                                 }                         
                                 break;
@@ -1859,18 +1927,23 @@ namespace NBX3.Service
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.FRONT_ATK)
                                 {
+                                    card.set2FrontAtk2();
                                     CardAnimation.turn(card);
+                                    CardOperate.sort_XYZ_atk(mcv);
                                     CardAreaEvent.bindingAtk(mcv, card);
                                 }                            
                                 break;
                             case Status.BACK_DEF:
                                 if (statuschangeInfo.aimStatus == Status.FRONT_ATK)
                                 {
-                                    CardAnimation.Rotate2FrontAtk2(card);
-                                    CardAreaEvent.bindingAtk(mcv, card);
+                                    card.set2FrontAtk2();
+                                    CardAnimation.rotate_turn(card);
+                                    //CardAnimation.Rotate2FrontAtk2(card);
+                                    //CardAreaEvent.bindingAtk(mcv, card);
                                 }
                                 else if (statuschangeInfo.aimStatus == Status.FRONT_DEF)
                                 {
+                                    card.set2FrontDef2();
                                     CardAnimation.turn(card);
                                     CardAreaEvent.bindingAtk(mcv, card);
                                 }
@@ -2072,13 +2145,13 @@ namespace NBX3.Service
                 case Area.GRAVEYARD:
                     return (Application.Current.MainWindow as MainWindow).card_2_Graveyard;
                 case Area.MAINDECK:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_Deck;
                 case Area.BANISH:
                     return null;
                 case Area.SPACE:
                     return null;
                 case Area.EXTRA:
-                    return null;
+                    return (Application.Current.MainWindow as MainWindow).card_2_Extra;
                 case Area.HAND:
                     return (Application.Current.MainWindow as MainWindow).card_2_hand;
                 case Area.MONSTER_1:

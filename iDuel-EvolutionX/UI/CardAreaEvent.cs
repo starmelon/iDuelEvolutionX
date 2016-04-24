@@ -656,40 +656,14 @@ namespace iDuel_EvolutionX.UI
                 if (card.Status == Status.BACK_ATK || card.Status == Status.FRONT_ATK)
                 {
                     card.centerAtVerticalInParent();
+                    Service.CardOperate.sort_XYZ_atk(mcv);
                 }
                 else
                 {
                     card.centerAtHorizontalInParent();
+                    Service.CardOperate.sort_XYZ_atk(mcv);
                 }
                 card.ContextMenu = AllMenu.Instance.cm_monster;
-
-
-                if (card.Status == Status.FRONT_ATK || card.Status == Status.FRONT_DEF)
-                {
-                    MainWindow mainwin = Application.Current.MainWindow as MainWindow;
-                    switch (card.info.sCardType)
-                    {
-
-
-                        case "同调怪兽":
-                            {
-                                Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
-                                Canvas.SetLeft(mainwin.img_synchro_op, summon2.X - ((mainwin.img_synchro_op.Width - mcv.ActualWidth) / 2));
-                                Canvas.SetTop(mainwin.img_synchro_op, summon2.Y - ((mainwin.img_synchro_op.Height - mcv.ActualHeight) / 2));
-                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_synchro_op);
-                            }
-                            break;
-                        default:
-                            {
-
-                                Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
-                                Canvas.SetLeft(mainwin.img_summon_op, summon2.X - ((mainwin.img_summon_op.Width - mcv.ActualWidth) / 2));
-                                Canvas.SetTop(mainwin.img_summon_op, summon2.Y - ((mainwin.img_summon_op.Height - mcv.ActualHeight) / 2));
-                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_summon_op);
-                            }
-                            break;
-                    }
-                }
                 
             }
             else
@@ -741,15 +715,16 @@ namespace iDuel_EvolutionX.UI
                 }
 
                 animator0.Begin(second);
-                Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
-                Canvas.SetLeft(card, mcv.ActualWidth - card.ActualWidth);
                 Service.CardOperate.sort_XYZ_atk(mcv);
+                //Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
+                //Canvas.SetLeft(card, mcv.ActualWidth - card.ActualWidth);
 
-                MainWindow mainwin = Application.Current.MainWindow as MainWindow;
-                Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
-                Canvas.SetLeft(mainwin.img_overlay_op, summon2.X - ((mainwin.img_overlay_op.Width - mcv.ActualWidth) / 2));
-                Canvas.SetTop(mainwin.img_overlay_op, summon2.Y - ((mainwin.img_overlay_op.Height - mcv.ActualHeight) / 2));
-                CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_overlay_op);
+
+                //MainWindow mainwin = Application.Current.MainWindow as MainWindow;
+                //Point summon2 = mcv.TranslatePoint(new Point(0.5, 0.5), mainwin.OpBattle);
+                //Canvas.SetLeft(mainwin.img_overlay_op, summon2.X - ((mainwin.img_overlay_op.Width - mcv.ActualWidth) / 2));
+                //Canvas.SetTop(mainwin.img_overlay_op, summon2.Y - ((mainwin.img_overlay_op.Height - mcv.ActualHeight) / 2));
+                //CardAnimation.Rotate_Scale_FadeInAndOut(mainwin.img_overlay_op);
             }
 
             //MainWindow mainwin = Application.Current.MainWindow as MainWindow;
@@ -793,22 +768,26 @@ namespace iDuel_EvolutionX.UI
                 {
                     //Canvas.SetTop(card, (cv.ActualHeight - card.ActualHeight) / 2.0);
                     //Canvas.SetLeft(card, 0);
-                    Canvas.SetLeft(card, 0 - card.Width);
+                    Canvas.SetLeft(card,  - card.Width);
                     Canvas.SetTop(card, (mcv.ActualHeight - card.Height) / 2);
                     Service.CardOperate.sort_XYZ_atk(mcv);
                 }
                 else
                 {
-                    if (count == 2)
-                    {
-                        card.centerAtVerticalInParent();
-                    }
-                    else
-                    {
-                        Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
-                        Canvas.SetLeft(card, 0);
-                        Service.CardOperate.sort_XYZ_def2(mcv);
-                    }
+
+                    Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
+                    Canvas.SetLeft(card, - card.ActualWidth);
+                    Service.CardOperate.sort_XYZ_def2(mcv);
+                    //if (count == 2)
+                    //{
+                        
+                    //}
+                    //else
+                    //{
+                    //    Canvas.SetTop(card, (mcv.ActualHeight - card.ActualHeight) / 2.0);
+                    //    Canvas.SetLeft(card, 0);
+                    //    Service.CardOperate.sort_XYZ_def2(mcv);
+                    //
 
                 }
 

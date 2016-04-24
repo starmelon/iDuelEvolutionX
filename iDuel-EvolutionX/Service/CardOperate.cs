@@ -314,10 +314,10 @@ namespace iDuel_EvolutionX.Service
             {
                 CardUI card_ = card as CardUI;
                 Canvas cv = card_.Parent as Canvas;
-                if (e.RightButton == MouseButtonState.Pressed && Base.getParerent(card_).Name.Equals("card_1_Deck"))
-                {
-                    return;
-                }
+                //if (e.RightButton == MouseButtonState.Pressed && Base.getParerent(card_).Name.Equals("card_1_Deck"))
+                //{
+                //    return;
+                //}
                 mb_right = e.RightButton.ToString();
 
                 DragEventHandler draghandler = new DragEventHandler(DragScope_PreviewDragOver);
@@ -496,7 +496,7 @@ namespace iDuel_EvolutionX.Service
                     #region 指令发送
 
                     MoveInfo moveInfo = new MoveInfo();
-                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    int cardid = getCardID(card);
                     moveInfo.cardID = cardid;
                     moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
@@ -520,7 +520,7 @@ namespace iDuel_EvolutionX.Service
                     #region 指令发送
 
                     MoveInfo moveInfo = new MoveInfo();
-                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    int cardid = getCardID(card);
                     moveInfo.cardID = cardid;
                     moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
@@ -569,151 +569,7 @@ namespace iDuel_EvolutionX.Service
                     #endregion
                 }
 
-                //加入当前区域
-
-
-
-
-                //对出发地的处理
-                //if (cv.Name.Equals("card_1_Extra"))
-                //{
-                //    return;
-                //}
-                //if (cv.Equals(mainwindow.card_1_Deck))
-                //{
-                //    return;
-                //}
-                //if (cv_monsters_1.Contains(cv) && cv.Children.Count < 2)
-                //{
-                //    #region 清除指示物
-
-                //    StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //    if (sp != null) sp.Children.Clear();
-
-                //    #endregion
-                //}
-                //if (cv.Name.Length == 8 || cv.Name.Length == 9)
-                //{
-
-                //    int witch;
-                //    if (int.TryParse(cv.Name.Substring(7), out witch))
-                //    {
-                //        #region 来自魔陷区
-
-                //        if (witch > 0 && witch < 11 && !mb_right.Equals("Pressed") && e.KeyStates == DragDropKeyStates.AltKey)
-                //        {
-                //            DuelOperate.getInstance().sendMsg("SelectObject=" + cv.Name + "," + cv_aim.Name, "选择对象");
-
-                //            MyStoryboard msb = CardAnimation.EffectOrigin();
-                //            msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
-                //            MyStoryboard msb2 = CardAnimation.EffectAim();
-                //            msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
-                //            return;
-                //        }
-
-                //        #endregion
-                //    }
-                //}
-
-
-
-                //#region 魔陷区放置
-
-
-
-                //if (cv_magictraps_1.Contains(cv) || cv_monsters_1.Contains(cv))
-                //{
-
-                //    //if (!card.isBack)
-                //    //{
-                //    //    report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]" );
-                //    //}
-                //    //else if (card.isBack)
-                //    //{
-                //    //    report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
-                //    //}
-
-                //    //if ( cv_monsters_1.Contains(cv) && card.isDef )
-                //    //{
-                //    //    card.isDef = false;                      
-
-                //    //}
-
-                //    //card.SetPic();
-                //    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                //    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
-                //    card.ContextMenu = AllMenu.cm_magictrap;
-                //    //DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
-
-
-                //    return;
-                //}
-
-                //if (cv_monsters.Contains(cv))
-                //{
-                //    if (card.isBack)
-                //    {
-                //        //战报
-                //        string report = ("将 " + DuelReportOperate.from(cv.Name) + "  [?] 作为装备卡  -> " + DuelReportOperate.from(cv_aim.Name) + Environment.NewLine);
-                //        DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name, report);
-                //    }
-                //    else
-                //    {
-                //        #region 清除指示物
-
-                //        StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //        sp.Children.Clear();
-
-                //        #endregion
-
-                //        Console.WriteLine(Keyboard.IsKeyDown(Key.A));
-                //        string report = ("将 " + DuelReportOperate.from(cv.Name) + " [" + card.cardName + "] 作为装备卡 -> " + DuelReportOperate.from(cv_aim.Name) + Environment.NewLine);
-                //        DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name, report);
-
-                //        //动作
-                //        //OpponentOperate.ActionAnalyze("Move=" + DuelReportOperate.Analyze_canvas(cv.Name) + "," + cv_childre_num + "," + DuelReportOperate.Analyze_canvas(cv_aim.Name), true);
-                //        //战报
-
-                //    }
-                //    cv_aim.Children.Add(card);
-                //    sort_SingleCard(card);
-                //    card.ContextMenu = AllMenu.cm_magictrap;
-                //    return;
-                //}
-
-                //if (mb_right.Equals("Pressed") && cv.Equals(mainwindow.card_1_hand))
-                //{
-
-                //    cv_aim.Children.Add(card);
-                //    //card_BackAtk(   card);
-                //    Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                //    Canvas.SetLeft(card, (cv_aim.ActualWidth - card.ActualWidth) / 2.0);
-
-                //    //report = ("[ ? ] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");                 
-                //    //DuelOperate.getInstance().sendMsg("Cover2=" + card.duelindex + "," + cv_aim.Name, report);
-
-                //    return;
-
-                //}
-
-                //cv_aim.Children.Add(card);
-
-
-                //report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
-                //DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
-                ////动作
-                //if (cv.Name.Equals("card_1_hand") || cv.Name.Equals("card_1_Deck"))
-                //{
-                //    //OpponentOperate.ActionAnalyze("Summon=" + DuelReportOperate.Analyze_canvas(cv.Name) + "," + cv_childre_num + "," + DuelReportOperate.Analyze_canvas(cv_aim.Name), true);
-                //    DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name, report);
-                //}
-                //else
-                //{
-                //    //OpponentOperate.ActionAnalyze("Move=" + DuelReportOperate.Analyze_canvas(cv.Name) + "," + cv_childre_num + "," + DuelReportOperate.Analyze_canvas(cv_aim.Name), true);
-                //    DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name, report);
-                //}
-
-                //#endregion
+                
 
 
             }
@@ -758,7 +614,7 @@ namespace iDuel_EvolutionX.Service
                 //{
                 //    return;
                 //}
-                if (cv.Equals(mainwindow.card_1_Extra))
+                if (cv.Equals(mainwindow.card_1_Extra) && !card.info.effect.Contains("灵摆效果"))
                 {
                     return;
                 }                      
@@ -787,128 +643,7 @@ namespace iDuel_EvolutionX.Service
                         break;
                 }
 
-                //if (cv_monsters_1.Contains(cv) && cv_monsters_1.Contains(cv_aim))
-                //{
-
-                //    if (cv_aim.Children.Count > 0)
-                //    {
-                //        OverOrInsert oi = new OverOrInsert();
-                //        oi.Owner = mainwindow;
-                //        oi.ShowDialog();
-
-
-                //        Card top = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-
-                //        if (card.info.sCardType.Equals("XYZ怪兽"))
-                //        {
-                //            if (!top.sCardType.Equals("XYZ怪兽"))
-                //            {
-                //                #region 转移指示物
-
-                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                if (sp.Children.Count > 0)
-                //                {
-                //                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                    int count = sp.Children.Count;
-                //                    for (int i = 0; i < count; i++)
-                //                    {
-                //                        Grid gd = sp.Children[0] as Grid;
-                //                        TextBlock tb = gd.Children[1] as TextBlock;
-                //                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                //                        sp.Children.Remove(gd);
-                //                        sp_aim.Children.Add(gd);
-                //                    }
-                //                }
-
-                //                #endregion
-                //            }
-                //            else
-                //            {
-
-                //                #region 清除指示物
-
-                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                if (sp != null) sp.Children.Clear();
-
-                //                #endregion
-
-                //            }
-
-                //        }
-                //        else
-                //        {
-
-                //            #region 清除指示物
-
-                //            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //            if (sp != null) sp.Children.Clear();
-
-                //            #endregion
-
-                //        }
-
-
-                //    }
-                //    else 
-                //    {
-                //        if (cv.Children.Count > 1)
-                //        {
-                //            if (cv.Children.IndexOf(card) == cv.Children.Count - 1 || card.info.sCardType.Equals("XYZ怪兽"))
-                //            {
-                //                #region 转移指示物
-
-                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                if (sp.Children.Count > 0)
-                //                {
-                //                    StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                    int count = sp.Children.Count;
-                //                    for (int i = 0; i < count; i++)
-                //                    {
-                //                        Grid gd = sp.Children[0] as Grid;
-                //                        TextBlock tb = gd.Children[1] as TextBlock;
-                //                        tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                //                        sp.Children.Remove(gd);
-                //                        sp_aim.Children.Add(gd);
-                //                    }
-                //                }
-
-                //                #endregion
-                //            }
-                //            else
-                //            {
-                //                #region 清除指示物
-
-                //                StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                if (sp != null) sp.Children.Clear();
-
-                //                #endregion
-                //            }
-                //        }
-                //        else
-                //        {
-                //            #region 转移指示物
-
-                //            StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //            if (sp.Children.Count > 0)
-                //            {
-                //                StackPanel sp_aim = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                //                int count = sp.Children.Count;
-                //                for (int i = 0; i < count; i++)
-                //                {
-                //                    Grid gd = sp.Children[0] as Grid;
-                //                    TextBlock tb = gd.Children[1] as TextBlock;
-                //                    tb.MouseDown -= new MouseButtonEventHandler(DuelEvent.ClikDouble2);
-                //                    sp.Children.Remove(gd);
-                //                    sp_aim.Children.Add(gd);
-                //                }
-                //            }
-
-                //            #endregion
-                //        }
-                //    }
-
-                //}
-                //对目标地的处理
+               
 
                 card.getAwayFromParents();
                 //cv.Children.Remove(card);
@@ -925,84 +660,117 @@ namespace iDuel_EvolutionX.Service
 
                 if (cv_aim.Children.Count > 0)
                 {
-                    Drop2MonsterWin oi = new Drop2MonsterWin();
-                    oi.Owner = mainwindow;
-                    oi.sendResult += new Drop2MonsterDelegate(result => {
-
-                       
-                        switch (result)
-                        {
-                            case Drop2MonsterWinResult.INSERT:
-                                {
-                                    cv_aim.Children.Insert(0, card);
-
-                                    #region 指令发送
-
-                                    MoveInfo moveInfo = new MoveInfo();
-                                    int cardid = getCardID(card);
-                                    moveInfo.cardID = cardid;
-                                    moveInfo.isAdd = false;
-                                    moveInfo.aimArea = cv_aim.area;
-                                    moveInfo.aimStatus = Status.FRONT_ATK;
-                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
-
-                                    BaseJson bj = new BaseJson();
-                                    bj.guid = DuelOperate.getInstance().myself.userindex;
-                                    bj.cid = "";
-                                    bj.action = ActionCommand.CARD_MOVE;
-                                    bj.json = contentJson;
-                                    String json = JsonConvert.SerializeObject(bj);
-                                    DuelOperate.getInstance().sendMsg(json);
-
-                                    #endregion
-                                }
+                    if (card.info.sCardType.Equals("XYZ怪兽"))
+                    {
+                        Drop2MonsterWin oi = new Drop2MonsterWin();
+                        oi.Owner = mainwindow;
+                        oi.sendResult += new Drop2MonsterDelegate(result => {
 
 
-                                break;
-                            case Drop2MonsterWinResult.OVERLAY:
-                                {
-                                    cv_aim.Children.Add(card);
+                            switch (result)
+                            {
+                                case Drop2MonsterWinResult.INSERT:
+                                    {
+                                        cv_aim.Children.Insert(0, card);
 
-                                    #region 召唤动画
+                                        #region 指令发送
 
-                                    Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
-                                    Canvas.SetLeft(mainwindow.img_overlay, summon2.X - ((mainwindow.img_overlay.Width - cv_aim.ActualWidth) / 2));
-                                    Canvas.SetTop(mainwindow.img_overlay, summon2.Y - ((mainwindow.img_overlay.Height - cv_aim.ActualHeight) / 2));
-                                    CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay);
+                                        MoveInfo moveInfo = new MoveInfo();
+                                        int cardid = getCardID(card);
+                                        moveInfo.cardID = cardid;
+                                        moveInfo.isAdd = false;
+                                        moveInfo.aimArea = cv_aim.area;
+                                        moveInfo.aimStatus = Status.FRONT_ATK;
+                                        String contentJson = JsonConvert.SerializeObject(moveInfo);
 
-                                    #endregion
+                                        BaseJson bj = new BaseJson();
+                                        bj.guid = DuelOperate.getInstance().myself.userindex;
+                                        bj.cid = "";
+                                        bj.action = ActionCommand.CARD_MOVE;
+                                        bj.json = contentJson;
+                                        String json = JsonConvert.SerializeObject(bj);
+                                        DuelOperate.getInstance().sendMsg(json);
 
-                                    #region 指令发送
+                                        #endregion
+                                    }
 
-                                    MoveInfo moveInfo = new MoveInfo();
-                                    int cardid = getCardID(card);
-                                    moveInfo.cardID = cardid;
-                                    moveInfo.isAdd = true;
-                                    moveInfo.aimArea = cv_aim.area;
-                                    moveInfo.aimStatus = Status.FRONT_ATK;
-                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
 
-                                    BaseJson bj = new BaseJson();
-                                    bj.guid = DuelOperate.getInstance().myself.userindex;
-                                    bj.cid = "";
-                                    bj.action = ActionCommand.CARD_MOVE;
-                                    bj.json = contentJson;
-                                    String json = JsonConvert.SerializeObject(bj);
-                                    DuelOperate.getInstance().sendMsg(json);
+                                    break;
+                                case Drop2MonsterWinResult.OVERLAY:
+                                    {
+                                        cv_aim.Children.Add(card);
 
-                                    #endregion
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                    
-                    //Point p = new Point();
-                    Point p = cv_aim.PointToScreen(new Point(0, 0));
-                    oi.Top = p.Y - oi.Height;
-                    oi.Left = p.X - ((oi.Width - cv_aim.ActualWidth) / 2);
-                    oi.ShowDialog();
+                                        if (cv.area == Area.EXTRA)
+                                        {
+                                            CardAnimation.overlaySummon(cv_aim);
+                                        }
+
+                                        //#region 召唤动画
+
+                                        //Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                        //Canvas.SetLeft(mainwindow.img_overlay, summon2.X - ((mainwindow.img_overlay.Width - cv_aim.ActualWidth) / 2));
+                                        //Canvas.SetTop(mainwindow.img_overlay, summon2.Y - ((mainwindow.img_overlay.Height - cv_aim.ActualHeight) / 2));
+                                        //CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay);
+
+                                        //#endregion
+
+                                        #region 指令发送
+
+                                        MoveInfo moveInfo = new MoveInfo();
+                                        int cardid = getCardID(card);
+                                        moveInfo.cardID = cardid;
+                                        moveInfo.isAdd = true;
+                                        moveInfo.aimArea = cv_aim.area;
+                                        moveInfo.aimStatus = Status.FRONT_ATK;
+                                        String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                                        BaseJson bj = new BaseJson();
+                                        bj.guid = DuelOperate.getInstance().myself.userindex;
+                                        bj.cid = "";
+                                        bj.action = ActionCommand.CARD_MOVE;
+                                        bj.json = contentJson;
+                                        String json = JsonConvert.SerializeObject(bj);
+                                        DuelOperate.getInstance().sendMsg(json);
+
+                                        #endregion
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+
+                        //Point p = new Point();
+                        Point p = cv_aim.PointToScreen(new Point(0, 0));
+                        oi.Top = p.Y - oi.Height;
+                        oi.Left = p.X - ((oi.Width - cv_aim.ActualWidth) / 2);
+                        oi.ShowDialog();
+                    }
+                    else
+                    {
+                        cv_aim.Children.Insert(0, card);
+
+                        #region 指令发送
+
+                        MoveInfo moveInfo = new MoveInfo();
+                        int cardid = getCardID(card);
+                        moveInfo.cardID = cardid;
+                        moveInfo.isAdd = false;
+                        moveInfo.aimArea = cv_aim.area;
+                        moveInfo.aimStatus = Status.FRONT_ATK;
+                        String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                        BaseJson bj = new BaseJson();
+                        bj.guid = DuelOperate.getInstance().myself.userindex;
+                        bj.cid = "";
+                        bj.action = ActionCommand.CARD_MOVE;
+                        bj.json = contentJson;
+                        String json = JsonConvert.SerializeObject(bj);
+                        DuelOperate.getInstance().sendMsg(json);
+
+                        #endregion
+                    }
+
 
                     /*
                     Card card_first = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
@@ -1151,38 +919,46 @@ namespace iDuel_EvolutionX.Service
                     //card.set2FrontAtk();
                     cv_aim.Children.Add(card);
 
-                    switch (card.info.sCardType)
+                    switch (cv.area)
                     {
-                        case "融合怪兽":
+
+                        case Area.GRAVEYARD:
+                        case Area.MAINDECK:
+                        case Area.BANISH:
+                        case Area.HAND:
+                            CardAnimation.commonSummon(cv_aim);
                             break;
-                        case "同调怪兽":
+                        case Area.EXTRA:
+                            switch (card.info.sCardType)
                             {
-                                #region 召唤动画
+                                case "同调怪兽":
+                                    {
+                                        #region 召唤动画
 
-                                Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
-                                Canvas.SetLeft(mainwindow.img_synchro, summon2.X - ((mainwindow.img_synchro.Width - cv_aim.ActualWidth) / 2));
-                                Canvas.SetTop(mainwindow.img_synchro, summon2.Y - ((mainwindow.img_synchro.Height - cv_aim.ActualHeight) / 2));
-                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_synchro);
+                                        CardAnimation.synchroSummon(cv_aim);
 
-                                #endregion
+                                        #endregion
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        #region 召唤动画
+
+                                        CardAnimation.commonSummon(cv_aim);
+
+                                        #endregion
+                                    }
+
+                                    break;
                             }
-
-
                             break;
+                        
+                       
                         default:
-                            {
-                                #region 召唤动画
-
-                                Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
-                                Canvas.SetLeft(mainwindow.img_summon, summon2.X - ((mainwindow.img_summon.Width - cv_aim.ActualWidth) / 2));
-                                Canvas.SetTop(mainwindow.img_summon, summon2.Y - ((mainwindow.img_summon.Height - cv_aim.ActualHeight) / 2));
-                                CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_summon);
-
-                                #endregion
-                            }
-
                             break;
                     }
+
+                    
                     //!card.info.sCardType.Equals("XYZ怪兽") && !card.info.sCardType.Equals("融合怪兽") && !card.info.sCardType.Equals("同调怪兽") && !card.info.CardDType.Contains("灵摆")
                     
 
@@ -1258,10 +1034,10 @@ namespace iDuel_EvolutionX.Service
                 CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
 
                 //判断卡片原有位置的父容器类型
-                Canvas cv = card.Parent as Canvas;
+                MyCanvas cv = card.Parent as MyCanvas;
 
                 //获取放置容器
-                Canvas cv_aim = sender as Canvas;
+                MyCanvas cv_aim = sender as MyCanvas;
 
                 //判断目标位置是否是原位置
                 if (cv.Name.Equals(cv_aim.Name)) return;
@@ -1283,19 +1059,41 @@ namespace iDuel_EvolutionX.Service
                     card.getAwayFromParents();
                     card.set2BackAtk();
 
+                    #region 指令发送
+
+                    MoveInfo moveInfo = new MoveInfo();
+                    int cardid = getCardID(card);
+                    moveInfo.cardID = cardid;
+
                     switch (result)
                     {
-                        case Drop2MainDeckResult.UP:
-                            cv_aim.Children.Add(card);
+                        case Drop2MainDeckResult.TOP:
+                            cv_aim.Children.Add(card);       
+                            moveInfo.isAdd = true;        
                             break;
                         case Drop2MainDeckResult.MIDDLE:
                             break;
                         case Drop2MainDeckResult.BOTTOM:
                             cv_aim.Children.Insert(0, card);
+                            moveInfo.isAdd = false;
                             break;
                         default:
                             break;
                     }
+
+                    moveInfo.aimArea = cv_aim.area;
+                    moveInfo.aimStatus = Status.BACK_ATK;
+                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                    BaseJson bj = new BaseJson();
+                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                    bj.cid = "";
+                    bj.action = ActionCommand.CARD_MOVE;
+                    bj.json = contentJson;
+                    String json = JsonConvert.SerializeObject(bj);
+                    DuelOperate.getInstance().sendMsg(json);
+
+                    #endregion
 
                 });
 
@@ -1347,38 +1145,39 @@ namespace iDuel_EvolutionX.Service
                 }
 
                 card.getAwayFromParents();
-                cv_aim.Children.Add(card);
+                
 
-                //if (cv.Name.Equals("card_1_hand") || cv.Name.Equals("card_1_Deck"))
-                //{
-                //    return;
-                //}
-                //#region 清除指示物
+                #region 指令发送
 
-                //StackPanel sp = mainwindow.FindName(cv.Name.Replace("card", "sp_sign")) as StackPanel;
-                //if (sp != null) sp.Children.Clear();
+                MoveInfo moveInfo = new MoveInfo();
+                int cardid = getCardID(card);
+                moveInfo.cardID = cardid;
+                
+                moveInfo.aimArea = cv_aim.area;
+                if (card.info.CardDType.Contains("灵摆"))
+                {
+                    cv_aim.Children.Add(card);
+                    moveInfo.isAdd = true;
+                    moveInfo.aimStatus = Status.FRONT_ATK;
+                }
+                else
+                {
+                    cv_aim.Children.Insert(0,card);
+                    moveInfo.isAdd = false;
+                    moveInfo.aimStatus = Status.BACK_ATK;
+                }
+                
+                String contentJson = JsonConvert.SerializeObject(moveInfo);
 
-                //#endregion
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.CARD_MOVE;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
 
-                ////对目标地的处理
-                ////if (cv_aim.Children.Count > 0) return;
-
-                //cv.Children.Remove(card);
-                //if (cv_monsters_1.Contains(cv) || cv.Equals(mainwindow.card_1_hand))
-                //{
-                //    CardOperate.sort(cv, card);
-                //}
-
-                //card_BackAtk(card);
-                //string report = (DuelReportOperate.from(cv.Name) + " [" + card.name + "] 返回额外" + Environment.NewLine);
-
-                //cv_aim.Children.Add(card);
-                //CardOperate.sort(cv_aim, card);
-                //card.ContextMenu = CardMenu.cm_deck;
-
-
-
-                //DuelOperate.getInstance().sendMsg("Back2Extra=" + card.duelindex, report);
+                #endregion
 
             }
         }
@@ -1447,11 +1246,11 @@ namespace iDuel_EvolutionX.Service
                 }
                 mainwindow.card_1_hand.Children.Add(card);
 
-                if (cv.area == Area.MAINDECK)
+                if (cv == mainwindow.card_1_Deck)
                 {
                     DrawInfo orderInfo = new DrawInfo();
 
-                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    int cardid = getCardID(card);
                     orderInfo.cardID = cardid;
                     String contentJson = JsonConvert.SerializeObject(orderInfo);
 
@@ -1468,7 +1267,7 @@ namespace iDuel_EvolutionX.Service
                     #region 指令发送
 
                     MoveInfo moveInfo = new MoveInfo();
-                    int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                    int cardid = getCardID(card);
                     moveInfo.cardID = cardid;
                     moveInfo.isAdd = true;
                     moveInfo.aimArea = cv_aim.area;
@@ -1552,7 +1351,7 @@ namespace iDuel_EvolutionX.Service
                 #region 指令发送
 
                 MoveInfo moveInfo = new MoveInfo();
-                int cardid = DuelOperate.getInstance().myself.deck.Main.IndexOf(card);
+                int cardid = getCardID(card);
                 moveInfo.cardID = cardid;
                 moveInfo.isAdd = true;
                 moveInfo.aimArea = cv_aim.area;
@@ -3476,7 +3275,7 @@ namespace iDuel_EvolutionX.Service
         /// </summary>
         public static void view_Extra_Click()
         {
-            CardsViewWin csv = new CardsViewWin(mainwindow.card_1_Deck);
+            CardsViewWin csv = new CardsViewWin(mainwindow.card_1_Extra);
             csv.tb_title.Text = "己方额外";
             Point p = mainwindow.card_1_8.PointToScreen(new Point(0, 0));
             csv.Top = p.Y - csv.Height;
@@ -4215,80 +4014,6 @@ namespace iDuel_EvolutionX.Service
 
             }
 
-            ////计算卡片数于控件中的平均距离
-            //double average = cv.ActualWidth / hn;
-
-            ////计算卡片的上下距离
-            //double average2 = (cv.ActualHeight - card_height) / 2.0;
-
-            ////int i = 1;
-
-            ////重置卡片距离
-
-            //CardUI card_top = cv.Children[hn] as CardUI;
-            //Point end_top = new Point((cv.ActualWidth - card_width) / 2.0, average2);
-            //MyStoryboard msb = CardAnimation.CanvasXY(end_top, 150);
-            //msb.card = card;
-            //msb.Completed += (object c, EventArgs d) =>
-            //{
-            //    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-            //    msb.card.BeginAnimation(Canvas.TopProperty, null);
-
-            //    Canvas.SetTop(msb.card, end.Y);
-            //    Canvas.SetLeft(msb.card, end.X);
-            //};
-            //msb.Begin(card);
-
-
-            //for (int i = 0; i < hn; i++)
-            //{
-            //    CardUI card = cv.Children[i] as CardUI;
-            //    Point start = card.TranslatePoint(new Point(), cv);
-            //    //2.获取卡片在卡框中的相对距离
-            //    //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-            //    double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
-            //    Point end = new Point(endX, average2);
-                
-            //    //Canvas.SetTop(card, average2);
-            //    //Canvas.SetLeft(card, endX);
-            //    MyStoryboard msb = CardAnimation.CanvasXY(end, 150);
-            //    msb.card = card;
-            //    msb.Completed += (object c, EventArgs d) =>
-            //    {
-            //        msb.card.BeginAnimation(Canvas.LeftProperty, null);
-            //        msb.card.BeginAnimation(Canvas.TopProperty, null);
-
-            //        Canvas.SetTop(msb.card, end.Y);
-            //        Canvas.SetLeft(msb.card, end.X);
-            //    };
-            //    msb.Begin(card);
-
-            //}
-
-            //foreach (Card card in cv.Children)
-            //{
-            //    if (hn == 1)
-            //    {
-            //        Canvas.SetTop(card, average2);
-            //        Canvas.SetLeft(card, (cv.ActualWidth - card_width) / 2.0);                 
-            //        if (i == 3) break;
-            //    }
-            //    else
-            //    {
-            //        if (i == hn + 1)
-            //        {
-            //            Canvas.SetTop(card, average2);
-            //            Canvas.SetLeft(card, (cv.ActualWidth - card_width) / 2.0);
-            //            break;
-            //        }
-            //        Canvas.SetTop(card, average2);
-            //        Canvas.SetLeft(card, (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * (i - 1));
-            //        i++;      
-            //    }
-            //    //card.ContextMenu = CardMenu.cm_XYZmeterial;
-
-            //}
-
         }
 
         /// <summary>
@@ -4297,52 +4022,78 @@ namespace iDuel_EvolutionX.Service
         /// <param name="cv"></param>
         public static void sort_XYZ_def2(Canvas cv)
         {
+            
+
             double card_height = 81;
             double card_width = 56;
 
             //获得控件中的卡片数量
             double hn = cv.Children.Count - 1;
 
-            //if (hn < 1) return;
-
-            //计算卡片数于控件中的平均距离
-            double average = cv.ActualWidth / hn;
+            
 
             //计算卡片的上下距离
             double average2 = (cv.ActualHeight - card_height) / 2.0;
 
-            //int i = 1;
-
-            //重置卡片距离
-
-            for (int i = 0; i < hn ; i++)
+            if (hn == 1)
             {
-                CardUI card = cv.Children[i] as CardUI;
-                Point start = card.TranslatePoint(new Point(), cv);
-                //2.获取卡片在卡框中的相对距离
-                //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-                double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
+                double endX = (cv.ActualWidth - card_width) / 2.0;
                 Point end = new Point(endX, average2);
-                if (i == hn)
-                {
-                    end.X = (cv.ActualWidth - card_width) / 2.0;
-                    end.Y = average2;
-                }
-                //Canvas.SetTop(card, average2);
-                //Canvas.SetLeft(card, endX);
+                CardUI card = cv.Children[0] as CardUI;
                 MyStoryboard msb = CardAnimation.CanvasXY(end);
-                msb.card = card;
                 msb.Completed += (object c, EventArgs d) =>
                 {
-                    msb.card.BeginAnimation(Canvas.LeftProperty, null);
-                    msb.card.BeginAnimation(Canvas.TopProperty, null);
+                    card.BeginAnimation(Canvas.LeftProperty, null);
+                    card.BeginAnimation(Canvas.TopProperty, null);
 
-                    Canvas.SetTop(msb.card, end.Y);
-                    Canvas.SetLeft(msb.card, end.X);
+                    Canvas.SetTop(card, end.Y);
+                    Canvas.SetLeft(card, end.X);
                 };
                 msb.Begin(card);
-
             }
+            else
+            {
+                //计算卡片数于控件中的平均距离
+                double average = cv.ActualWidth / hn;
+
+
+
+                //int i = 1;
+
+                //重置卡片距离
+
+                for (int i = 0; i < hn; i++)
+                {
+                    CardUI card = cv.Children[i] as CardUI;
+                    Point start = card.TranslatePoint(new Point(), cv);
+                    //2.获取卡片在卡框中的相对距离
+                    //Card card_handlast = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
+                    double endX = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * i;
+                    Point end = new Point(endX, average2);
+                    if (i == hn)
+                    {
+                        end.X = (cv.ActualWidth - card_width) / 2.0;
+                        end.Y = average2;
+                    }
+                    //Canvas.SetTop(card, average2);
+                    //Canvas.SetLeft(card, endX);
+                    MyStoryboard msb = CardAnimation.CanvasXY(end);
+                    msb.card = card;
+                    msb.Completed += (object c, EventArgs d) =>
+                    {
+                        msb.card.BeginAnimation(Canvas.LeftProperty, null);
+                        msb.card.BeginAnimation(Canvas.TopProperty, null);
+
+                        Canvas.SetTop(msb.card, end.Y);
+                        Canvas.SetLeft(msb.card, end.X);
+                    };
+                    msb.Begin(card);
+
+                }
+            }
+            //if (hn < 1) return;
+
+            
 
         }
 
@@ -4439,8 +4190,8 @@ namespace iDuel_EvolutionX.Service
                     double end_ = (card_width - ((card_width * hn - cv.ActualWidth) / (hn - 1))) * (i - 1);
                     Point end = new Point(end_, average2);
                 
-                    Canvas.SetTop(card, average2);
-                    Canvas.SetLeft(card, end_);
+                    //Canvas.SetTop(card, average2);
+                    //Canvas.SetLeft(card, end_);
 
                     MyStoryboard msb = CardAnimation.CanvasXY(start, end, 200);
                     msb.Completed += (object c, EventArgs d) =>

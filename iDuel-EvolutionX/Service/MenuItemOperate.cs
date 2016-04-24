@@ -85,6 +85,7 @@ namespace iDuel_EvolutionX.Service
                     statuschangeInfo.aimStatus = Status.FRONT_DEF;  
                     break;
                 case Status.FRONT_DEF:
+
                     CardAnimation.Rotate2FrontAtk(card);
                     statuschangeInfo.aimStatus = Status.FRONT_ATK;
                     break;
@@ -93,12 +94,17 @@ namespace iDuel_EvolutionX.Service
                     statuschangeInfo.aimStatus = Status.BACK_DEF;
                     break;
                 case Status.BACK_DEF:
-                    CardAnimation.Rotate2FrontAtk2(card);
+                    card.set2FrontAtk2();
+                    CardAnimation.rotate_turn(card);
+                    Service.CardOperate.sort_XYZ_atk(mcv);
                     statuschangeInfo.aimStatus = Status.FRONT_ATK;
                     break;
                 default:
                     break;
             }
+
+            
+            
 
             String contentJson = JsonConvert.SerializeObject(statuschangeInfo);
 
