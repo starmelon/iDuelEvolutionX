@@ -489,7 +489,7 @@ namespace NBX3.Service
 
                 #endregion
             };
-
+            msb6.FillBehavior = FillBehavior.HoldEnd;
             msb6.Begin();
 
             #endregion
@@ -1730,12 +1730,12 @@ namespace NBX3.Service
                                                 Canvas.SetTop(card, start.Y - (mcv_orgin.ActualWidth - card.Width)*2 - card.Width);
                                                 CardAnimation.CanvasXY_Scale_Rotate3(card, mcv_aim, moveInfo.isAdd);
                                                 break;
-                                            case Area.GRAVEYARD_OP:
-                                                (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
-                                                Canvas.SetLeft(card, start.X );
-                                                Canvas.SetTop(card, start.Y);
-                                                CardAnimation.CanvasXY_Scale_Rotate2(card, mcv_aim,moveInfo.isAdd);
-                                                break;
+                                            //case Area.GRAVEYARD_OP:
+                                            //    (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                            //    Canvas.SetLeft(card, start.X );
+                                            //    Canvas.SetTop(card, start.Y);
+                                            //    CardAnimation.CanvasXY_Scale_Rotate2(card, mcv_aim,moveInfo.isAdd);
+                                            //    break;
                                             case Area.EXTRA_OP:
                                                 break;
                                             case Area.MONSTER_1_OP:
@@ -1743,15 +1743,17 @@ namespace NBX3.Service
                                             case Area.MONSTER_3_OP:
                                             case Area.MONSTER_4_OP:
                                             case Area.MONSTER_5_OP:
+                                            case Area.GRAVEYARD_OP:
                                             default:
                                                 {
-                                                    card.set2BackAtk2();
-
-                                                    (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                                    //card.set2BackAtk2();
+                                                    MyCanvas cv = (Application.Current.MainWindow as MainWindow).OpBattle as MyCanvas;
+                                                    cv.WhenAddChildren -= CardAreaEvent.add2OPBattle;
+                                                    cv.Children.Add(card);
                                                     Canvas.SetLeft(card, start.X);
                                                     Canvas.SetTop(card, start.Y);
-
-                                                    CardAnimation.move(card, end, mcv_aim,moveInfo.isAdd);
+                                                    CardAnimation.CanvasXY_Scale_Rotate2(card, mcv_aim, moveInfo.isAdd);
+                                                    cv.WhenAddChildren += CardAreaEvent.add2OPBattle;//CardAnimation.move(card, end, mcv_aim,moveInfo.isAdd);
                                                 }
                                                 break;
                                         }
@@ -1760,13 +1762,17 @@ namespace NBX3.Service
                                     break;
                                 case Status.FRONT_DEF:
                                     {
-                                        card.set2BackAtk2();
+                                        //card.set2BackAtk2();
 
                                         (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(card);
+                                        start.X += (mcv_orgin.ActualHeight - card.Width) / 2 - (mcv_orgin.ActualWidth - card.Height) / 2;
+                                        start.Y += -card.Width - (mcv_orgin.ActualHeight - card.Width) / 2 + (mcv_orgin.ActualWidth - card.Height) / 2;
+
                                         Canvas.SetLeft(card, start.X);
                                         Canvas.SetTop(card, start.Y);
 
-                                        CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
+                                        CardAnimation.CanvasXY_Scale_Rotate2(card, mcv_aim, moveInfo.isAdd);
+                                        //CardAnimation.move_rotate(card, end, mcv_aim,moveInfo.isAdd);
 
                                     }
                                     break;
@@ -1861,7 +1867,7 @@ namespace NBX3.Service
                         {
                             if (!item.count.Equals("0"))
                             {
-                                SignTextBlock stb = new SignTextBlock();
+                                SignTextBlock stb = new SignTextBlock(false);
                                 stb.Height = 25;
                                 stb.Width = 25;
                                 stb.BorderBrush = item.brush;

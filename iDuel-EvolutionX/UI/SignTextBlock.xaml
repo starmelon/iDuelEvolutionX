@@ -16,18 +16,18 @@
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Grid Name="gird">
+                        <Grid x:Name="gird">
                             <!--<Border x:Name="ellipse" CornerRadius="12.5"  BorderThickness="2" BorderBrush="{TemplateBinding UserControl.BorderBrush}"  Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Style="{DynamicResource bd_style}" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" >
                                 <Border.Effect>
                                     <DropShadowEffect Color="#d24726" BlurRadius="5" Direction="225"  ShadowDepth="0" Opacity="1" />
                                 </Border.Effect>
                             </Border>-->
-                            <Ellipse x:Name="ellipse"  StrokeThickness="2" Stroke="{TemplateBinding UserControl.BorderBrush}" Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Fill="{TemplateBinding UserControl.Background}" SizeChanged="ellipse_SizeChanged" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" />
+                            <Ellipse x:Name="ellipse"  StrokeThickness="2" Stroke="{TemplateBinding UserControl.BorderBrush}" Width="{TemplateBinding UserControl.Height}" Height="{TemplateBinding UserControl.Height}" Fill="{TemplateBinding UserControl.Background}" SizeChanged="ellipse_SizeChanged"  />
 
                             <TextBlock 
                                 x:Name="content" Text="{TemplateBinding UserControl.Content}"   
                                 Foreground="White"
-                                FontSize="{TemplateBinding UserControl.FontSize}" TextAlignment="Center" VerticalAlignment="Center"  HorizontalAlignment="Center" MouseWheel="content_MouseWheel" MouseDown="content_MouseDown" >
+                                FontSize="{TemplateBinding UserControl.FontSize}" TextAlignment="Center" VerticalAlignment="Center"  HorizontalAlignment="Center"  >
                                 <TextBlock.Effect>
                                     <DropShadowEffect Direction="225" BlurRadius="5" ShadowDepth="0" Color="Black" />
                                 </TextBlock.Effect>

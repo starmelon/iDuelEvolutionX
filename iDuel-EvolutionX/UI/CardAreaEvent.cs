@@ -41,6 +41,9 @@ namespace iDuel_EvolutionX.UI
                 card.set2FrontAtk();
             }
 
+            card.ContextMenu = AllMenu.Instance.cm_graveyard;
+           
+
             #region 指令发送
 
             MoveInfo moveInfo = new MoveInfo();
@@ -61,7 +64,7 @@ namespace iDuel_EvolutionX.UI
             #endregion
             //card.set2FrontAtk();
 
-            card.ContextMenu = AllMenu.Instance.cm_graveyard;
+            
         }
 
         /// <summary>
@@ -347,11 +350,22 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void removeFromMonster(MyCanvas cv, CardUI card)
         {
-            
+
+            if (card.info.sCardType.Equals("XYZ怪兽"))
+            {
+                cv.WhenRemoveChildren -= removeFromMonster;
+                while (cv.Children.Count > 0)
+                {
+                    CardUI remove = cv.Children[0] as CardUI;
+                    //remove.getAwayFromParents();
+                    CardAnimation.move2Graveyard(remove);
+                }
+                cv.WhenRemoveChildren += removeFromMonster;
+            }
             int count = cv.Children.Count;
             if (count == 0)
             {
-                
+
                 Binding bind = new Binding();
                 BindingOperations.ClearBinding(cv.tb_atkDef, TextBlock.TextProperty);
                 cv.tb_atkDef.IsHitTestVisible = false;
@@ -367,6 +381,9 @@ namespace iDuel_EvolutionX.UI
                 Service.CardOperate.sort_XYZ_def(cv);
             }
             bindingAtk(cv, top);//绑定顶层卡片攻击力
+            
+            
+            
         }
 
         #endregion
@@ -473,7 +490,10 @@ namespace iDuel_EvolutionX.UI
         /// <param name="card">卡片</param>
         public static void add2OPBattle(MyCanvas cv, CardUI card)
         {
-
+            if(card == null)
+            {
+                return;
+            }
             if ((card.StatusLast == Status.BACK_DEF || card.StatusLast == Status.BACK_ATK) && card.Status == Status.FRONT_ATK)
             {
                 CardAnimation.turn(card);

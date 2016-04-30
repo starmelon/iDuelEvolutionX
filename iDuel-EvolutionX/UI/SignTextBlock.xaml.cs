@@ -12,7 +12,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using System.Windows.Shapes;
 
 namespace iDuel_EvolutionX.UI
 {
@@ -21,17 +21,21 @@ namespace iDuel_EvolutionX.UI
     /// </summary>
     public partial class SignTextBlock : UserControl,IDisposable
     {
+        private Ellipse ellipse;
+        private TextBlock texbblock;
+        private bool canControl;
 
-        public SignTextBlock()
+        public SignTextBlock(bool canControl)
         {
             
             InitializeComponent();
-
+            
             ContextMenu cm = new ContextMenu();
             MenuItem remark = new MenuItem { Header = "编辑备注" };
             remark.Click += Remark_Click;
             cm.Items.Add(remark);
             this.ContextMenu = cm;
+            this.canControl = canControl;
         }
 
         private void Remark_Click(object sender, RoutedEventArgs e)
@@ -50,7 +54,7 @@ namespace iDuel_EvolutionX.UI
 
         }
 
-        
+
         /// <summary>
         /// 自适应文字
         /// </summary>
@@ -65,6 +69,19 @@ namespace iDuel_EvolutionX.UI
             //this.Height = num;
             
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            ellipse = this.GetTemplateChild("ellipse") as Ellipse;
+            texbblock = this.GetTemplateChild("content") as TextBlock;
+            if (canControl)
+            {
+                addAction();
+            }
+            
+        }
+
 
         private double GetFontSize(string text, Size availableSize, Typeface typeFace)
         {
@@ -124,6 +141,8 @@ namespace iDuel_EvolutionX.UI
             sendSignInfo();
         }
 
+
+
         private void sendSignInfo()
         {
             #region 指令发送
@@ -149,8 +168,40 @@ namespace iDuel_EvolutionX.UI
             #endregion
         }
 
+        
+
+
+        public void addAction()
+        {
+            ellipse.MouseWheel += content_MouseWheel;
+            ellipse.MouseDown += content_MouseDown;
+            texbblock.MouseWheel += content_MouseWheel;
+            texbblock.MouseDown += content_MouseDown;
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+        where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+
+
         public void clearSelf()
         {
+            
             CardUI card = this.Tag as CardUI;
             if (card == null)
             {

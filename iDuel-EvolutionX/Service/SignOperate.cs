@@ -21,7 +21,7 @@ namespace iDuel_EvolutionX.Service
         {
             CardUI card = e.OriginalSource as CardUI;
             StackPanel sp = (sender as MyCanvas).signs;
-            SignTextBlock stb = new SignTextBlock();
+            SignTextBlock stb = new SignTextBlock(true);
             stb.Height = 25;
             stb.Width = 25;
             stb.Content = "1";

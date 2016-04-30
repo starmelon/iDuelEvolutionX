@@ -186,61 +186,133 @@ namespace iDuel_EvolutionX.Service
         /// <param name="card"></param>
         public static void Card_DoubleClick(CardUI card,MouseButtonEventArgs e)
         {
-            cardview = CardView.getInstance(mainwindow); ;
-            Canvas cv = card.Parent as Canvas;
 
-            #region <-- 检索卡片回手 -->
+            MyCanvas mcv = card.Parent as MyCanvas;
 
-            if (cv.Equals(cardview.card_1_Deck))
-	        {
-                cardview.card_1_Deck.Children.Remove(card);
-                sort_CardView(cardview.card_1_Deck, 10);
-                mainwindow.card_1_hand.Children.Add(card);
-                card_FrontAtk(card);
-                card.ContextMenu = AllMenu.Instance.cm_hand;
-                sort_HandCard(mainwindow.card_1_hand);
-                string report = ("[" + card.info.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [<手卡>]");              
-                //DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex, report);
-		 
-	        } 
-
-            #endregion
-
-            #region <-- 查看卡片素材 -->
-
-            if ( cv_monsters_1.Contains(cv) || cv_magictraps_2.Contains(cv) )
+            switch (mcv.area)
             {
-                if (mb_right.Equals("Pressed")) return;
-                if (cv.Children.Count < 2) return;
-                if (cv.Children.IndexOf(card) == cv.Children.Count - 1)
-                {
-                    int n = cv.Children.Count;
-                    //if (card.scCardType.Equals("XYZ怪兽"))
-                    //{
-                    //    //Canvas cv = card.Parent as Canvas;
-                    //    n = n - 1;
-                    //}
-
-                    XYZmaterialView xyz = XYZmaterialView.getInstance(mainwindow, cv);
-
-                    for (int i = 0; i < n - 1; i++)
+                case Area.MONSTER_1:
+                case Area.MONSTER_2:
+                case Area.MONSTER_3:
+                case Area.MONSTER_4:
+                case Area.MONSTER_5:
                     {
-                        Card temp = cv.Children[0] as Card;
-                        cv.Children.RemoveAt(0);
-                        xyz.materials.Children.Insert(0, temp);
+                        #region 指令发送
+
+                        StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+                        int cardid = CardOperate.getCardID(card);
+                        statuschangeInfo.cardID = cardid;
+
+                        switch (card.Status)
+                        {
+                            case Status.FRONT_ATK:
+                                CardAnimation.Rotate2FrontDef(card);
+                                statuschangeInfo.aimStatus = Status.FRONT_DEF;
+                                break;
+                            case Status.FRONT_DEF:
+
+                                CardAnimation.Rotate2FrontAtk(card);
+                                statuschangeInfo.aimStatus = Status.FRONT_ATK;
+                                break;
+                            case Status.BACK_ATK:
+                                CardAnimation.Rotate2BackDef(card);
+                                statuschangeInfo.aimStatus = Status.BACK_DEF;
+                                break;
+                            case Status.BACK_DEF:
+                                card.set2FrontAtk2();
+                                CardAnimation.rotate_turn(card);
+                                Service.CardOperate.sort_XYZ_atk(mcv);
+                                statuschangeInfo.aimStatus = Status.FRONT_ATK;
+                                break;
+                            default:
+                                break;
+                        }
+
+
+
+
+                        String contentJson = JsonConvert.SerializeObject(statuschangeInfo);
+
+                        BaseJson bj = new BaseJson();
+                        bj.guid = DuelOperate.getInstance().myself.userindex;
+                        bj.cid = "";
+                        bj.action = ActionCommand.CARD_STATUS_CHANGE;
+                        bj.json = contentJson;
+                        String json = JsonConvert.SerializeObject(bj);
+                        DuelOperate.getInstance().sendMsg(json);
+
+                        #endregion
                     }
-                    sort_CardView(xyz.materials, 7);
-                    sort_SingleCard(card);
-                    xyz.Show();
-                    xyz.Activate();
-
-
-                }
+                    break;
+                case Area.MAGICTRAP_1:
+                case Area.MAGICTRAP_2:
+                case Area.MAGICTRAP_3:
+                case Area.MAGICTRAP_4:
+                case Area.MAGICTRAP_5:
+                
+                    break;
+                default:
+                    break;
             }
 
             
-            #endregion
-         
+            //cardview = CardView.getInstance(mainwindow); ;
+            //Canvas cv = card.Parent as Canvas;
+
+
+
+            //   #region <-- 检索卡片回手 -->
+
+            //   if (cv.Equals(cardview.card_1_Deck))
+            //{
+            //       cardview.card_1_Deck.Children.Remove(card);
+            //       sort_CardView(cardview.card_1_Deck, 10);
+            //       mainwindow.card_1_hand.Children.Add(card);
+            //       card_FrontAtk(card);
+            //       card.ContextMenu = AllMenu.Instance.cm_hand;
+            //       sort_HandCard(mainwindow.card_1_hand);
+            //       string report = ("[" + card.info.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [<手卡>]");              
+            //       //DuelOperate.getInstance().sendMsg("Back2Hand=" + card.duelindex, report);
+
+            //} 
+
+            //   #endregion
+
+            //#region <-- 查看卡片素材 -->
+
+            //if ( cv_monsters_1.Contains(cv) || cv_magictraps_2.Contains(cv) )
+            //{
+            //    if (mb_right.Equals("Pressed")) return;
+            //    if (cv.Children.Count < 2) return;
+            //    if (cv.Children.IndexOf(card) == cv.Children.Count - 1)
+            //    {
+            //        int n = cv.Children.Count;
+            //        //if (card.scCardType.Equals("XYZ怪兽"))
+            //        //{
+            //        //    //Canvas cv = card.Parent as Canvas;
+            //        //    n = n - 1;
+            //        //}
+
+            //        XYZmaterialView xyz = XYZmaterialView.getInstance(mainwindow, cv);
+
+            //        for (int i = 0; i < n - 1; i++)
+            //        {
+            //            Card temp = cv.Children[0] as Card;
+            //            cv.Children.RemoveAt(0);
+            //            xyz.materials.Children.Insert(0, temp);
+            //        }
+            //        sort_CardView(xyz.materials, 7);
+            //        sort_SingleCard(card);
+            //        xyz.Show();
+            //        xyz.Activate();
+
+
+            //    }
+            //}
+
+
+            //#endregion
+
         }
 
         #endregion

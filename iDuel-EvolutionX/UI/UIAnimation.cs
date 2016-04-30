@@ -50,6 +50,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ChangePhase(int to)
         {
             MyStoryboard msb = new MyStoryboard();
+            msb.FillBehavior = FillBehavior.HoldEnd;
             DoubleAnimation da = new DoubleAnimation(to, TimeSpan.FromMilliseconds(300));
 
             msb.Children.Add(da);

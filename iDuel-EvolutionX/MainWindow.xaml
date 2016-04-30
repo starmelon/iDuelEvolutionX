@@ -270,7 +270,7 @@
                 <!--己方血条数值-->
                 <TextBlock Grid.Column="2" Grid.Row="9" x:Name="tbk_life_P1"  TextAlignment="Center" Text="0" Padding="5" FontSize="17" HorizontalAlignment="Center" />
 
-                <Grid Grid.Column="2" Grid.Row="7" Background="Transparent" Opacity="1">
+                <Grid Grid.Column="2" Grid.Row="7" Background="Transparent" Opacity="0">
                     <Grid.Triggers>
                         <EventTrigger RoutedEvent="UIElement.MouseEnter">
                             <BeginStoryboard>

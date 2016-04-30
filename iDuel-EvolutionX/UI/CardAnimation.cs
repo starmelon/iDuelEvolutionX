@@ -422,9 +422,9 @@ namespace iDuel_EvolutionX.UI
             {
 
                 card.getAwayFromParents();
+                main.Battle.Children.Add(card);
                 Canvas.SetLeft(card, start.X);
                 Canvas.SetTop(card, start.Y);
-                main.Battle.Children.Add(card);
                 MyStoryboard msb = CanvasXY(start, end, 500);
                 msb.card = card;
                 msb.Completed += (object c, EventArgs d) =>
@@ -502,9 +502,9 @@ namespace iDuel_EvolutionX.UI
             {
 
                 card.getAwayFromParents();
-                Canvas.SetLeft(card, start.X);
-                Canvas.SetTop(card, start.Y);
                 main.Battle.Children.Add(card);
+                Canvas.SetLeft(card, start.X);
+                Canvas.SetTop(card, start.Y);       
                 MyStoryboard msb = CanvasXY(start, end, 500);
                 msb.card = card;
                 msb.Completed += (object c, EventArgs d) =>
@@ -1626,6 +1626,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard CanvasXY_Rotate(Point end, double movetime,double startAngle,double endAngle,double rotatetime)
         {
             MyStoryboard msb = new MyStoryboard();
+            msb.FillBehavior = FillBehavior.Stop;
             msb.Children.Add(CanvasX(end.X, movetime));
             msb.Children.Add(CanvasY(end.Y, movetime));
             msb.Children.Add(Rotate(startAngle, endAngle, rotatetime));
@@ -1697,6 +1698,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_120(double time)
         {
             MyStoryboard msb = new MyStoryboard();
+            msb.FillBehavior = FillBehavior.Stop;
             msb.Children.Add(scaleX(-1, 0, time));
             return msb;
         }
@@ -1713,6 +1715,7 @@ namespace iDuel_EvolutionX.UI
         public static MyStoryboard ScaleX_021(double time)
         {
             MyStoryboard msb = new MyStoryboard();
+            msb.FillBehavior = FillBehavior.Stop;
             msb.Children.Add(scaleX(0, 1, time));
             return msb;
         }
@@ -3086,7 +3089,15 @@ namespace iDuel_EvolutionX.UI
             end.Y = (main.OpBattle.ActualHeight - card.Height) / 2.0;
             msb2.Children.Add(CanvasX_KeyFrames(end.X, 650, 1000));
             msb2.Children.Add(CanvasY_KeyFrames(end.Y, 650, 1000));
-            msb2.Children.Add(Rotate(0, 180, 450));
+            if (card.Status == Status.BACK_DEF || card.Status == Status.FRONT_DEF)
+            {
+                msb2.Children.Add(Rotate(-90, 180, 450));
+            }
+            else
+            {
+                msb2.Children.Add(Rotate(0, 180, 450));
+            }
+            
             //msb.Children.Add(Opacity(1, 0, 1100));
             msb2.FillBehavior = FillBehavior.HoldEnd;
             //animator.addAnime(msb);

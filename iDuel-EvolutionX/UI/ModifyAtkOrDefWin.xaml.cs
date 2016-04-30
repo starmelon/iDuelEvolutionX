@@ -57,34 +57,66 @@ namespace iDuel_EvolutionX.UI
                     this.Close();
                     return;
                 }
-                switch (tb_atk.Text[0])
+                try
                 {
-                    case '/':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurAtk = (Convert.ToDouble(card.curAtk) / 2L).ToString();
-                        break;
-                    case '*':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurAtk = (Convert.ToDouble(card.curAtk) * 2L).ToString();
-                        break;
-                    case '-':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurAtk = (Convert.ToDouble(card.curAtk) - Convert.ToDouble(tb_atk.Text.Remove(0, 1))).ToString();
-                        break;
-                    default:
-                        card.CurAtk = (Convert.ToDouble(card.curAtk) + Convert.ToDouble(tb_atk.Text)).ToString();
-                        break;
+                    switch (tb_atk.Text[0])
+                    {
+                        case '/':
+                            if (card.curDef.Equals("0"))
+                            {
+                                return;
+                            }
+                            card.CurAtk = (Convert.ToDouble(card.curAtk) / 2L).ToString();
+                            break;
+                        case '*':
+                            if (card.curDef.Equals("0"))
+                            {
+                                return;
+                            }
+                            card.CurAtk = (Convert.ToDouble(card.curAtk) * 2L).ToString();
+                            break;
+                        case '-':
+                            {
+                                if (card.curDef.Equals("0"))
+                                {
+                                    return;
+                                }
+                                double decrease = Convert.ToDouble(tb_atk.Text.Remove(0, 1));
+                                if (decrease == 0)
+                                {
+                                    card.CurAtk = "0";
+                                }
+                                else
+                                {
+                                    Double result = Convert.ToDouble(card.curAtk) - decrease;
+                                    if (result < 0)
+                                    {
+                                        return;
+                                    }
+                                    card.CurAtk = result.ToString();
+                                }
+                            } 
+                            break;
+                        default:
+                            {
+                                double decrease = Convert.ToDouble(tb_atk.Text);
+                                if (decrease == 0)
+                                {
+                                    card.CurAtk = "0";
+                                }
+                                else
+                                {
+                                    card.CurAtk = (Convert.ToDouble(card.curAtk) + decrease).ToString();
+                                }
+                            }
+                            break;
+                    }
+                    tb_atk.Clear();
                 }
-                tb_atk.Clear();
+                catch (Exception)
+                {
+                       
+                }
 
             }
         }
@@ -93,34 +125,66 @@ namespace iDuel_EvolutionX.UI
         {
             if (e.Key == Key.Enter)
             {
-                switch (tb_def.Text[0])
+                try
                 {
-                    case '/':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurDef = (Convert.ToDouble(card.curDef) / 2L).ToString();
-                        break;
-                    case '*':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurDef = (Convert.ToDouble(card.curDef) * 2L).ToString();
-                        break;
-                    case '-':
-                        if (card.curDef.Equals("0"))
-                        {
-                            return;
-                        }
-                        card.CurDef = (Convert.ToDouble(card.curDef) - Convert.ToDouble(tb_def.Text.Remove(0, 1))).ToString();
-                        break;
-                    default:
-                        card.CurDef = (Convert.ToDouble(card.curDef) + Convert.ToDouble(tb_def.Text)).ToString();
-                        break;
+                    switch (tb_def.Text[0])
+                    {
+                        case '/':
+                            if (card.curDef.Equals("0"))
+                            {
+                                return;
+                            }
+                            card.CurDef = (Convert.ToDouble(card.curDef) / 2L).ToString();
+                            break;
+                        case '*':
+                            if (card.curDef.Equals("0"))
+                            {
+                                return;
+                            }
+                            card.CurDef = (Convert.ToDouble(card.curDef) * 2L).ToString();
+                            break;
+                        case '-':
+                            {
+                                if (card.curDef.Equals("0"))
+                                {
+                                    return;
+                                }
+                                double decrease = Convert.ToDouble(tb_def.Text.Remove(0, 1));
+                                if (decrease == 0)
+                                {
+                                    card.CurDef = "0";
+                                }
+                                else
+                                {
+                                    double result = Convert.ToDouble(card.curDef) - decrease;
+                                    if (result < 0)
+                                    {
+                                        return;
+                                    }
+                                    card.CurDef = result.ToString();
+                                }
+                            }
+                            break;
+                        default:
+                            {
+                                double decrease = Convert.ToDouble(tb_def.Text);
+                                if (decrease == 0)
+                                {
+                                    card.CurDef = "0";
+                                }
+                                else
+                                {
+                                    card.CurDef = (Convert.ToDouble(card.curDef) + decrease).ToString();
+                                }
+                            }
+                            break;
+                    }
+                    tb_atk.Clear();
                 }
-                tb_atk.Clear();
+                catch (Exception)
+                {
+
+                }
 
             }
         }
