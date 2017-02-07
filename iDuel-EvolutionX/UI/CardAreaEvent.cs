@@ -974,7 +974,7 @@ namespace iDuel_EvolutionX.UI
         /// </summary>
         /// <param name="cv"></param>
         /// <param name="card"></param>
-        private static void showSigns(MyCanvas cv, CardUI card)
+        public static void showSigns(MyCanvas cv, CardUI card)
         {
             foreach (SignTextBlock item in card.signs)
             {

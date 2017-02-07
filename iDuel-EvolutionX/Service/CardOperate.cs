@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -189,8 +190,13 @@ namespace iDuel_EvolutionX.Service
 
             MyCanvas mcv = card.Parent as MyCanvas;
 
+            StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+            int cardid = CardOperate.getCardID(card);
+            statuschangeInfo.cardID = cardid;
+
             switch (mcv.area)
             {
+
                 case Area.MONSTER_1:
                 case Area.MONSTER_2:
                 case Area.MONSTER_3:
@@ -199,9 +205,9 @@ namespace iDuel_EvolutionX.Service
                     {
                         #region 指令发送
 
-                        StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
-                        int cardid = CardOperate.getCardID(card);
-                        statuschangeInfo.cardID = cardid;
+                        //StatusChangeInfo statuschangeInfo = new StatusChangeInfo();
+                        //int cardid = CardOperate.getCardID(card);
+                        //statuschangeInfo.cardID = cardid;
 
                         switch (card.Status)
                         {
@@ -249,7 +255,23 @@ namespace iDuel_EvolutionX.Service
                 case Area.MAGICTRAP_3:
                 case Area.MAGICTRAP_4:
                 case Area.MAGICTRAP_5:
-                
+                    {
+                        switch (card.Status)
+                        {
+                            case Status.FRONT_ATK:
+                                card.set2BackAtk2();
+                                CardAnimation.turn(card);
+                                statuschangeInfo.aimStatus = Status.BACK_ATK;
+                                break;
+                            case Status.BACK_ATK:
+                                card.set2FrontAtk2();
+                                CardAnimation.turn(card);
+                                statuschangeInfo.aimStatus = Status.FRONT_ATK;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -512,6 +534,32 @@ namespace iDuel_EvolutionX.Service
 
         #endregion
 
+        /// <summary>
+        /// 通用释放
+        /// </summary>
+        public static void card_drop(object sender, DragEventArgs e)
+        {
+            //获取释放数据
+            IDataObject data = e.Data;
+
+            //判断是否为卡片类型
+            if (!data.GetDataPresent(typeof(BitmapImage)))
+            {
+                return;
+            }
+
+            //获得卡片对象
+            CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
+
+
+
+            //脱离父控件
+            card.getAwayFromParents();
+
+
+
+        }
+
         #region <-- 魔陷区释放 -->
 
         /// <summary>
@@ -660,388 +708,166 @@ namespace iDuel_EvolutionX.Service
         {
             cardview = CardView.getInstance(mainwindow);
 
+            //判断放置数据的有效性
             IDataObject data = e.Data;
-
-            if (data.GetDataPresent(typeof(BitmapImage)))
+            if (!data.GetDataPresent(typeof(BitmapImage)))
             {
-                //获得卡片对象
-                CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
-                //MessageBox.Show(rect.Parent.GetType().ToString().Contains("Canvas"));
+                return;
+            }
+           
+            //获得卡片对象
+            CardUI card = data.GetData(typeof(BitmapImage)) as CardUI;
 
-                //判断卡片原有位置的父容器类型
-                MyCanvas cv = card.Parent as MyCanvas;
+            //获取父控件
+            MyCanvas cv = card.Parent as MyCanvas;
 
-                //获取放置容器
-                MyCanvas cv_aim = sender as MyCanvas;
+            //获取目标控件
+            MyCanvas cv_aim = sender as MyCanvas;
 
-                //判断目标位置是否是原位置
-                if (cv.Equals(cv_aim)) return;
+            //判断目标位置是否是原位置
+            if (cv.Equals(cv_aim)) return;
 
-                //对出发地的处理
-                if (cv.Equals(mainwindow.card_1_Deck))
-                {
-                    return;
-                }
-                //if (cv.Name.Substring(5,1).Equals("2"))
-                //{
-                //    return;
-                //}
-                if (cv.Equals(mainwindow.card_1_Extra) && !card.info.effect.Contains("灵摆效果"))
-                {
-                    return;
-                }                      
-                if (cv_magictraps_1.Contains(cv) && !mb_right.Equals("Pressed") && e.KeyStates == DragDropKeyStates.AltKey)
-                {
+            //if (cv.Equals(mainwindow.card_1_Extra) && !card.info.effect.Contains("灵摆效果"))
+            //{
+            //    return;
+            //}           
+                       
+            if (cv_magictraps_1.Contains(cv) && !mb_right.Equals("Pressed") && e.KeyStates == DragDropKeyStates.AltKey)
+            {
                    
 
-                    MyStoryboard msb = CardAnimation.EffectOrigin();
-                    msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
-                    MyStoryboard msb2 = CardAnimation.EffectAim();
-                    msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
-                    return;
-                }
+                MyStoryboard msb = CardAnimation.EffectOrigin();
+                msb.Begin((mainwindow.FindName(cv.Name.Replace("card", "bd")) as FrameworkElement));
+                MyStoryboard msb2 = CardAnimation.EffectAim();
+                msb2.Begin((mainwindow.FindName(cv_aim.Name.Replace("card", "bd")) as FrameworkElement));
+                return;
+            }
 
-                //如果源目标是魔法陷阱区，则应该先清除指示物
-                switch (cv.Name)
-                {
-                    case "card_1_1":
-                    case "card_1_2":
-                    case "card_1_3":
-                    case "card_1_4":
-                    case "card_1_5":
-                        card.clearSigns();
-                        break;
-                    default:
-                        break;
-                }
+            //如果源目标是魔法陷阱区，则应该先清除指示物
+            switch (cv.Name)
+            {
+                case "card_1_1":
+                case "card_1_2":
+                case "card_1_3":
+                case "card_1_4":
+                case "card_1_5":
+                    card.clearSigns();
+                    break;
+                default:
+                    break;
+            }
 
                
+            card.ContextMenu = AllMenu.Instance.cm_monster;
 
+            #region 目标卡区存在卡
+
+            if (cv_aim.Children.Count > 0)
+            {
                 card.getAwayFromParents();
-                //cv.Children.Remove(card);
                 if (cv.Equals(mainwindow.card_1_hand))
                 {
                     CardOperate.sort(cv, null);
                 }
 
-                
-
-                card.ContextMenu = AllMenu.Instance.cm_monster;
-
-                #region 目标卡区存在卡
-
-                if (cv_aim.Children.Count > 0)
+                if (card.info.sCardType.Equals("XYZ怪兽"))
                 {
-                    if (card.info.sCardType.Equals("XYZ怪兽"))
-                    {
-                        Drop2MonsterWin oi = new Drop2MonsterWin();
-                        oi.Owner = mainwindow;
-                        oi.sendResult += new Drop2MonsterDelegate(result => {
+                    Drop2MonsterWin oi = new Drop2MonsterWin();
+                    oi.Owner = mainwindow;
+                    oi.sendResult += new Drop2MonsterDelegate(result => {
 
 
-                            switch (result)
-                            {
-                                case Drop2MonsterWinResult.INSERT:
+                        switch (result)
+                        {
+                            case Drop2MonsterWinResult.INSERT:
+                                {
+                                    cv_aim.Children.Insert(0, card);
+
+                                    #region 指令发送
+
+                                    MoveInfo moveInfo = new MoveInfo();
+                                    int cardid = getCardID(card);
+                                    moveInfo.cardID = cardid;
+                                    moveInfo.isAdd = false;
+                                    moveInfo.aimArea = cv_aim.area;
+                                    moveInfo.aimStatus = Status.FRONT_ATK;
+                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                                    BaseJson bj = new BaseJson();
+                                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                                    bj.cid = "";
+                                    bj.action = ActionCommand.CARD_MOVE;
+                                    bj.json = contentJson;
+                                    String json = JsonConvert.SerializeObject(bj);
+                                    DuelOperate.getInstance().sendMsg(json);
+
+                                    #endregion
+                                }
+
+
+                                break;
+                            case Drop2MonsterWinResult.OVERLAY:
+                                {
+                                    cv_aim.Children.Add(card);
+
+                                    if (cv.area == Area.EXTRA)
                                     {
-                                        cv_aim.Children.Insert(0, card);
-
-                                        #region 指令发送
-
-                                        MoveInfo moveInfo = new MoveInfo();
-                                        int cardid = getCardID(card);
-                                        moveInfo.cardID = cardid;
-                                        moveInfo.isAdd = false;
-                                        moveInfo.aimArea = cv_aim.area;
-                                        moveInfo.aimStatus = Status.FRONT_ATK;
-                                        String contentJson = JsonConvert.SerializeObject(moveInfo);
-
-                                        BaseJson bj = new BaseJson();
-                                        bj.guid = DuelOperate.getInstance().myself.userindex;
-                                        bj.cid = "";
-                                        bj.action = ActionCommand.CARD_MOVE;
-                                        bj.json = contentJson;
-                                        String json = JsonConvert.SerializeObject(bj);
-                                        DuelOperate.getInstance().sendMsg(json);
-
-                                        #endregion
+                                        CardAnimation.overlaySummon(cv_aim);
                                     }
 
+                                    //#region 召唤动画
 
-                                    break;
-                                case Drop2MonsterWinResult.OVERLAY:
-                                    {
-                                        cv_aim.Children.Add(card);
+                                    //Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
+                                    //Canvas.SetLeft(mainwindow.img_overlay, summon2.X - ((mainwindow.img_overlay.Width - cv_aim.ActualWidth) / 2));
+                                    //Canvas.SetTop(mainwindow.img_overlay, summon2.Y - ((mainwindow.img_overlay.Height - cv_aim.ActualHeight) / 2));
+                                    //CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay);
 
-                                        if (cv.area == Area.EXTRA)
-                                        {
-                                            CardAnimation.overlaySummon(cv_aim);
-                                        }
+                                    //#endregion
 
-                                        //#region 召唤动画
+                                    #region 指令发送
 
-                                        //Point summon2 = cv_aim.TranslatePoint(new Point(0.5, 0.5), mainwindow.Battle);
-                                        //Canvas.SetLeft(mainwindow.img_overlay, summon2.X - ((mainwindow.img_overlay.Width - cv_aim.ActualWidth) / 2));
-                                        //Canvas.SetTop(mainwindow.img_overlay, summon2.Y - ((mainwindow.img_overlay.Height - cv_aim.ActualHeight) / 2));
-                                        //CardAnimation.Rotate_Scale_FadeInAndOut(mainwindow.img_overlay);
+                                    MoveInfo moveInfo = new MoveInfo();
+                                    int cardid = getCardID(card);
+                                    moveInfo.cardID = cardid;
+                                    moveInfo.isAdd = true;
+                                    moveInfo.aimArea = cv_aim.area;
+                                    moveInfo.aimStatus = Status.FRONT_ATK;
+                                    String contentJson = JsonConvert.SerializeObject(moveInfo);
 
-                                        //#endregion
+                                    BaseJson bj = new BaseJson();
+                                    bj.guid = DuelOperate.getInstance().myself.userindex;
+                                    bj.cid = "";
+                                    bj.action = ActionCommand.CARD_MOVE;
+                                    bj.json = contentJson;
+                                    String json = JsonConvert.SerializeObject(bj);
+                                    DuelOperate.getInstance().sendMsg(json);
 
-                                        #region 指令发送
-
-                                        MoveInfo moveInfo = new MoveInfo();
-                                        int cardid = getCardID(card);
-                                        moveInfo.cardID = cardid;
-                                        moveInfo.isAdd = true;
-                                        moveInfo.aimArea = cv_aim.area;
-                                        moveInfo.aimStatus = Status.FRONT_ATK;
-                                        String contentJson = JsonConvert.SerializeObject(moveInfo);
-
-                                        BaseJson bj = new BaseJson();
-                                        bj.guid = DuelOperate.getInstance().myself.userindex;
-                                        bj.cid = "";
-                                        bj.action = ActionCommand.CARD_MOVE;
-                                        bj.json = contentJson;
-                                        String json = JsonConvert.SerializeObject(bj);
-                                        DuelOperate.getInstance().sendMsg(json);
-
-                                        #endregion
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-
-                        //Point p = new Point();
-                        Point p = cv_aim.PointToScreen(new Point(0, 0));
-                        oi.Top = p.Y - oi.Height;
-                        oi.Left = p.X - ((oi.Width - cv_aim.ActualWidth) / 2);
-                        oi.ShowDialog();
-                    }
-                    else
-                    {
-                        cv_aim.Children.Insert(0, card);
-
-                        #region 指令发送
-
-                        MoveInfo moveInfo = new MoveInfo();
-                        int cardid = getCardID(card);
-                        moveInfo.cardID = cardid;
-                        moveInfo.isAdd = false;
-                        moveInfo.aimArea = cv_aim.area;
-                        moveInfo.aimStatus = Status.FRONT_ATK;
-                        String contentJson = JsonConvert.SerializeObject(moveInfo);
-
-                        BaseJson bj = new BaseJson();
-                        bj.guid = DuelOperate.getInstance().myself.userindex;
-                        bj.cid = "";
-                        bj.action = ActionCommand.CARD_MOVE;
-                        bj.json = contentJson;
-                        String json = JsonConvert.SerializeObject(bj);
-                        DuelOperate.getInstance().sendMsg(json);
-
-                        #endregion
-                    }
-
-
-                    /*
-                    Card card_first = cv_aim.Children[cv_aim.Children.Count - 1] as Card;
-
-                    #region 从额外区召唤XYZ怪兽
-
-                    if ((cv.Equals(cardview.card_1_Extra) && card.sCardType.Equals("XYZ怪兽")) || !card_first.sCardType.Equals("XYZ怪兽"))
-                    {
-                        if (card_first.isDef)
-                        {
-                            CardAnimation.setTransformGroup(card_first);
-                            TransLibrary.StoryboardChain animator0 = new TransLibrary.StoryboardChain();
-                            if (card_first.isBack)
-                            {
-
-
-                                MyStoryboard msb1 = CardAnimation.ScaleX_120_Rotate(-90, 0, 150, 200);
-                                msb1.card = card_first;
-                                msb1.Completed += (object sender_, EventArgs e_) =>
-                                {
-                                    //卡片切换为背面
-                                    msb1.card.isBack = false;
-                                    msb1.card.isDef = false;
-                                    msb1.card.SetPic();
-                                };
-                                animator0.Animates.Add(msb1);
-                                MyStoryboard msb2 = CardAnimation.ScaleX_021(150);
-                                animator0.Animates.Add(msb2);
-
-                            }
-                            else if (!card_first.isBack)
-                            {
-                                MyStoryboard msb = CardAnimation.Rotate_D2A(150);
-                                msb.card = card_first;
-                                msb.Completed += (object sender_, EventArgs e_) =>
-                                {
-                                    msb.card.isDef = false;
-                                };
-                                animator0.Animates.Add(msb);
-                            }
-                            animator0.Begin(card_first);
-
-                            report = ("[" + card.name + "] From " + "[" + DuelReportOperate.from(cv.Name) + "] To [" + DuelReportOperate.from(cv_aim.Name) + "]");
-                            if (card.isDef)
-                            {
-                                card_FrontAtk(card);
-                                DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name + "," + 1 + "," + card_first.duelindex, report);
-                            }
-                            else if (!card.isDef)
-                            {
-                                DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name + "," + 1 + "," + card_first.duelindex, report);
-                            }
-                            cv_aim.Children.Add(card);
-                            Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                            Canvas.SetLeft(card, cv_aim.ActualWidth - card.ActualWidth);
-                            sort(cv_aim, null);
-                            return;
+                                    #endregion
+                                }
+                                break;
+                            default:
+                                break;
                         }
+                    });
 
-                        if (cv_monsters_1.Contains(cv))
-                        {
-                            DuelOperate.getInstance().sendMsg("Move=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", report);
-                        }
-                        else
-                        {
-                            DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name + "," + 1 + ",", "");
-                        }
-                        if (card.isDef)
-                        {
-                            card_FrontAtk(card);
-                        }
-
-                        if ( !(cv_monsters_1.Contains(cv) && cv_monsters_1.Contains(cv_aim)))
-                        {
-                            #region 清除指示物
-
-                            StackPanel sp = mainwindow.FindName(cv_aim.Name.Replace("card", "sp_sign")) as StackPanel;
-                            if (sp != null) sp.Children.Clear();
-
-                            #endregion
-                        }                      
-
-                        cv_aim.Children.Add(card);
-                        Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                        Canvas.SetLeft(card, cv_aim.ActualWidth - card.ActualWidth);
-                        sort(cv_aim, null);
-                        return;
-                    }
-
-                    #endregion
-
-                    if (card_first.sCardType.Equals("XYZ怪兽"))
-                    {
-                        cv_aim.Children.Insert(0, card);
-                        Canvas.SetTop(card, (cv_aim.ActualHeight - card.ActualHeight) / 2.0);
-                        Canvas.SetLeft(card, 0);
-                        sort(cv_aim, null);
-                        DuelOperate.getInstance().sendMsg("Summon=" + card.duelindex + "," + cv_aim.Name + "," + 0 + ",", "");
-                        return;
-                    }*/
+                    //Point p = new Point();
+                    Point p = cv_aim.PointToScreen(new Point(0, 0));
+                    oi.Top = p.Y - oi.Height;
+                    oi.Left = p.X - ((oi.Width - cv_aim.ActualWidth) / 2);
+                    oi.ShowDialog();
                 }
-
-                #endregion
-
-                #region 目标卡区为空时
-
-
-                if (cv_aim.Children.Count == 0)
+                else
                 {
-
-                    if (cv.Equals(mainwindow.card_1_hand))
-                    {
-                        #region 右键盖放
-
-                        if (mb_right.Equals("Pressed"))
-                        {
-                            card.set2BackDef();
-                            cv_aim.Children.Add(card);
-
-                            #region 指令发送
-                            {
-                                MoveInfo moveInfo1 = new MoveInfo();
-                                moveInfo1.cardID = getCardID(card);
-                                moveInfo1.isAdd = true;
-                                moveInfo1.aimArea = cv_aim.area;
-                                moveInfo1.aimStatus = Status.BACK_DEF;
-                                String contentJson1 = JsonConvert.SerializeObject(moveInfo1);
-
-                                BaseJson bj1 = new BaseJson();
-                                bj1.guid = DuelOperate.getInstance().myself.userindex;
-                                bj1.cid = "";
-                                bj1.action = ActionCommand.CARD_MOVE;
-                                bj1.json = contentJson1;
-                                String json1 = JsonConvert.SerializeObject(bj1);
-                                DuelOperate.getInstance().sendMsg(json1);
-                            }    
-                            #endregion
-
-                            return;
-                        }
-
-                        #endregion
-                    }
-
-
-                    //card.set2FrontAtk();
-                    cv_aim.Children.Add(card);
-
-                    switch (cv.area)
-                    {
-
-                        case Area.GRAVEYARD:
-                        case Area.MAINDECK:
-                        case Area.BANISH:
-                        case Area.HAND:
-                            CardAnimation.commonSummon(cv_aim);
-                            break;
-                        case Area.EXTRA:
-                            switch (card.info.sCardType)
-                            {
-                                case "同调怪兽":
-                                    {
-                                        #region 召唤动画
-
-                                        CardAnimation.synchroSummon(cv_aim);
-
-                                        #endregion
-                                    }
-                                    break;
-                                default:
-                                    {
-                                        #region 召唤动画
-
-                                        CardAnimation.commonSummon(cv_aim);
-
-                                        #endregion
-                                    }
-
-                                    break;
-                            }
-                            break;
-                        
-                       
-                        default:
-                            break;
-                    }
-
-                    
-                    //!card.info.sCardType.Equals("XYZ怪兽") && !card.info.sCardType.Equals("融合怪兽") && !card.info.sCardType.Equals("同调怪兽") && !card.info.CardDType.Contains("灵摆")
-                    
+                    cv_aim.Children.Insert(0, card);
 
                     #region 指令发送
 
                     MoveInfo moveInfo = new MoveInfo();
                     int cardid = getCardID(card);
                     moveInfo.cardID = cardid;
-                    moveInfo.isAdd = true;
+                    moveInfo.isAdd = false;
                     moveInfo.aimArea = cv_aim.area;
-                    moveInfo.aimStatus = card.Status;
+                    moveInfo.aimStatus = Status.FRONT_ATK;
                     String contentJson = JsonConvert.SerializeObject(moveInfo);
 
                     BaseJson bj = new BaseJson();
@@ -1053,14 +879,181 @@ namespace iDuel_EvolutionX.Service
                     DuelOperate.getInstance().sendMsg(json);
 
                     #endregion
-
-                    return;
                 }
+
+
+                    
+            }
+
+            #endregion
+
+            #region 目标卡区为空时
+
+
+            if (cv_aim.Children.Count == 0)
+            {
+
+                    
+                switch (cv.area)
+                {
+
+                    case Area.GRAVEYARD:
+                    case Area.MAINDECK:
+                    case Area.BANISH:
+                    case Area.HAND:
+                        {
+                            card.getAwayFromParents();
+                            CardOperate.sort(cv, null);
+
+                            #region 右键盖放
+
+                            if (mb_right.Equals("Pressed"))
+                            {
+                                card.set2BackDef();
+                                    
+                                cv_aim.Children.Add(card);
+
+                                #region 指令发送
+                                {
+                                    MoveInfo moveInfo1 = new MoveInfo();
+                                    moveInfo1.cardID = getCardID(card);
+                                    moveInfo1.isAdd = true;
+                                    moveInfo1.aimArea = cv_aim.area;
+                                    moveInfo1.aimStatus = Status.BACK_DEF;
+                                    String contentJson1 = JsonConvert.SerializeObject(moveInfo1);
+
+                                    BaseJson bj1 = new BaseJson();
+                                    bj1.guid = DuelOperate.getInstance().myself.userindex;
+                                    bj1.cid = "";
+                                    bj1.action = ActionCommand.CARD_MOVE;
+                                    bj1.json = contentJson1;
+                                    String json1 = JsonConvert.SerializeObject(bj1);
+                                    DuelOperate.getInstance().sendMsg(json1);
+                                }
+                                #endregion
+
+                                return;
+                            }
+
+                            #endregion
+                            cv_aim.Children.Add(card);
+                            CardAnimation.commonSummon(cv_aim);
+                        }
+                        break;
+                    case Area.EXTRA:
+                        card.getAwayFromParents();
+                        cv_aim.Children.Add(card);
+                        switch (card.info.sCardType)
+                        {
+                            case "同调怪兽":
+                                {
+                                    #region 召唤动画
+
+                                    CardAnimation.synchroSummon(cv_aim);
+
+                                    #endregion
+                                }
+                                break;
+                            default:
+                                {
+                                    #region 召唤动画
+
+                                    CardAnimation.commonSummon(cv_aim);
+
+                                    #endregion
+                                }
+
+                                break;
+                        }
+                        break;
+                    case Area.MONSTER_1:
+                    case Area.MONSTER_2:
+                    case Area.MONSTER_3:
+                    case Area.MONSTER_4:
+                    case Area.MONSTER_5:
+                        cv.WhenRemoveChildren -= CardAreaEvent.removeFromMonster;
+                        card.getAwayFromParents();
+                        while (cv.Children.Count > 0)
+                        {
+                            CardUI c = cv.Children[0] as CardUI;
+                            c.getAwayFromParents();
+                            cv_aim.Children.Add(c);
+
+                            //#region 指令发送
+
+                            //MoveInfo moveInfo1 = new MoveInfo();
+                            //moveInfo1.cardID =  getCardID(c);
+                            //moveInfo1.isAdd = true;
+                            //moveInfo1.aimArea = cv_aim.area;
+                            //moveInfo1.aimStatus = card.Status;
+                            //String contentJson1 = JsonConvert.SerializeObject(moveInfo1);
+
+                            //BaseJson bj1 = new BaseJson();
+                            //bj1.guid = DuelOperate.getInstance().myself.userindex;
+                            //bj1.cid = "";
+                            //bj1.action = ActionCommand.CARD_MOVE;
+                            //bj1.json = contentJson1;
+                            //String json1 = JsonConvert.SerializeObject(bj1);
+                            //DuelOperate.getInstance().sendMsg(json1);
+
+                            //#endregion
+                        }
+                        cv.WhenRemoveChildren += CardAreaEvent.removeFromMonster;
+                        cv_aim.Children.Add(card);
+
+                        #region 消除攻守显示
+
+                        Binding bind = new Binding();
+                        BindingOperations.ClearBinding(cv.tb_atkDef, TextBlock.TextProperty);
+                        cv.tb_atkDef.IsHitTestVisible = false;
+
+                        #endregion
+
+                        //CardAreaEvent.showSigns(cv_aim, card);
+
+                        break;
+                    case Area.MAGICTRAP_1:
+                    case Area.MAGICTRAP_2:
+                    case Area.MAGICTRAP_3:
+                    case Area.MAGICTRAP_4:
+                    case Area.MAGICTRAP_5:
+                        card.getAwayFromParents();
+                        cv_aim.Children.Add(card);
+
+                        break;
+                    default:
+                        //cv_aim.Children.Add(card);
+                        break;
+                }
+                                 
+
+                #region 指令发送
+
+                MoveInfo moveInfo = new MoveInfo();
+                int cardid = getCardID(card);
+                moveInfo.cardID = cardid;
+                moveInfo.isAdd = true;
+                moveInfo.aimArea = cv_aim.area;
+                moveInfo.aimStatus = card.Status;
+                String contentJson = JsonConvert.SerializeObject(moveInfo);
+
+                BaseJson bj = new BaseJson();
+                bj.guid = DuelOperate.getInstance().myself.userindex;
+                bj.cid = "";
+                bj.action = ActionCommand.CARD_MOVE;
+                bj.json = contentJson;
+                String json = JsonConvert.SerializeObject(bj);
+                DuelOperate.getInstance().sendMsg(json);
 
                 #endregion
 
-
+                return;
             }
+
+            #endregion
+
+
+            
         }
 
         public static int getCardID(CardUI card)
@@ -3008,6 +3001,8 @@ namespace iDuel_EvolutionX.Service
 
         #endregion
 
+
+
         #region <-- 拖拽完成 -->
 
         /// <summary>
@@ -3028,7 +3023,6 @@ namespace iDuel_EvolutionX.Service
         #endregion
 
         #endregion
-
 
         #region <-- 预览区的Tab切换 -->
 

@@ -53,7 +53,8 @@ namespace iDuel_EvolutionX.UI
             cm_hand = new CardMenuHand();
             cm_outside = new CardMenuOutside();
             cm_pendulum = new CardMenuPendulum();
-    }
+        }
+
 
         /// <summary>
         /// 怪物场区的菜单
@@ -66,7 +67,7 @@ namespace iDuel_EvolutionX.UI
             MenuItem mi_4  = new MenuItem { Header = "攻击宣言" };
             MenuItem activeCard  = new MenuItem { Header = "效果发动" };
             MenuItem aim2Card = new MenuItem { Header = "选择为对象" };
-            MenuItem mi_6  = new MenuItem { Header = "转移控制权" };
+            MenuItem changeControl  = new MenuItem { Header = "转移控制权" };
         
             MenuItem release = new MenuItem { Header = "解放" };
             MenuItem release2Graveyard = new MenuItem { Header = "解放 → 墓地" };
@@ -105,6 +106,9 @@ namespace iDuel_EvolutionX.UI
                 aim2Card.Command = CardCommands.Aim2Card;
 
                 this.AddChild(new Separator());
+
+                this.AddChild(changeControl);
+                AllMenu.setMenuItemBind(changeControl);
 
                 mi_4.IsEnabled = false;
                 //this.AddChild(mi_4);
@@ -238,6 +242,7 @@ namespace iDuel_EvolutionX.UI
             MenuItem back2MainDeck = new MenuItem { Header = "放回卡组顶端" };   //OK
             MenuItem release2Graveyard = new MenuItem { Header = "送入墓地" };       //OK
             MenuItem release2Banish = new MenuItem { Header = "除外此卡" };   //OK
+            MenuItem randomDropHandCard = new MenuItem { Header = "随机舍弃一张手牌" };
             MenuItem mi_7 = new MenuItem { Header = "效果发动" };  
 
             public CardMenuHand()
@@ -268,6 +273,11 @@ namespace iDuel_EvolutionX.UI
                 this.AddChild(release2Banish);
                 AllMenu.setMenuItemBind(release2Banish);
                 release2Banish.Command = CardCommands.Release2Banish;
+
+                this.AddChild(randomDropHandCard);
+                AllMenu.setMenuItemBind(randomDropHandCard);
+                randomDropHandCard.Command = CardCommands.RandomDropHandCard; 
+
 
                 mi_7.IsEnabled = false;
                 this.AddChild(mi_7);

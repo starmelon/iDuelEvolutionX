@@ -181,6 +181,11 @@ namespace iDuel_EvolutionX.UI
 
         }
 
+        public static void set2BackAtk(CardUI card)
+        {
+
+        }
+
         /// <summary>
         /// 表示形式变更
         /// 旋转→背面防守
@@ -3262,6 +3267,14 @@ namespace iDuel_EvolutionX.UI
 
 
         }
+
+
+
+        #endregion
+
+        #region 2017.02.07
+
+        
 
         #endregion
     }

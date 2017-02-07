@@ -366,6 +366,23 @@ namespace iDuel_EvolutionX.Service
 
         }
 
+        /// <summary>
+        /// 随机舍弃一张手卡
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void execute_randomDropHandCard(object sender, ExecutedRoutedEventArgs e)
+        {
+            CardUI card = e.OriginalSource as CardUI;
+            MyCanvas hand_cv = card.Parent as MyCanvas;
+            int total = hand_cv.Children.Count;
+            Random random = new Random();
+            int which = random.Next(total - 1);
+            Console.WriteLine(total + "," + which);
+            CardUI drop_card = hand_cv.Children[which] as CardUI;
+            CardAnimation.move2Graveyard(drop_card);
+        }
+
         //判断要执行的命令
         public static void Command_judge(object sender, string command)
         {

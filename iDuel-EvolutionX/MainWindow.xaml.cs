@@ -528,6 +528,11 @@ namespace iDuel_EvolutionX
                     CardCommands.Back2MainDeck,
                     MenuItemOperate.excuete_back2MainDeck));
 
+            this.CommandBindings.Add(
+                new CommandBinding(
+                    CardCommands.RandomDropHandCard,
+                    MenuItemOperate.execute_randomDropHandCard));
+
             #endregion
 
 

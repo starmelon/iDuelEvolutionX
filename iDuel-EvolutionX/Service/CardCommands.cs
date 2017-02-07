@@ -21,11 +21,16 @@ namespace iDuel_EvolutionX.Service
 
         private static RoutedUICommand release2Graveyard;
         private static RoutedUICommand release2Banish;
+        private static RoutedUICommand randomDropHnadCard;
 
         private static RoutedUICommand back2MainDeck;
 
         private static RoutedUICommand activeCard;
         private static RoutedUICommand aim2Card;
+
+        private static RoutedUICommand changeControl;
+
+        //private static RoutedUICommand 
 
         static CardCommands()
         {
@@ -41,11 +46,15 @@ namespace iDuel_EvolutionX.Service
 
             release2Graveyard = new RoutedUICommand("release2Graveyard", "release2Graveyard", typeof(CardCommands));
             release2Banish = new RoutedUICommand("release2Banish", "release2Banish", typeof(CardCommands));
+            randomDropHnadCard = new RoutedUICommand("randomDropHnadCard", "randomDropHnadCard", typeof(CardCommands));
 
             back2MainDeck = new RoutedUICommand("back2MainDeck", "back2MainDeck", typeof(CardCommands));
 
             activeCard = new RoutedUICommand("activeCard", "activeCard", typeof(CardCommands));
             aim2Card = new RoutedUICommand("aim2Card", "aim2Card", typeof(CardCommands));
+
+
+            changeControl = new RoutedUICommand("changeControl", "changeControl", typeof(CardCommands));
         }
 
         public static RoutedUICommand AddBlueSign
@@ -164,6 +173,22 @@ namespace iDuel_EvolutionX.Service
                 return aim2Card;
             }
 
+        }
+
+        public static RoutedUICommand ChangeControl
+        {
+            get
+            {
+                return changeControl;
+            }
+        }
+
+        public static RoutedUICommand RandomDropHandCard
+        {
+            get
+            {
+                return randomDropHnadCard;
+            }
         }
     }
 }

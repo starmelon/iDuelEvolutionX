@@ -1043,20 +1043,20 @@ namespace NBX3.Service
 
             receiveMsg(msg);
 
-            if (Server.check())
-            {
-                Server sr = Server.getInstance(mainwindow);
-                sr.sendMsg(msg);
-            }
-            else if (Client.check())
-            {
-                Client cl = Client.getInstance(mainwindow);
-                cl.sendMsg(msg);
-            }
-            else
-            {
-                mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
-            }
+            //if (Server.check())
+            //{
+            //    Server sr = Server.getInstance(mainwindow);
+            //    sr.sendMsg(msg);
+            //}
+            //else if (Client.check())
+            //{
+            //    Client cl = Client.getInstance(mainwindow);
+            //    cl.sendMsg(msg);
+            //}
+            //else
+            //{
+            //    mainwindow.report.AppendText("system：未建立连接" + Environment.NewLine);
+            //}
 
         }
 
@@ -1332,6 +1332,8 @@ namespace NBX3.Service
                                             end.X -= (mcv_aim.ActualWidth - card.Width) / 2 + card.Width;
                                         }
 
+                                        
+
                                     }
                                     
                                     break;
@@ -1392,6 +1394,75 @@ namespace NBX3.Service
                                         default:
                                             break;
                                     }
+
+                                    switch (mcv_aim.area)
+                                    {
+                                        case Area.MONSTER_1_OP:
+                                        case Area.MONSTER_2_OP:
+                                        case Area.MONSTER_3_OP:
+                                        case Area.MONSTER_4_OP:
+                                        case Area.MONSTER_5_OP:
+                                            {
+                                                switch (mcv_orgin.area)
+                                                {
+                                                    case Area.MONSTER_1_OP:
+                                                    case Area.MONSTER_2_OP:
+                                                    case Area.MONSTER_3_OP:
+                                                    case Area.MONSTER_4_OP:
+                                                    case Area.MONSTER_5_OP:
+                                                        {
+                                                            mcv_aim.WhenAddChildren -= CardAreaEvent.add2MonsterOP;
+                                                            mcv_orgin.WhenRemoveChildren -= CardAreaEvent.removeFromMonsterOP;
+                                                            while (mcv_orgin.Children.Count > 0)
+                                                            {
+
+                                                                CardUI c = mcv_orgin.Children[mcv_orgin.Children.Count - 1] as CardUI;
+                                                                Point start2 = c.TranslatePoint(new Point(), mainwindow.OpBattle);
+                                                                c.getAwayFromParents();
+                                                                (Application.Current.MainWindow as MainWindow).OpBattle.Children.Add(c);
+                                                                Canvas.SetLeft(c, start2.X);
+                                                                Canvas.SetTop(c, start2.Y);
+                                                                Point end2 = mcv_aim.TranslatePoint(new Point(), mainwindow.OpBattle);
+                                                                end2.X = end2.X - c.Width;
+                                                                end2.Y = end2.Y + (mcv_aim.ActualHeight - c.Height) / 2.0;
+                                                                MyStoryboard msb2 = CardAnimation.CanvasXY(end2);
+                                                                msb2.card = c;
+                                                                msb2.Completed += (sender2, e2) =>
+                                                                {
+                                                                    msb2.card.BeginAnimation(Canvas.LeftProperty, null);
+                                                                    msb2.card.BeginAnimation(Canvas.TopProperty, null);
+
+                                                                    Canvas.SetLeft(msb2.card, -c.Width);
+                                                                    Canvas.SetTop(msb2.card, (mcv_aim.ActualHeight - c.Height) / 2.0);
+
+                                                                    msb2.card.getAwayFromParents();
+                                                                    mcv_aim.Children.Insert(0, c);
+
+                                                                };
+
+                                                                msb2.Begin(c);
+                                                            }
+
+                                                            #region 消除攻守显示
+
+                                                            Binding bind = new Binding();
+                                                            BindingOperations.ClearBinding(mcv_orgin.tb_atkDef, TextBlock.TextProperty);
+                                                            mcv_orgin.tb_atkDef.IsHitTestVisible = false;
+
+                                                            #endregion
+
+                                                            mcv_aim.WhenAddChildren += CardAreaEvent.add2MonsterOP;
+                                                            mcv_orgin.WhenRemoveChildren += CardAreaEvent.removeFromMonsterOP;
+                                                        }
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                            break;
+                                    }
+
+                                    
 
                                 }
                                 else
